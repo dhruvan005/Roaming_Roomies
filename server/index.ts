@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/bun'
-import { userRoute } from './routes/userRoutes'
+import userRoutes from './routes/userRoutes'
 
 const app = new Hono()
 app.use(logger())
@@ -15,7 +15,7 @@ app.get('/hi', (c) => {
   return c.text('Hello Hono! hi i am a new developer')
 })
 
-app.route('/api/user', userRoute);
+app.route('/api/user', userRoutes);
 
 
 
