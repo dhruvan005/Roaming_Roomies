@@ -1,43 +1,76 @@
 import * as React from "react";
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import {
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import { LayoutDashboard , CircleUser ,UserRoundPen } from 'lucide-react';
 
+import { Layout, Menu, theme } from "antd";
+const { useToken } = theme;
+
+const { Header, Content, Footer, Sider } = Layout;
 export const Route = createRootRoute({
   component: RootComponent,
 });
+const items = [
+  {
+    key: "1",
+    icon: <LayoutDashboard style={{ height: '17px'}} />,
+    label: <Link to="/">Home</Link>,
+  },
+  {
+    key: "2",
+    icon: <CircleUser style={{ height: '17px'}}/>,
+    label: <Link to="/about">About</Link>,
+  },
+  {
+    key: "3",
+    icon: <UserRoundPen style={{ height: '17px'}}/>,
+    label: <Link to="/profile">Profile</Link>,
+  },
+];
 
 function RootComponent() {
+  const { token } = useToken();
+
   return (
     <>
-      <div className="p-2 flex  gap-2 text-lg">
-        <Link
-          to="/"
-          activeProps={{
-            className: "font-bold",
+      <Layout style={{ height: "100vh" }}>
+        <Sider
+          breakpoint="md"
+          collapsedWidth="0"
+          onBreakpoint={(broken) => {
+            console.log(broken);
           }}
-          activeOptions={{ exact: true }}
-        >
-          Home
-        </Link>{" "}
-        <Link
-          to="/about"
-          activeProps={{
-            className: "font-bold",
+          onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
           }}
+          className="pt-5"
         >
-          About
-        </Link>
-        <Link
-          to="/profile"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          Profile
-        </Link>
-      </div>
-      <hr />
-      <Outlet />
+          <div className="demo-logo-vertical" />
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            items={items}
+            
+          />
+        </Sider>
+        <Layout>
+          {/* <Header style={{ padding: 0 }} /> */}
+          <Content style={{ margin: "24px 16px 0" }} >
+            <Outlet />
+          </Content>
+          <Footer style={{ textAlign: "center" ,
+            backgroundColor: token.colorPrimaryBg,
+           }}>
+            Roaming Roomies ©{new Date().getFullYear()} 
+          </Footer>
+        </Layout>
+      </Layout>
     </>
   );
 }
