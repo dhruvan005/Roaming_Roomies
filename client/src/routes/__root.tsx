@@ -64,7 +64,7 @@ function RootComponent() {
           <Content style={{ margin: "24px 16px 0" }} >
             <Outlet />
           </Content>
-          <Footer style={{ textAlign: "center" ,
+          <Footer style={{ height: '3vh' , textAlign: "center" ,
             backgroundColor: token.colorPrimaryBg,
            }}>
             Roaming Roomies ©{new Date().getFullYear()} 

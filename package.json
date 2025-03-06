@@ -7,7 +7,8 @@
     "migrate": "bun run ./server/db/migrate.ts"
   },
   "dependencies": {
-    "@clerk/backend": "^1.24.1",
+    "@clerk/backend": "^1.25.0",
+    "@hono/clerk-auth": "^2.0.0",
     "@hono/node-server": "^1.13.8",
     "@types/pg": "^8.11.11",
     "drizzle-orm": "^0.40.0",
