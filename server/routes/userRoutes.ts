@@ -3,7 +3,7 @@ import { db } from '../db'; // Adjust the import path
 import { roommateUsers } from '../db/schema'; // Adjust the import path
 import { eq, and, or, gte, lte, sql } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
-import { RoommateUserSchema } from '../schema';
+import { RoommateUserSchema } from '../zodSchema';
 
 const userRoutes = new Hono();
 

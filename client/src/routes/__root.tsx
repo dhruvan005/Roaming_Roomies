@@ -1,11 +1,7 @@
 import * as React from "react";
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+
 import { LayoutDashboard , CircleUser ,UserRoundPen } from 'lucide-react';
 
 import { Layout, Menu, theme } from "antd";
@@ -38,7 +34,7 @@ function RootComponent() {
 
   return (
     <>
-      <Layout style={{ height: "100vh" }}>
+      <Layout style={{ height: "100%" }}>
         <Sider
           breakpoint="md"
           collapsedWidth="0"
