@@ -1,15 +1,13 @@
 import * as React from "react";
 import { Button } from "@carbon/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Divider } from "antd";
 
-import { Card } from "antd";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
-const { Meta } = Card;
+
 
 function HomeComponent() {
   return (
