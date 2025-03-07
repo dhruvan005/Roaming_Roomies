@@ -56,7 +56,7 @@ userRoutes.get('/', async (c) => {
             page: pageNum,
             limit: limitNum,
             total: count,
-            data: users
+            users: users
         });
     } catch (error) {
         console.error('Error fetching users:', error);

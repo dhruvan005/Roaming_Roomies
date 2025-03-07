@@ -4,7 +4,7 @@ import postgres from 'postgres';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL!;
-
+// console.log('Connecting to database:', connectionString);
 const connectionOptions = {
     max: 10,          
     idle_timeout: 30,  // timeout in seconds

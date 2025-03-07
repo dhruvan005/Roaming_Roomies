@@ -15,14 +15,17 @@ app.get('/hi', (c) => {
   return c.text('Hello Hono! hi i am a new developer')
 })
 
-app.route('/api/user', userRoutes);
+const apiRoutes = app.basePath("/api").route("/user", userRoutes)
 
 
+// Serve static files
 
-// Serve the index.html file for all other routes
-app.get('*', serveStatic({ path: './frontend/dist/index.html' }))
+app.use('*', serveStatic({ root: './client/dist' }))
+app.get('*', serveStatic({ path: './client/dist/index.html' }))
+
 
 export default {
   port: 3000,
   fetch: app.fetch,
 }
+export type ApiRoutes = typeof apiRoutes;
