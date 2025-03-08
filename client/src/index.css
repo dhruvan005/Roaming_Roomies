@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.root-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .root-layout .ant-layout {
+    flex: 1;
+  }
