@@ -33,11 +33,9 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1>All Users</h1>
+      <div className="h-3"></div>
       <UserList />
-      
-      
-      
+
     </div>
   );
 }

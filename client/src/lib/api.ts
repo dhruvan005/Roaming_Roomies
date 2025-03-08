@@ -62,6 +62,10 @@ export const userApi = {
         const response = await api.user.$get();
         return parseApiResponse(response);
     },
+    loadMore: async () => {
+        const response = await api.user.$get({ query: { page: 2 } }); // Example query parameter for pagination
+        return parseApiResponse(response);
+    },
 
     // Add more API functions as needed
 };
@@ -75,7 +79,7 @@ export function useUsers() {
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
         // Override with any custom options
-        
+
     });
 }
 
@@ -89,5 +93,6 @@ export const dataControls = {
     // Set users data manually (useful after adding new data)
     updateUsersData: (newData: any) => {
         queryClient.setQueryData(["allUsers"], newData);
-    }
+    },
+    loadMoreUsers: userApi.loadMore,
 };
