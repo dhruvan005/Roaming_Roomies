@@ -5,12 +5,8 @@ import { eq, and, or, gte, lte, sql } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { RoommateUserSchema } from '../zodSchema';
 
-const userRoutes = new Hono();
-
-/**
- * GET all users with advanced filtering
- */
-userRoutes.get('/', async (c) => {
+ export const userRoutes = new Hono()
+ .get('/', async (c) => {
     try {
         const query = c.req.query();
         const {
@@ -66,12 +62,8 @@ userRoutes.get('/', async (c) => {
             error: error instanceof Error ? error.message : 'Unknown error'
         }, 500);
     }
-});
-
-/**
- * POST new user with validation
- */
-userRoutes.post(
+})
+.post(
     '/',
     zValidator('json', RoommateUserSchema),
     async (c) => {
@@ -131,12 +123,8 @@ userRoutes.post(
             }, 500);
         }
     }
-);
-
-/**
- * GET user by ID
- */
-userRoutes.get('/:id', async (c) => {
+)
+.get('/:id', async (c) => {
     try {
         const { id } = c.req.param();
 
@@ -253,4 +241,3 @@ userRoutes.get('/:id', async (c) => {
 //     }
 // });
 
-export default userRoutes;
