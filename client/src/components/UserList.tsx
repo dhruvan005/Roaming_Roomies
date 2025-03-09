@@ -5,14 +5,22 @@ import { useUsers, dataControls } from "../lib/api";
 const UserList: React.FC = () => {
   // Use the optimized query hook
   const { isPending, isError, data, error } = useUsers();
-  const [loading, setLoading] = useState(false);
+  const [initLoading, setInitLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState(data?.users || []);
 
   useEffect(() => {
-    if (data?.users) {
+    if (isPending) {
+      setLoading(true);
+    } else if (data?.users) {
       setList(data.users);
+      setInitLoading(false);
+      setLoading(false);
+    } else if (isError) {
+      setLoading(false);
     }
-  }, [data]);
+  }, [isPending, data, isError]);
+
 
   // Manual refresh function when needed
   const handleRefresh = () => {
@@ -32,13 +40,13 @@ const UserList: React.FC = () => {
       </h2>
       <div className="h-2"></div>
 
-      {isPending && <div>Loading...</div>}
+      {/* {isPending && <div>Loading...</div>} */}
       {isError && <div>Error loading users: {error.message}</div>}
 
       {!isPending && !isError && (
         <List
           className="demo-loadmore-list"
-          loading={loading}
+          loading={initLoading}
           itemLayout="horizontal"
           style={{
             border: "1px solid #c7ced6 ",
