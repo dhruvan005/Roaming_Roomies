@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RoomListingImport } from './routes/roomListing'
 import { Route as ProfileImport } from './routes/profile'
 import { Route as AllUsersImport } from './routes/allUsers'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const RoomListingRoute = RoomListingImport.update({
+  id: '/roomListing',
+  path: '/roomListing',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ProfileRoute = ProfileImport.update({
   id: '/profile',
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileImport
       parentRoute: typeof rootRoute
     }
+    '/roomListing': {
+      id: '/roomListing'
+      path: '/roomListing'
+      fullPath: '/roomListing'
+      preLoaderRoute: typeof RoomListingImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/allUsers': typeof AllUsersRoute
   '/profile': typeof ProfileRoute
+  '/roomListing': typeof RoomListingRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +106,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/allUsers': typeof AllUsersRoute
   '/profile': typeof ProfileRoute
+  '/roomListing': typeof RoomListingRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +115,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/allUsers': typeof AllUsersRoute
   '/profile': typeof ProfileRoute
+  '/roomListing': typeof RoomListingRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/allUsers' | '/profile'
+  fullPaths: '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/allUsers' | '/profile'
-  id: '__root__' | '/' | '/about' | '/allUsers' | '/profile'
+  to: '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
+  id: '__root__' | '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +132,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AllUsersRoute: typeof AllUsersRoute
   ProfileRoute: typeof ProfileRoute
+  RoomListingRoute: typeof RoomListingRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AllUsersRoute: AllUsersRoute,
   ProfileRoute: ProfileRoute,
+  RoomListingRoute: RoomListingRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +156,8 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/allUsers",
-        "/profile"
+        "/profile",
+        "/roomListing"
       ]
     },
     "/": {
@@ -151,6 +171,9 @@ export const routeTree = rootRoute
     },
     "/profile": {
       "filePath": "profile.tsx"
+    },
+    "/roomListing": {
+      "filePath": "roomListing.tsx"
     }
   }
 }

@@ -12,6 +12,7 @@ import {
   CircleUser,
   UserRoundPen,
   Search,
+  HousePlus,
 } from "lucide-react";
 
 import { Layout, Menu, theme } from "antd";
@@ -27,7 +28,8 @@ const keyToRouteMap = {
   "1": "/",
   "2": "/about",
   "3": "/allUsers",
-  "4": "/profile"
+  "4": "/roomListing",
+  "5": "/profile",
 };
 
 // Define a function to get the key based on pathname
@@ -35,7 +37,8 @@ function getKeyFromPath(pathname: string): string {
   if (pathname === "/") return "1";
   if (pathname === "/about" || pathname.startsWith("/about/")) return "2";
   if (pathname === "/allUsers" || pathname.startsWith("/allUsers/")) return "3";
-  if (pathname === "/profile" || pathname.startsWith("/profile/")) return "4";
+  if (pathname === "/roomListing" || pathname.startsWith("/roomroomListing/")) return "4";
+  if (pathname === "/profile" || pathname.startsWith("/profile/")) return "5";
   return "1"; // Default to home
 }
 
@@ -83,6 +86,11 @@ function RootComponent() {
     },
     {
       key: "4",
+      icon: <HousePlus style={{ height: "17px" }} />,
+      label: "List Your Room",
+    },
+    {
+      key: "5",
       icon: <UserRoundPen style={{ height: "17px" }} />,
       label: "Profile",
     },

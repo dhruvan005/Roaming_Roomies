@@ -5,71 +5,76 @@ import { useUsers, dataControls } from "../lib/api";
 const UserList: React.FC = () => {
   // Use the optimized query hook
   const { isPending, isError, data, error } = useUsers();
-  const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [list, setList] = useState(data?.users || []);
+  const [list, setList] = useState<any[]>([]);
 
   useEffect(() => {
-    if (isPending) {
-      setLoading(true);
-    } else if (data?.users) {
+    
+    if (data?.users) {
       setList(data.users);
-      setInitLoading(false);
-      setLoading(false);
-    } else if (isError) {
-      setLoading(false);
     }
-  }, [isPending, data, isError]);
-
+  }, [data]);
 
   // Manual refresh function when needed
   const handleRefresh = () => {
     dataControls.refreshUsers();
   };
 
+  // Create placeholder items for skeleton loading
+  const skeletonItems = Array(4).fill({});
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        {/* <p>Total users: {data?.total || 0}</p> */}
-        <p></p>
+        <p>Total users: {data?.total || 0}</p>
         <Button onClick={handleRefresh}>Refresh Data</Button>
       </div>
 
-      <h2 className="text-center text-xl  font-semibold">
+      <h2 className="text-center text-xl font-semibold">
         Find Your Future Roommate !!
       </h2>
       <div className="h-2"></div>
 
-      {/* {isPending && <div>Loading...</div>} */}
-      {isError && <div>Error loading users: {error.message}</div>}
+      {isError && <div>Error loading users</div>}
 
-      {!isPending && !isError && (
+      {isPending ? (
+        <div style={{ height: "40dvh", borderRadius: "10px", padding: "10px" }}>
+          {skeletonItems.map((_, index) => (
+            <div key={index} style={{ marginBottom: "16px" }}>
+              <Skeleton 
+                avatar 
+                paragraph={{ rows: 1 }} 
+                active 
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
         <List
           className="demo-loadmore-list"
-          loading={initLoading}
           itemLayout="horizontal"
+          dataSource={list}
           style={{
-            border: "1px solid #c7ced6 ",
+            border: "1px solid #c7ced6",
             borderRadius: "10px",
             padding: "10px",
           }}
-        >
-          {list.map((user) => (
-            <List.Item key={user.id} actions={[<a key="more">Load More</a>]}>
-              <Skeleton avatar title={false} loading={loading} active>
-                <List.Item.Meta
-                  avatar={<Avatar src={user.profileImageUrl} />}
-                  title={
-                    <a href="https://ant.design">
-                      {user.firstName} {user.lastName}
-                    </a>
-                  }
-                  description={`${user.occupation} · ${user.age} · ${user.desiredRoomType} · ${user.maxRent}$`}
-                />
-              </Skeleton>
+          renderItem={(user: any) => (
+            <List.Item 
+              key={user.id} 
+              actions={[<a key="more">Load More</a>]}
+            >
+              <List.Item.Meta
+                avatar={<Avatar src={user.profileImageUrl} />}
+                title={
+                  <p>
+                    {user.firstName} {user.lastName}
+                  </p>
+                }
+                description={`${user.occupation} · ${user.age} · ${user.desiredRoomType} · ${user.maxRent}$`}
+              />
             </List.Item>
-          ))}
-        </List>
+          )}
+        />
       )}
     </div>
   );
