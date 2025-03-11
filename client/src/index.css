@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
   .heroHeader {
-    background-color: #eaeeef; /* Light blue color */
+    background-color: #888888d0; /* Light blue color */
     font-family: "Source Sans 3", sans-serif;
     font-weight: 400;
   }

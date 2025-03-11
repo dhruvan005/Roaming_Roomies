@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export interface User {
     id: number;
     firstName: string;
@@ -18,7 +20,7 @@ export interface User {
     desiredRoomType: "apartment" | "house" | "studio" | "other";
     maxRent: number;
     preferredLocations: string[];
-    moveInDate: Date;
+    moveInDate: moment.Moment | null;
     minimumStay: number;
     bio: string;
     profileImageUrl: string;
