@@ -12,7 +12,7 @@ import {
   CircleUser,
   UserRoundPen,
   Search,
-  HousePlus,
+  Newspaper,
 } from "lucide-react";
 
 import { Layout, Menu, theme } from "antd";
@@ -86,8 +86,8 @@ function RootComponent() {
     },
     {
       key: "4",
-      icon: <HousePlus style={{ height: "17px" }} />,
-      label: "List Your Room",
+      icon: <Newspaper style={{ height: "17px" }} />,
+      label: "Create Profile",
     },
     {
       key: "5",
