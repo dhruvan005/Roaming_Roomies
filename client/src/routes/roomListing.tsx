@@ -62,6 +62,7 @@ interface UserProfileFormValues {
   dietaryPreferences:
     | "vegetarian"
     | "vegan"
+    | "non_vegetarian"
     | "pescatarian"
     | "omnivore"
     | "gluten_free"
@@ -100,8 +101,10 @@ function UserProfileForm() {
 
   // Get current lists from form for dynamic fields
   const getInterests = () => form.getFieldValue("interests") || [];
-  const getLocations = () => form.getFieldValue("preferredLocations") || [];
-  const getTraits = () => form.getFieldValue("personalityTraits") || {};
+  const getLocations = () => {
+    const locations = form.getFieldValue("preferredLocations");
+    return Array.isArray(locations) ? locations : [];
+  };
 
   // Add new interest
   const addInterest = () => {
@@ -109,8 +112,10 @@ function UserProfileForm() {
     const interests = getInterests();
     // Make sure interests is an array
     const currentInterests = Array.isArray(interests) ? interests : [];
-    form.setFieldsValue({ interests: [...currentInterests, newInterest.trim()] });
-    setNewInterest(""); // Clear the input field after adding
+    form.setFieldsValue({
+      interests: [...currentInterests, newInterest.trim()],
+    });
+    setNewInterest("");
   };
 
   // Remove interest
@@ -125,46 +130,92 @@ function UserProfileForm() {
   const addLocation = () => {
     if (!newLocation.trim()) return;
 
-    const locations = getLocations();
+    const currentLocations = getLocations();
+    const updatedLocations = [...currentLocations, newLocation.trim()];
+
     form.setFieldsValue({
-      preferredLocations: [...locations, newLocation.trim()],
+      preferredLocations: updatedLocations,
     });
+
+    // Force the form to update its internal state
+    setTimeout(() => {
+      form.validateFields(["preferredLocations"]);
+    }, 0);
+
     setNewLocation("");
   };
 
   // Remove location
   const removeLocation = (index: number) => {
-    const locations = getLocations();
+    const currentLocations = getLocations();
+    const updatedLocations = currentLocations.filter(
+      (_: any, i: number) => i !== index
+    );
+
     form.setFieldsValue({
-      preferredLocations: locations.filter((_: any, i: number) => i !== index),
+      preferredLocations: updatedLocations,
     });
+
+    // Force a re-render by triggering validation
+    setTimeout(() => {
+      form.validateFields(["preferredLocations"]);
+    }, 0);
+  };
+  const getTraits = () => {
+    const traits = form.getFieldValue("personalityTraits");
+    return traits && typeof traits === "object" && !Array.isArray(traits)
+      ? traits
+      : {};
   };
 
   // Add personality trait
   const addPersonalityTrait = () => {
     if (!traitKey.trim() || !traitValue.trim()) return;
 
-    const traits = getTraits();
+    // Get current traits directly from form
+    const currentTraits = getTraits();
+
+    // Create new traits object with the added trait
+    const updatedTraits = {
+      ...currentTraits,
+      [traitKey.trim()]: traitValue.trim(),
+    };
+    console.log("Updated traits:", updatedTraits);
+
+    // Update form with the new traits object
     form.setFieldsValue({
-      personalityTraits: {
-        ...traits,
-        [traitKey.trim()]: traitValue.trim(),
-      },
+      personalityTraits: updatedTraits,
     });
 
+    // Force the form to update its internal state
+    setTimeout(() => {
+      form.validateFields(["personalityTraits"]);
+    }, 0);
+
+    // Reset input fields
     setTraitKey("");
     setTraitValue("");
   };
 
   // Remove personality trait
   const removePersonalityTrait = (key: string) => {
-    const traits = getTraits();
-    const newTraits = { ...traits };
-    delete newTraits[key];
+    // Get current traits
+    const currentTraits = getTraits();
 
-    form.setFieldsValue({ personalityTraits: newTraits });
+    // Create a new object without the removed trait
+    const updatedTraits = { ...currentTraits };
+    delete updatedTraits[key];
+
+    // Update form with the new object
+    form.setFieldsValue({
+      personalityTraits: updatedTraits,
+    });
+
+    // Force a re-render by triggering validation
+    setTimeout(() => {
+      form.validateFields(["personalityTraits"]);
+    }, 0);
   };
-
   // Form submission
   const onFinish = (values: UserProfileFormValues) => {
     // Convert moment to ISO string for move-in date
@@ -191,7 +242,7 @@ function UserProfileForm() {
         style={{ padding: "16px", maxWidth: "1200px", margin: "0 auto" }}
       >
         <Card
-          bordered={false}
+          // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
         >
           <Title
@@ -422,6 +473,7 @@ function UserProfileForm() {
                     <Select placeholder="Select dietary preference">
                       <Option value="vegetarian">Vegetarian</Option>
                       <Option value="vegan">Vegan</Option>
+                      <Option value="non_vegetarian">Non-Vegetarian</Option>
                       <Option value="pescatarian">Pescatarian</Option>
                       <Option value="omnivore">Omnivore</Option>
                       <Option value="gluten_free">Gluten-Free</Option>
@@ -494,6 +546,7 @@ function UserProfileForm() {
                           getInterests().map(
                             (interest: string, index: number) => (
                               <Tag
+                                style={{ marginBottom: 8 }}
                                 key={index}
                                 closable
                                 onClose={() => removeInterest(index)}
@@ -671,43 +724,11 @@ function UserProfileForm() {
                         {getLocations().length > 0 ? (
                           <Space size={[8, 8]} wrap>
                             {getLocations().map(
-                              (
-                                location:
-                                  | string
-                                  | number
-                                  | bigint
-                                  | boolean
-                                  | React.ReactElement<
-                                      unknown,
-                                      string | React.JSXElementConstructor<any>
-                                    >
-                                  | Iterable<React.ReactNode>
-                                  | React.ReactPortal
-                                  | Promise<
-                                      | string
-                                      | number
-                                      | bigint
-                                      | boolean
-                                      | React.ReactPortal
-                                      | React.ReactElement<
-                                          unknown,
-                                          | string
-                                          | React.JSXElementConstructor<any>
-                                        >
-                                      | Iterable<React.ReactNode>
-                                      | null
-                                      | undefined
-                                    >
-                                  | null
-                                  | undefined,
-                                index: number
-                              ) => (
+                              (location: string, index: number) => (
                                 <Tag
                                   key={index}
                                   closable
-                                  onClose={() =>
-                                    removeLocation(index as number)
-                                  }
+                                  onClose={() => removeLocation(index)}
                                   color="green"
                                 >
                                   {location}
