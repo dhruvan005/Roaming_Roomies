@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useState } from "react";
+import React, { useState , useEffect , useCallback } from "react";
 import {
   Form,
   Input,
@@ -26,8 +26,8 @@ import {
   UserOutlined,
   MailOutlined,
   PhoneOutlined,
-  HomeOutlined,
-  InboxOutlined,
+  UploadOutlined,
+  CloudFilled,
 } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
@@ -76,7 +76,7 @@ interface UserProfileFormValues {
   interests: string[];
 
   // Personality Traits
-  personalityTraits: Record<string, string>; // Key-value pairs of traits
+  // personalityTraits: Record<string, string>; // Key-value pairs of traits
 
   // Housing Preferences
   desiredRoomType: "apartment" | "house" | "studio" | "other" | undefined;
@@ -93,129 +93,124 @@ interface UserProfileFormValues {
 function UserProfileForm() {
   const [form] = Form.useForm();
 
-  // States for managing dynamic fields
   const [newInterest, setNewInterest] = useState("");
-  const [newLocation, setNewLocation] = useState("");
-  const [traitKey, setTraitKey] = useState("");
-  const [traitValue, setTraitValue] = useState("");
+  const [interests, setInterests] = useState<{ id: number; value: string }[]>([]);
 
-  // Get current lists from form for dynamic fields
-  const getInterests = () => form.getFieldValue("interests") || [];
-  const getLocations = () => {
-    const locations = form.getFieldValue("preferredLocations");
-    return Array.isArray(locations) ? locations : [];
-  };
-
-  // Add new interest
-  const addInterest = () => {
+  // Add interest with useCallback to ensure stability
+  const addInterest = useCallback(() => {
     if (!newInterest.trim()) return;
-    const interests = getInterests();
-    // Make sure interests is an array
-    const currentInterests = Array.isArray(interests) ? interests : [];
-    form.setFieldsValue({
-      interests: [...currentInterests, newInterest.trim()],
-    });
-    setNewInterest("");
-  };
 
-  // Remove interest
-  const removeInterest = (index: number) => {
-    const interests = getInterests();
-    form.setFieldsValue({
-      interests: interests.filter((_: any, i: number) => i !== index),
-    });
-  };
-
-  // Add new location
-  const addLocation = () => {
-    if (!newLocation.trim()) return;
-
-    const currentLocations = getLocations();
-    const updatedLocations = [...currentLocations, newLocation.trim()];
-
-    form.setFieldsValue({
-      preferredLocations: updatedLocations,
-    });
-
-    // Force the form to update its internal state
-    setTimeout(() => {
-      form.validateFields(["preferredLocations"]);
-    }, 0);
-
-    setNewLocation("");
-  };
-
-  // Remove location
-  const removeLocation = (index: number) => {
-    const currentLocations = getLocations();
-    const updatedLocations = currentLocations.filter(
-      (_: any, i: number) => i !== index
-    );
-
-    form.setFieldsValue({
-      preferredLocations: updatedLocations,
-    });
-
-    // Force a re-render by triggering validation
-    setTimeout(() => {
-      form.validateFields(["preferredLocations"]);
-    }, 0);
-  };
-  const getTraits = () => {
-    const traits = form.getFieldValue("personalityTraits");
-    return traits && typeof traits === "object" && !Array.isArray(traits)
-      ? traits
-      : {};
-  };
-
-  // Add personality trait
-  const addPersonalityTrait = () => {
-    if (!traitKey.trim() || !traitValue.trim()) return;
-
-    // Get current traits directly from form
-    const currentTraits = getTraits();
-
-    // Create new traits object with the added trait
-    const updatedTraits = {
-      ...currentTraits,
-      [traitKey.trim()]: traitValue.trim(),
+    const newEntry = {
+      id: Date.now(), 
+      value: newInterest.trim(),
     };
-    console.log("Updated traits:", updatedTraits);
 
-    // Update form with the new traits object
-    form.setFieldsValue({
-      personalityTraits: updatedTraits,
+    // Use functional update to guarantee we're working with latest state
+    setInterests(prevInterests => {
+      const updatedInterests = [...prevInterests, newEntry];
+      
+      // Update form here with the actual updated array
+      form.setFieldsValue({
+        interests: updatedInterests.map(item => item.value),
+      });
+      
+      return updatedInterests;
     });
 
-    // Force the form to update its internal state
-    setTimeout(() => {
-      form.validateFields(["personalityTraits"]);
-    }, 0);
+    setNewInterest("");
+  }, [newInterest]);
 
-    // Reset input fields
-    setTraitKey("");
-    setTraitValue("");
-  };
-
-  // Remove personality trait
-  const removePersonalityTrait = (key: string) => {
-    // Get current traits
-    const currentTraits = getTraits();
-
-    // Create a new object without the removed trait
-    const updatedTraits = { ...currentTraits };
-    delete updatedTraits[key];
-
-    // Update form with the new object
-    form.setFieldsValue({
-      personalityTraits: updatedTraits,
+  // Remove interest with useCallback
+  const removeInterest = useCallback((idToRemove: number) => {
+    // Use functional update pattern for reliable state updates
+    setInterests(prevInterests => {
+      // Create new filtered array
+      const updatedInterests = prevInterests.filter(item => item.id !== idToRemove);
+      
+      // Update form with the same array we're using for state
+      form.setFieldsValue({
+        interests: updatedInterests.map(item => item.value),
+      });
+      
+      return updatedInterests;
     });
+  }, []);
 
-    // Force a re-render by triggering validation
-    setTimeout(() => {
-      form.validateFields(["personalityTraits"]);
-    }, 0);
-  };
+  // For debugging - logs whenever interests change
+  useEffect(() => {
+    console.log("Interest state updated:", interests);
+  }, [interests]);
+
+  // Reset all interests
+  const clearAllInterests = useCallback(() => {
+    setInterests([]);
+    form.setFieldsValue({ interests: [] });
+  }, []);
+
+  // Example form submission handler
+  const handleSubmit = useCallback(() => {
+    // Get final interests from state, not from form
+    const finalInterests = interests.map(item => item.value);
+    console.log("Submitting interests:", finalInterests);
+    
+    // Your form submission logic here
+  }, [interests]);
+
+  // const getTraits = () => {
+  //   const traits = form.getFieldValue("personalityTraits");
+  //   return traits && typeof traits === "object" && !Array.isArray(traits)
+  //     ? traits
+  //     : {};
+  // };
+
+  // // Add personality trait
+  // const addPersonalityTrait = () => {
+  //   if (!traitKey.trim() || !traitValue.trim()) return;
+
+  //   // Get current traits directly from form
+  //   const currentTraits = getTraits();
+
+  //   // Create new traits object with the added trait
+  //   const updatedTraits = {
+  //     ...currentTraits,
+  //     [traitKey.trim()]: traitValue.trim(),
+  //   };
+  //   console.log("Updated traits:", updatedTraits);
+
+  //   // Update form with the new traits object
+  //   form.setFieldsValue({
+  //     personalityTraits: updatedTraits,
+  //   });
+
+  //   // Force the form to update its internal state
+  //   setTimeout(() => {
+  //     form.validateFields(["personalityTraits"]);
+  //   }, 0);
+
+  //   // Reset input fields
+  //   setTraitKey("");
+  //   setTraitValue("");
+  // };
+
+  // // Remove personality trait
+  // const removePersonalityTrait = (key: string) => {
+  //   // Get current traits
+  //   const currentTraits = getTraits();
+
+  //   // Create a new object without the removed trait
+  //   const updatedTraits = { ...currentTraits };
+  //   delete updatedTraits[key];
+
+  //   // Update form with the new object
+  //   form.setFieldsValue({
+  //     personalityTraits: updatedTraits,
+  //   });
+
+  //   // Force a re-render by triggering validation
+  //   setTimeout(() => {
+  //     form.validateFields(["personalityTraits"]);
+  //   }, 0);
+  // };
   // Form submission
   const onFinish = (values: UserProfileFormValues) => {
     // Convert moment to ISO string for move-in date
@@ -238,9 +233,7 @@ function UserProfileForm() {
   }
   return (
     <Layout>
-      <Content
-        style={{ padding: "16px", maxWidth: "1200px", margin: "0 auto" }}
-      >
+      <Content style={{ padding: "16px", margin: "0 auto" }}>
         <Card
           // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
@@ -398,29 +391,38 @@ function UserProfileForm() {
                 </Col>
 
                 <Col xs={24} sm={24} md={8}>
-                  <Form.Item name="occupation" label="Occupation">
+                  <Form.Item
+                    name="occupation"
+                    label="Occupation"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your occupation",
+                      },
+                    ]}
+                  >
                     <Input placeholder="Your occupation" />
                   </Form.Item>
                 </Col>
                 <Col xs={24}>
-                  <Form.Item label="Dragger">
+                  <Form.Item label="Profile Photo">
                     <Form.Item
-                      name="dragger"
+                      name="profilePic"
                       valuePropName="fileList"
                       getValueFromEvent={normFile}
                       noStyle
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload a profile picture",
+                      //   },
+                      // ]}
                     >
-                      <Upload.Dragger name="files" action="/upload.do">
-                        <p className="ant-upload-drag-icon">
-                          <InboxOutlined />
-                        </p>
-                        <p className="ant-upload-text">
-                          Click or drag file to this area to upload
-                        </p>
-                        <p className="ant-upload-hint">
-                          Support for a single or bulk upload.
-                        </p>
-                      </Upload.Dragger>
+                      <Upload>
+                        <Button icon={<UploadOutlined />}>
+                          Click to Upload
+                        </Button>
+                      </Upload>
                     </Form.Item>
                   </Form.Item>
                 </Col>
@@ -435,7 +437,16 @@ function UserProfileForm() {
             >
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12}>
-                  <Form.Item name="sleepSchedule" label="Sleep Schedule">
+                  <Form.Item
+                    name="sleepSchedule"
+                    label="Sleep Schedule"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter Sleep Schedule ",
+                      },
+                    ]}
+                  >
                     <Select placeholder="Select sleep schedule">
                       <Option value="early_bird">
                         Early Bird (Before 10 PM)
@@ -451,7 +462,7 @@ function UserProfileForm() {
                   </Form.Item>
                 </Col>
 
-                <Col xs={24} sm={12}>
+                <Col xs={24} sm={12} style={{ paddingLeft: "40px" }}>
                   <Form.Item name="cleanlinessLevel" label="Cleanliness Level">
                     <Slider
                       min={1}
@@ -533,6 +544,57 @@ function UserProfileForm() {
                     <Button
                       type="primary"
                       icon={<PlusOutlined />}
+                      onClick={addInterest}
+                    >
+                      Add
+                    </Button>
+                  </Space>
+
+                  <div style={{ marginTop: 8 }}>
+                    {interests.length > 0 ? (
+                      <Space size={[8, 8]} wrap>
+                        {interests.map((interest) => (
+                          <Tag
+                            style={{ marginBottom: 8 }}
+                            key={interest.id}
+                            closable
+                            onClose={() => removeInterest(interest.id)}
+                            color="blue"
+                          >
+                            {interest.value}
+                          </Tag>
+                        ))}
+                      </Space>
+                    ) : (
+                      <Paragraph type="secondary">
+                        No interests added yet.
+                      </Paragraph>
+                    )}
+                  </div>
+                </div>
+              </Form.Item>
+            </Card>
+            {/* <Card
+              title={<Title level={4}>Interests</Title>}
+              style={{ marginBottom: 24 }}
+              className="responsive-card"
+            >
+              <Form.Item
+                name="interests"
+                label="Your Interests"
+                extra="Add your hobbies, activities, and other interests"
+              >
+                <div>
+                  <Space direction="horizontal" style={{ marginBottom: 16 }}>
+                    <Input
+                      placeholder="Add an interest"
+                      value={newInterest}
+                      onChange={(e) => setNewInterest(e.target.value)}
+                      onPressEnter={addInterest}
+                    />
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
                       onClick={() => addInterest()}
                     >
                       Add
@@ -570,10 +632,10 @@ function UserProfileForm() {
                   </div>
                 </div>
               </Form.Item>
-            </Card>
+            </Card> */}
 
             {/* Personality Traits Section */}
-            <Card
+            {/* <Card
               title={<Title level={4}>Personality Traits</Title>}
               style={{ marginBottom: 24 }}
               className="responsive-card"
@@ -641,7 +703,7 @@ function UserProfileForm() {
                   </div>
                 </div>
               </Form.Item>
-            </Card>
+            </Card> */}
 
             {/* Housing Preferences Section */}
             <Card
@@ -693,55 +755,25 @@ function UserProfileForm() {
                   </Form.Item>
                 </Col>
 
-                <Col xs={24}>
+                <Col xs={42} sm={12}>
                   <Form.Item
                     name="preferredLocations"
                     label="Preferred Locations"
                     extra="Add neighborhoods, cities, or areas you'd like to live in"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please add at least one preferred location",
+                      },
+                    ]}
                   >
                     <div>
                       <Space
                         direction="horizontal"
                         style={{ marginBottom: 16 }}
                       >
-                        <Input
-                          prefix={<HomeOutlined />}
-                          placeholder="Add a location"
-                          value={newLocation}
-                          onChange={(e) => setNewLocation(e.target.value)}
-                          onPressEnter={addLocation}
-                        />
-                        <Button
-                          type="primary"
-                          icon={<PlusOutlined />}
-                          onClick={addLocation}
-                        >
-                          Add
-                        </Button>
+                        <TextArea placeholder="Add a Location" autoSize />
                       </Space>
-
-                      <div style={{ marginTop: 8 }}>
-                        {getLocations().length > 0 ? (
-                          <Space size={[8, 8]} wrap>
-                            {getLocations().map(
-                              (location: string, index: number) => (
-                                <Tag
-                                  key={index}
-                                  closable
-                                  onClose={() => removeLocation(index)}
-                                  color="green"
-                                >
-                                  {location}
-                                </Tag>
-                              )
-                            )}
-                          </Space>
-                        ) : (
-                          <Paragraph type="secondary">
-                            No locations added yet.
-                          </Paragraph>
-                        )}
-                      </div>
                     </div>
                   </Form.Item>
                 </Col>
