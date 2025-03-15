@@ -7,7 +7,7 @@ import {
     QueryOptions
 } from "@tanstack/react-query";
 import { ApiResponse } from "../types";
-
+import { createRouter } from '@tanstack/react-router';
 // Create a typed Hono client
 // Make sure the base URL is correct for your API
 const client = hc<ApiRoutes>("/");
@@ -79,7 +79,6 @@ export function useUsers() {
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
         // Override with any custom options
-
     });
 }
 
@@ -95,4 +94,17 @@ export const dataControls = {
         queryClient.setQueryData(["allUsers"], newData);
     },
     loadMoreUsers: userApi.loadMore,
+};
+
+export const useQueryOptions = {
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+        const response = await api.me.$get();
+        if (!response.ok) {
+            throw new Error('Failed to fetch user');
+        }
+        return response.json();
+    },
+    staleTime: Infinity,
+    retry: false
 };

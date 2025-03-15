@@ -137,9 +137,9 @@ function UserProfileForm() {
   }, []);
 
   // For debugging - logs whenever interests change
-  useEffect(() => {
-    console.log("Interest state updated:", interests);
-  }, [interests]);
+  // useEffect(() => {
+  //   console.log("Interest state updated:", interests);
+  // }, [interests]);
 
   // Reset all interests
   const clearAllInterests = useCallback(() => {
@@ -156,62 +156,7 @@ function UserProfileForm() {
     // Your form submission logic here
   }, [interests]);
 
-  // const getTraits = () => {
-  //   const traits = form.getFieldValue("personalityTraits");
-  //   return traits && typeof traits === "object" && !Array.isArray(traits)
-  //     ? traits
-  //     : {};
-  // };
 
-  // // Add personality trait
-  // const addPersonalityTrait = () => {
-  //   if (!traitKey.trim() || !traitValue.trim()) return;
-
-  //   // Get current traits directly from form
-  //   const currentTraits = getTraits();
-
-  //   // Create new traits object with the added trait
-  //   const updatedTraits = {
-  //     ...currentTraits,
-  //     [traitKey.trim()]: traitValue.trim(),
-  //   };
-  //   console.log("Updated traits:", updatedTraits);
-
-  //   // Update form with the new traits object
-  //   form.setFieldsValue({
-  //     personalityTraits: updatedTraits,
-  //   });
-
-  //   // Force the form to update its internal state
-  //   setTimeout(() => {
-  //     form.validateFields(["personalityTraits"]);
-  //   }, 0);
-
-  //   // Reset input fields
-  //   setTraitKey("");
-  //   setTraitValue("");
-  // };
-
-  // // Remove personality trait
-  // const removePersonalityTrait = (key: string) => {
-  //   // Get current traits
-  //   const currentTraits = getTraits();
-
-  //   // Create a new object without the removed trait
-  //   const updatedTraits = { ...currentTraits };
-  //   delete updatedTraits[key];
-
-  //   // Update form with the new object
-  //   form.setFieldsValue({
-  //     personalityTraits: updatedTraits,
-  //   });
-
-  //   // Force a re-render by triggering validation
-  //   setTimeout(() => {
-  //     form.validateFields(["personalityTraits"]);
-  //   }, 0);
-  // };
-  // Form submission
   const onFinish = (values: UserProfileFormValues) => {
     // Convert moment to ISO string for move-in date
     const formattedValues: UserProfileFormValues = {
@@ -853,7 +798,7 @@ function UserProfileForm() {
 }
 
 // Define the route using the UserProfileForm component
-export const Route = createFileRoute("/roomListing")({
+export const Route = createFileRoute("/_authenticated/roomListing")({
   component: UserProfileForm,
 });
 

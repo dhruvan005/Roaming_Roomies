@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Button } from "antd";
 import { createFileRoute } from "@tanstack/react-router";
-import Home from "../assets/home.png";
-import People from "../assets/people.png";
+import Home from "../../assets/home.png";
+import People from "../../assets/people.png";
 import { User } from "lucide-react";
-import UserList from "../components/UserList";
+import UserList from "../../components/UserList";
+import Information from "../../components/Information";
+import { Divider } from 'antd';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   component: HomeComponent,
 });
 
@@ -51,7 +53,9 @@ function HomeComponent() {
           </div>
         </div>
       </div>
+      <Divider />
       {/* <UserList /> */}
+      <Information  />
     </div>
   );
 }

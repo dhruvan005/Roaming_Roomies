@@ -11,136 +11,170 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RoomListingImport } from './routes/roomListing'
-import { Route as ProfileImport } from './routes/profile'
-import { Route as AllUsersImport } from './routes/allUsers'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedRoomListingImport } from './routes/_authenticated/roomListing'
+import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedAllUsersImport } from './routes/_authenticated/allUsers'
+import { Route as AuthenticatedAboutImport } from './routes/_authenticated/about'
 
 // Create/Update Routes
 
-const RoomListingRoute = RoomListingImport.update({
-  id: '/roomListing',
-  path: '/roomListing',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProfileRoute = ProfileImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AllUsersRoute = AllUsersImport.update({
-  id: '/allUsers',
-  path: '/allUsers',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
+const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedRoomListingRoute = AuthenticatedRoomListingImport.update({
+  id: '/roomListing',
+  path: '/roomListing',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedAllUsersRoute = AuthenticatedAllUsersImport.update({
+  id: '/allUsers',
+  path: '/allUsers',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedAboutRoute = AuthenticatedAboutImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
+    '/_authenticated/about': {
+      id: '/_authenticated/about'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedAboutImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/allUsers': {
-      id: '/allUsers'
+    '/_authenticated/allUsers': {
+      id: '/_authenticated/allUsers'
       path: '/allUsers'
       fullPath: '/allUsers'
-      preLoaderRoute: typeof AllUsersImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedAllUsersImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/profile': {
-      id: '/profile'
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedProfileImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/roomListing': {
-      id: '/roomListing'
+    '/_authenticated/roomListing': {
+      id: '/_authenticated/roomListing'
       path: '/roomListing'
       fullPath: '/roomListing'
-      preLoaderRoute: typeof RoomListingImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedRoomListingImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
+  AuthenticatedAllUsersRoute: typeof AuthenticatedAllUsersRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedRoomListingRoute: typeof AuthenticatedRoomListingRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAboutRoute: AuthenticatedAboutRoute,
+  AuthenticatedAllUsersRoute: AuthenticatedAllUsersRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedRoomListingRoute: AuthenticatedRoomListingRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/allUsers': typeof AllUsersRoute
-  '/profile': typeof ProfileRoute
-  '/roomListing': typeof RoomListingRoute
+  '': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AuthenticatedAboutRoute
+  '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/roomListing': typeof AuthenticatedRoomListingRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/allUsers': typeof AllUsersRoute
-  '/profile': typeof ProfileRoute
-  '/roomListing': typeof RoomListingRoute
+  '/about': typeof AuthenticatedAboutRoute
+  '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/roomListing': typeof AuthenticatedRoomListingRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/allUsers': typeof AllUsersRoute
-  '/profile': typeof ProfileRoute
-  '/roomListing': typeof RoomListingRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_authenticated/about': typeof AuthenticatedAboutRoute
+  '/_authenticated/allUsers': typeof AuthenticatedAllUsersRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/roomListing': typeof AuthenticatedRoomListingRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
+  fullPaths: '' | '/about' | '/allUsers' | '/profile' | '/roomListing' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
-  id: '__root__' | '/' | '/about' | '/allUsers' | '/profile' | '/roomListing'
+  to: '/about' | '/allUsers' | '/profile' | '/roomListing' | '/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_authenticated/about'
+    | '/_authenticated/allUsers'
+    | '/_authenticated/profile'
+    | '/_authenticated/roomListing'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  AllUsersRoute: typeof AllUsersRoute
-  ProfileRoute: typeof ProfileRoute
-  RoomListingRoute: typeof RoomListingRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  AllUsersRoute: AllUsersRoute,
-  ProfileRoute: ProfileRoute,
-  RoomListingRoute: RoomListingRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -153,27 +187,38 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
-        "/allUsers",
-        "/profile",
-        "/roomListing"
+        "/_authenticated"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/about",
+        "/_authenticated/allUsers",
+        "/_authenticated/profile",
+        "/_authenticated/roomListing",
+        "/_authenticated/"
+      ]
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/_authenticated/about": {
+      "filePath": "_authenticated/about.tsx",
+      "parent": "/_authenticated"
     },
-    "/allUsers": {
-      "filePath": "allUsers.tsx"
+    "/_authenticated/allUsers": {
+      "filePath": "_authenticated/allUsers.tsx",
+      "parent": "/_authenticated"
     },
-    "/profile": {
-      "filePath": "profile.tsx"
+    "/_authenticated/profile": {
+      "filePath": "_authenticated/profile.tsx",
+      "parent": "/_authenticated"
     },
-    "/roomListing": {
-      "filePath": "roomListing.tsx"
+    "/_authenticated/roomListing": {
+      "filePath": "_authenticated/roomListing.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/": {
+      "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }
