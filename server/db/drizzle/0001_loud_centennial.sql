@@ -1,0 +1,1 @@
+ALTER TABLE "roommate_users" DROP COLUMN "personality_traits";
