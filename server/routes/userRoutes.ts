@@ -55,7 +55,7 @@ export const userRoutes = new Hono()
                 users: users
             });
         } catch (error) {
-            console.error('Error fetching users:', error);
+            // console.error('Error fetching users:', error);
             return c.json({
                 success: false,
                 message: 'Error fetching users',
@@ -66,14 +66,14 @@ export const userRoutes = new Hono()
     .post('/', zValidator('json', RoommateUserSchema), async (c) => {
         try {
             const requestData = await c.req.json();
-            console.log('Request Data: in Post route', requestData);
-            // Convert moveInDate to Date object if it exists
+            // console.log('Request Data: in Post route', requestData);
+
             if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
                 requestData.moveInDate = new Date(requestData.moveInDate);
             }
 
             const validatedData = RoommateUserSchema.parse(requestData);
-            console.log('Validated Data: in UserRoute', validatedData);
+            // console.log('Validated Data: in UserRoute', validatedData);
             // Check if email already exists
             const existingUser = await db
                 .select()
@@ -92,14 +92,11 @@ export const userRoutes = new Hono()
             const newUser = await db.insert(roommateUsers)
                 .values({
                     ...validatedData,
-                    // Convert date to PostgreSQL date format if exists
                     moveInDate: validatedData.moveInDate
                         ? new Date(validatedData.moveInDate).toISOString()
                         : null,
-                    // Convert optional arrays and objects to PostgreSQL compatible format
                     interests: validatedData.interests || [],
                     preferredLocations: validatedData.preferredLocations || '',
-
                     maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
                 })
                 .returning();
@@ -110,7 +107,7 @@ export const userRoutes = new Hono()
                 data: newUser
             }, 201);
         } catch (error) {
-            console.error('Detailed Error:', error);
+            // console.error('Detailed Error:', error);
             return c.json({
                 success: false,
                 message: 'Error creating user',

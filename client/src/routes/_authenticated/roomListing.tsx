@@ -116,22 +116,20 @@ function UserProfileForm() {
       const formattedValues: UserProfileFormValues = {
         ...values,
         moveInDate: values.moveInDate?.toISOString() as any,
-        // Ensure interests array is properly formatted
         interests: interests.map((interest) => interest.value),
       };
-      console.log("Formatted values: in listing page", formattedValues);
-      // Submit the data
+      // console.log("Formatted values: in listing page", formattedValues);
+     
       const response = await createProfile.mutateAsync(formattedValues);
-      console.log("Response from api", response);
-      // Show success message
+      // console.log("Response from api", response);
       message.success("Profile created successfully!");
 
       // Optionally navigate to another page
       navigate({ to: "/allUsers" });
     } catch (error) {
-      // Handle errors
+      
       message.error("Failed to create profile. Please try again.");
-      console.error("Profile creation error:", error);
+      // console.error("Profile creation error:", error);
     }
   };
 

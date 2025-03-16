@@ -115,7 +115,7 @@ export function useCreateProfile() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (data: UserProfileFormValues) => {
-            console.log("Original data:", data);
+            // console.log("Original data:", data);
             
             const formattedData = {
                 ...data,
@@ -124,7 +124,7 @@ export function useCreateProfile() {
                 age: Number(data.age)
             };
             
-            console.log("Formatted data being sent:", JSON.stringify(formattedData, null, 2));
+            // console.log("Formatted data being sent:", JSON.stringify(formattedData, null, 2));
             
             try {
                 // Use fetch directly for more debugging control
@@ -138,10 +138,10 @@ export function useCreateProfile() {
                 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('Server response:', response.status, errorText);
+                    // console.error('Server response:', response.status, errorText);
                     try {
                         const errorJson = JSON.parse(errorText);
-                        console.error('Error details:', errorJson);
+                        // console.error('Error details:', errorJson);
                         throw new Error(errorJson.message || `Request failed with status ${response.status}`);
                     } catch (e) {
                         throw new Error(`Request failed with status ${response.status}: ${errorText}`);
@@ -150,7 +150,7 @@ export function useCreateProfile() {
                 
                 return await response.json();
             } catch (error) {
-                console.error('Request error:', error);
+                // console.error('Request error:', error);
                 throw error;
             }
         },
