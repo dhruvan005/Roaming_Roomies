@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-query";
 import { ApiResponse } from "../types";
 import { createRouter } from '@tanstack/react-router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { UserProfileFormValues } from '../types';
 // Create a typed Hono client
 // Make sure the base URL is correct for your API
 const client = hc<ApiRoutes>("/");
@@ -67,6 +69,7 @@ export const userApi = {
         return parseApiResponse(response);
     },
 
+
     // Add more API functions as needed
 };
 
@@ -108,3 +111,29 @@ export const useQueryOptions = {
     staleTime: Infinity,
     retry: false
 };
+
+export function useCreateProfile() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: UserProfileFormValues) => {
+            console.log("data in api", data);
+            const formattedData = {
+                ...data,
+                // Handle the moveInDate conversion properly
+                moveInDate: data.moveInDate,
+                // Ensure maxRent is a number
+                maxRent: data.maxRent ? Number(data.maxRent) : undefined,
+                // Ensure age is a number
+                age: Number(data.age)
+            };
+            return api.user.$post({
+                json: formattedData
+            }).then(res => res.json());
+        },
+        onSuccess: () => {
+            // Invalidate and refetch relevant queries
+            queryClient.invalidateQueries({ queryKey: ['allUsers'] });
+        },
+    });
+}

@@ -22,7 +22,7 @@ export const RoommateUserSchema = z.object({
 
     // Additional Preferences
     interests: z.array(z.string()).optional(),
-    personalityTraits: z.record(z.string(), z.any()).optional(),
+
 
     // Roommate Matching Criteria
     desiredRoomType: z.enum(['apartment', 'house', 'studio', 'other']).optional(),

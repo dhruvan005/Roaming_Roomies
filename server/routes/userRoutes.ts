@@ -5,154 +5,152 @@ import { eq, and, or, gte, lte, sql } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { RoommateUserSchema } from '../zodSchema';
 
- export const userRoutes = new Hono()
- .get('/', async (c) => {
-    try {
-        const query = c.req.query();
-        const {
-            age,
-            gender,
-            minRent,
-            maxRent,
-            desiredRoomType,
-            cleanlinessLevel,
-            page = '1',
-            limit = '10'
-        } = query;
-
-        // Parse pagination
-        const pageNum = parseInt(page as string, 10);
-        const limitNum = parseInt(limit as string, 10);
-        const offset = (pageNum - 1) * limitNum;
-
-        // Build dynamic filter conditions
-        const whereConditions: any[] = [];
-
-        if (age) whereConditions.push(eq(roommateUsers.age, Number(age)));
-        if (gender) whereConditions.push(eq(roommateUsers.gender, gender as 'male' | 'female' | 'non_binary' | 'other' | 'prefer_not_to_say'));
-        if (minRent) whereConditions.push(gte(roommateUsers.maxRent, minRent.toString())); // Convert minRent to string
-        if (maxRent) whereConditions.push(lte(roommateUsers.maxRent, maxRent.toString())); // Convert maxRent to string
-        if (desiredRoomType) whereConditions.push(eq(roommateUsers.desiredRoomType, desiredRoomType as 'apartment' | 'house' | 'studio' | 'other'));
-        if (cleanlinessLevel) whereConditions.push(eq(roommateUsers.cleanlinessLevel, Number(cleanlinessLevel)));
-
-        // Fetch users with filtering and pagination
-        const users = await db.select()
-            .from(roommateUsers)
-            .where(and(...whereConditions))
-            .limit(limitNum)
-            .offset(offset);
-
-        // Count total matching users
-        const [{ count }] = await db.select({ count: sql<number>`count(*)` })
-            .from(roommateUsers)
-            .where(and(...whereConditions));
-
-        return c.json({
-            success: true,
-            page: pageNum,
-            limit: limitNum,
-            total: count,
-            users: users
-        });
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        return c.json({
-            success: false,
-            message: 'Error fetching users',
-            error: error instanceof Error ? error.message : 'Unknown error'
-        }, 500);
-    }
-})
-.post(
-    '/',
-    zValidator('json', RoommateUserSchema),
-    async (c) => {
+export const userRoutes = new Hono()
+    .get('/', async (c) => {
         try {
-            const requestData = await c.req.json();
-            
-            // Convert moveInDate to Date object if it exists
-            if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
-                requestData.moveInDate = new Date(requestData.moveInDate);
-            }
-            
-            const validatedData = RoommateUserSchema.parse(requestData);
+            const query = c.req.query();
+            const {
+                age,
+                gender,
+                minRent,
+                maxRent,
+                desiredRoomType,
+                cleanlinessLevel,
+                page = '1',
+                limit = '10'
+            } = query;
 
-            // Check if email already exists
-            const existingUser = await db
-                .select()
+            // Parse pagination
+            const pageNum = parseInt(page as string, 10);
+            const limitNum = parseInt(limit as string, 10);
+            const offset = (pageNum - 1) * limitNum;
+
+            // Build dynamic filter conditions
+            const whereConditions: any[] = [];
+
+            if (age) whereConditions.push(eq(roommateUsers.age, Number(age)));
+            if (gender) whereConditions.push(eq(roommateUsers.gender, gender as 'male' | 'female' | 'non_binary' | 'other' | 'prefer_not_to_say'));
+            if (minRent) whereConditions.push(gte(roommateUsers.maxRent, minRent.toString())); // Convert minRent to string
+            if (maxRent) whereConditions.push(lte(roommateUsers.maxRent, maxRent.toString())); // Convert maxRent to string
+            if (desiredRoomType) whereConditions.push(eq(roommateUsers.desiredRoomType, desiredRoomType as 'apartment' | 'house' | 'studio' | 'other'));
+            if (cleanlinessLevel) whereConditions.push(eq(roommateUsers.cleanlinessLevel, Number(cleanlinessLevel)));
+
+            // Fetch users with filtering and pagination
+            const users = await db.select()
                 .from(roommateUsers)
-                .where(eq(roommateUsers.email, validatedData.email))
-                .limit(1);
+                .where(and(...whereConditions))
+                .limit(limitNum)
+                .offset(offset);
 
-            if (existingUser.length > 0) {
-                return c.json({
-                    success: false,
-                    message: 'User with this email already exists'
-                }, 409);
-            }
-
-            // Insert new user
-            const [newUser] = await db.insert(roommateUsers)
-                .values({
-                    ...validatedData,
-                    // Convert date to PostgreSQL date format if exists
-                    moveInDate: validatedData.moveInDate
-                        ? new Date(validatedData.moveInDate).toISOString()
-                        : null,
-                    // Convert optional arrays and objects to PostgreSQL compatible format
-                    interests: validatedData.interests || [],
-                    preferredLocations: validatedData.preferredLocations || [],
-                    personalityTraits: validatedData.personalityTraits
-                        ? JSON.stringify(validatedData.personalityTraits)
-                        : null,
-                    maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
-                })
-                .returning();
+            // Count total matching users
+            const [{ count }] = await db.select({ count: sql<number>`count(*)` })
+                .from(roommateUsers)
+                .where(and(...whereConditions));
 
             return c.json({
                 success: true,
-                message: 'User created successfully',
-                data: newUser
-            }, 201);
+                page: pageNum,
+                limit: limitNum,
+                total: count,
+                users: users
+            });
         } catch (error) {
-            console.error('Detailed Error:', error);
+            console.error('Error fetching users:', error);
             return c.json({
                 success: false,
-                message: 'Error creating user',
+                message: 'Error fetching users',
                 error: error instanceof Error ? error.message : 'Unknown error'
             }, 500);
         }
-    }
-)
-.get('/:id', async (c) => {
-    try {
-        const { id } = c.req.param();
+    })
+    .post(
+        '/',
+        zValidator('json', RoommateUserSchema),
+        async (c) => {
+            try {
+                const requestData = await c.req.json();
 
-        const [user] = await db
-            .select()
-            .from(roommateUsers)
-            .where(eq(roommateUsers.id, id));
+                // Convert moveInDate to Date object if it exists
+                if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
+                    requestData.moveInDate = new Date(requestData.moveInDate);
+                }
 
-        if (!user) {
+                const validatedData = RoommateUserSchema.parse(requestData);
+
+                // Check if email already exists
+                const existingUser = await db
+                    .select()
+                    .from(roommateUsers)
+                    .where(eq(roommateUsers.email, validatedData.email))
+                    .limit(1);
+
+                if (existingUser.length > 0) {
+                    return c.json({
+                        success: false,
+                        message: 'User with this email already exists'
+                    }, 409);
+                }
+
+                // Insert new user
+                const newUser = await db.insert(roommateUsers)
+                    .values({
+                        ...validatedData,
+                        // Convert date to PostgreSQL date format if exists
+                        moveInDate: validatedData.moveInDate
+                            ? new Date(validatedData.moveInDate).toISOString()
+                            : null,
+                        // Convert optional arrays and objects to PostgreSQL compatible format
+                        interests: validatedData.interests || [],
+                        preferredLocations: validatedData.preferredLocations || [],
+
+                        maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
+                    })
+                    .returning();
+
+                return c.json({
+                    success: true,
+                    message: 'User created successfully',
+                    data: newUser
+                }, 201);
+            } catch (error) {
+                console.error('Detailed Error:', error);
+                return c.json({
+                    success: false,
+                    message: 'Error creating user',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                }, 500);
+            }
+        }
+    )
+    .get('/:id', async (c) => {
+        try {
+            const { id } = c.req.param();
+
+            const [user] = await db
+                .select()
+                .from(roommateUsers)
+                .where(eq(roommateUsers.id, id));
+
+            if (!user) {
+                return c.json({
+                    success: false,
+                    message: 'User not found'
+                }, 404);
+            }
+
+            return c.json({
+                success: true,
+                data: user
+            });
+        } catch (error) {
+            console.error('Error fetching user:', error);
             return c.json({
                 success: false,
-                message: 'User not found'
-            }, 404);
+                message: 'Error fetching user',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            }, 500);
         }
-
-        return c.json({
-            success: true,
-            data: user
-        });
-    } catch (error) {
-        console.error('Error fetching user:', error);
-        return c.json({
-            success: false,
-            message: 'Error fetching user',
-            error: error instanceof Error ? error.message : 'Unknown error'
-        }, 500);
-    }
-});
+    });
 
 
 

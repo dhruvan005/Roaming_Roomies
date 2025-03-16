@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useState , useEffect , useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Form,
   Input,
@@ -29,91 +29,45 @@ import {
   UploadOutlined,
   CloudFilled,
 } from "@ant-design/icons";
-
+import { useQueryOptions } from "../../lib/api";
+import { useQuery } from "@tanstack/react-query";
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Content } = Layout;
-interface UserProfileFormValues {
-  // Personal Information
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  age: number | null;
-  gender:
-    | "male"
-    | "female"
-    | "non_binary"
-    | "other"
-    | "prefer_not_to_say"
-    | undefined;
-  occupation: string;
-
-  // Lifestyle Preferences
-  sleepSchedule:
-    | "early_bird"
-    | "night_owl"
-    | "average"
-    | "irregular"
-    | undefined;
-  cleanlinessLevel: number; // 1-5 scale
-  dietaryPreferences:
-    | "vegetarian"
-    | "vegan"
-    | "non_vegetarian"
-    | "pescatarian"
-    | "omnivore"
-    | "gluten_free"
-    | "other"
-    | undefined;
-  smokingTolerance: boolean;
-  petTolerance: boolean;
-  alcoholTolerance: boolean;
-
-  // Interests
-  interests: string[];
-
-  // Personality Traits
-  // personalityTraits: Record<string, string>; // Key-value pairs of traits
-
-  // Housing Preferences
-  desiredRoomType: "apartment" | "house" | "studio" | "other" | undefined;
-  maxRent: number | null;
-  preferredLocations: string[];
-  moveInDate: moment.Moment | null; // Uses Moment.js from Ant Design's DatePicker
-  minimumStay: number | null;
-
-  // Bio Information
-  bio: string;
-  profileImageUrl: string;
-}
+import { useCreateProfile } from "../../lib/api";
+import { useNavigate } from "@tanstack/react-router";
+import { UserProfileFormValues } from "../../types";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
+  const { isPending, isError, data, error } = useQuery(useQueryOptions);
+  const createProfile = useCreateProfile();
+  const navigate = useNavigate();
 
   const [newInterest, setNewInterest] = useState("");
-  const [interests, setInterests] = useState<{ id: number; value: string }[]>([]);
+  const [interests, setInterests] = useState<{ id: number; value: string }[]>(
+    []
+  );
 
   // Add interest with useCallback to ensure stability
   const addInterest = useCallback(() => {
     if (!newInterest.trim()) return;
 
     const newEntry = {
-      id: Date.now(), 
+      id: Date.now(),
       value: newInterest.trim(),
     };
 
     // Use functional update to guarantee we're working with latest state
-    setInterests(prevInterests => {
+    setInterests((prevInterests) => {
       const updatedInterests = [...prevInterests, newEntry];
-      
+
       // Update form here with the actual updated array
       form.setFieldsValue({
-        interests: updatedInterests.map(item => item.value),
+        interests: updatedInterests.map((item) => item.value),
       });
-      
+
       return updatedInterests;
     });
 
@@ -123,15 +77,17 @@ function UserProfileForm() {
   // Remove interest with useCallback
   const removeInterest = useCallback((idToRemove: number) => {
     // Use functional update pattern for reliable state updates
-    setInterests(prevInterests => {
+    setInterests((prevInterests) => {
       // Create new filtered array
-      const updatedInterests = prevInterests.filter(item => item.id !== idToRemove);
-      
+      const updatedInterests = prevInterests.filter(
+        (item) => item.id !== idToRemove
+      );
+
       // Update form with the same array we're using for state
       form.setFieldsValue({
-        interests: updatedInterests.map(item => item.value),
+        interests: updatedInterests.map((item) => item.value),
       });
-      
+
       return updatedInterests;
     });
   }, []);
@@ -150,24 +106,35 @@ function UserProfileForm() {
   // Example form submission handler
   const handleSubmit = useCallback(() => {
     // Get final interests from state, not from form
-    const finalInterests = interests.map(item => item.value);
+    const finalInterests = interests.map((item) => item.value);
     console.log("Submitting interests:", finalInterests);
-    
+
     // Your form submission logic here
   }, [interests]);
 
+  const onFinish = async (values: UserProfileFormValues) => {
+    try {
+      // Format the values
+      const formattedValues: UserProfileFormValues = {
+        ...values,
+        moveInDate: values.moveInDate?.toISOString() as any,
+        // Ensure interests array is properly formatted
+        interests: interests.map((interest) => interest.value),
+      };
+      console.log("Formatted values: in listing page", formattedValues);
+      // Submit the data
+      await createProfile.mutateAsync(formattedValues);
 
-  const onFinish = (values: UserProfileFormValues) => {
-    // Convert moment to ISO string for move-in date
-    const formattedValues: UserProfileFormValues = {
-      ...values,
-      moveInDate: values.moveInDate?.toISOString() as any,
-    };
+      // Show success message
+      message.success("Profile created successfully!");
 
-    console.log("Form values:", formattedValues);
-    message.success("Profile submitted successfully!");
-
-    // Here you would typically send the data to your API
+      // Optionally navigate to another page
+      navigate({ to: "/allUsers" });
+    } catch (error) {
+      // Handle errors
+      message.error("Failed to create profile. Please try again.");
+      console.error("Profile creation error:", error);
+    }
   };
 
   function normFile(e: any) {
@@ -189,7 +156,7 @@ function UserProfileForm() {
           >
             User Profile Form
           </Title>
-
+          <Divider />
           <Form
             form={form}
             layout="vertical"
@@ -198,9 +165,9 @@ function UserProfileForm() {
             scrollToFirstError
             initialValues={{
               id: 0,
-              firstName: "",
-              lastName: "",
-              email: "",
+              firstName: data?.user.given_name,
+              lastName: data?.user.family_name,
+              email: data?.user.email,
               phone: "",
               age: null,
               gender: undefined,
@@ -241,6 +208,8 @@ function UserProfileForm() {
                     ]}
                   >
                     <Input
+                      disabled
+                      style={{ color: "#71717a" }}
                       prefix={<UserOutlined />}
                       placeholder="Enter your first name"
                     />
@@ -261,6 +230,8 @@ function UserProfileForm() {
                     <Input
                       prefix={<UserOutlined />}
                       placeholder="Enter your last name"
+                      disabled
+                      style={{ color: "#71717a" }}
                     />
                   </Form.Item>
                 </Col>
@@ -277,6 +248,8 @@ function UserProfileForm() {
                     <Input
                       prefix={<MailOutlined />}
                       placeholder="Enter your email"
+                      disabled
+                      style={{ color: "#71717a" }}
                     />
                   </Form.Item>
                 </Col>
@@ -304,11 +277,18 @@ function UserProfileForm() {
                     name="age"
                     label="Age"
                     rules={[
-                      { required: true, message: "Please enter your age" },
+                      {
+                        required: true,
+                        type: "number",
+                        min: 18,
+                        max: 80,
+                        message: "Age must be between 18 and 80",
+                      },
                     ]}
                   >
                     <InputNumber
                       min={18}
+                      max={80}
                       placeholder="Your age"
                       style={{ width: "100%" }}
                     />
@@ -430,8 +410,6 @@ function UserProfileForm() {
                       <Option value="vegetarian">Vegetarian</Option>
                       <Option value="vegan">Vegan</Option>
                       <Option value="non_vegetarian">Non-Vegetarian</Option>
-                      <Option value="pescatarian">Pescatarian</Option>
-                      <Option value="omnivore">Omnivore</Option>
                       <Option value="gluten_free">Gluten-Free</Option>
                       <Option value="other">Other</Option>
                     </Select>
@@ -519,136 +497,6 @@ function UserProfileForm() {
                 </div>
               </Form.Item>
             </Card>
-            {/* <Card
-              title={<Title level={4}>Interests</Title>}
-              style={{ marginBottom: 24 }}
-              className="responsive-card"
-            >
-              <Form.Item
-                name="interests"
-                label="Your Interests"
-                extra="Add your hobbies, activities, and other interests"
-              >
-                <div>
-                  <Space direction="horizontal" style={{ marginBottom: 16 }}>
-                    <Input
-                      placeholder="Add an interest"
-                      value={newInterest}
-                      onChange={(e) => setNewInterest(e.target.value)}
-                      onPressEnter={addInterest}
-                    />
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={() => addInterest()}
-                    >
-                      Add
-                    </Button>
-                  </Space>
-
-                  <div style={{ marginTop: 8 }}>
-                    {getInterests().length > 0 ? (
-                      <Space size={[8, 8]} wrap>
-                        {Array.isArray(getInterests()) ? (
-                          getInterests().map(
-                            (interest: string, index: number) => (
-                              <Tag
-                                style={{ marginBottom: 8 }}
-                                key={index}
-                                closable
-                                onClose={() => removeInterest(index)}
-                                color="blue"
-                              >
-                                {interest}
-                              </Tag>
-                            )
-                          )
-                        ) : (
-                          <Paragraph type="secondary">
-                            No interests added yet.
-                          </Paragraph>
-                        )}
-                      </Space>
-                    ) : (
-                      <Paragraph type="secondary">
-                        No interests added yet.
-                      </Paragraph>
-                    )}
-                  </div>
-                </div>
-              </Form.Item>
-            </Card> */}
-
-            {/* Personality Traits Section */}
-            {/* <Card
-              title={<Title level={4}>Personality Traits</Title>}
-              style={{ marginBottom: 24 }}
-              className="responsive-card"
-            >
-              <Form.Item
-                name="personalityTraits"
-                label="Your Personality Traits"
-                extra="Add key personality traits that describe you"
-              >
-                <div>
-                  <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-                    <Col xs={24} sm={10}>
-                      <Input
-                        placeholder="Trait (e.g., Sociability)"
-                        value={traitKey}
-                        onChange={(e) => setTraitKey(e.target.value)}
-                      />
-                    </Col>
-                    <Col xs={24} sm={10}>
-                      <Input
-                        placeholder="Value (e.g., Highly social)"
-                        value={traitValue}
-                        onChange={(e) => setTraitValue(e.target.value)}
-                        onPressEnter={addPersonalityTrait}
-                      />
-                    </Col>
-                    <Col xs={24} sm={4}>
-                      <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        onClick={addPersonalityTrait}
-                        block
-                      >
-                        Add
-                      </Button>
-                    </Col>
-                  </Row>
-
-                  <div style={{ marginTop: 8 }}>
-                    {Object.keys(getTraits()).length > 0 ? (
-                      <Space direction="vertical" style={{ width: "100%" }}>
-                        {Object.entries(getTraits()).map(([key, value]) => (
-                          <Card
-                            key={key}
-                            size="small"
-                            style={{ marginBottom: 8 }}
-                            extra={
-                              <Button
-                                type="text"
-                                danger
-                                icon={<CloseOutlined />}
-                                onClick={() => removePersonalityTrait(key)}
-                              />
-                            }
-                          >
-                            <strong>{key as string}:</strong> {value as string}
-                          </Card>
-                        ))}
-                      </Space>
-                    ) : (
-                      <Paragraph type="secondary">
-                        No personality traits added yet.
-                      </Paragraph>
-                    )}
-                  </div>
-                </div>
-              </Form.Item>
-            </Card> */}
 
             {/* Housing Preferences Section */}
             <Card
@@ -704,11 +552,12 @@ function UserProfileForm() {
                   <Form.Item
                     name="preferredLocations"
                     label="Preferred Locations"
-                    extra="Add neighborhoods, cities, or areas you'd like to live in"
+                    extra="Add neighborhoods, cities, or areas where your room is located"
                     rules={[
                       {
                         required: true,
-                        message: "Please add at least one preferred location",
+                        message: "Minimum 5 characters required",
+                        min: 5,
                       },
                     ]}
                   >
@@ -717,7 +566,11 @@ function UserProfileForm() {
                         direction="horizontal"
                         style={{ marginBottom: 16 }}
                       >
-                        <TextArea placeholder="Add a Location" autoSize />
+                        <TextArea
+                          placeholder="Add a Location"
+                          autoSize
+                          minLength={5}
+                        />
                       </Space>
                     </div>
                   </Form.Item>
@@ -740,11 +593,19 @@ function UserProfileForm() {
                     name="minimumStay"
                     label="Minimum Stay (months)"
                     rules={[
-                      { required: true, message: "Please enter minimum stay" },
+                      {
+                        type: "number",
+                        min: 2,
+                        message: "Minimum 2 month",
+                      },
+                      {
+                        required: true,
+                        message: "Please enter minimum stay",
+                      },
                     ]}
                   >
                     <InputNumber
-                      min={1}
+                      min={2}
                       placeholder="Minimum stay in months"
                       style={{ width: "100%" }}
                     />
@@ -765,10 +626,25 @@ function UserProfileForm() {
                     name="bio"
                     label="Bio"
                     extra="Tell potential roommates about yourself"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Minimum 20 characters required",
+                        min: 20,
+                        max: 100,
+                      },
+                    ]}
                   >
-                    <TextArea
+                    {/* <TextArea
                       rows={4}
                       placeholder="Share a bit about yourself, your lifestyle, and what makes you a good roommate..."
+                    /> */}
+                    <TextArea
+                      showCount
+                      minLength={20}
+                      maxLength={200}
+                      placeholder="Share a bit about yourself, your lifestyle, and what makes you a good roommate..."
+                      style={{ height: 120, resize: "none" }}
                     />
                   </Form.Item>
                 </Col>
