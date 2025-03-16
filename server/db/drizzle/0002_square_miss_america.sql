@@ -1,0 +1,1 @@
+ALTER TABLE "roommate_users" ALTER COLUMN "preferred_locations" SET DATA TYPE text;

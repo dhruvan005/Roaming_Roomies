@@ -46,9 +46,7 @@ function UserProfileForm() {
   const navigate = useNavigate();
 
   const [newInterest, setNewInterest] = useState("");
-  const [interests, setInterests] = useState<{ id: number; value: string }[]>(
-    []
-  );
+  const [interests, setInterests] = useState<{ id: number; value: string }[]>([]);
 
   // Add interest with useCallback to ensure stability
   const addInterest = useCallback(() => {
@@ -58,7 +56,7 @@ function UserProfileForm() {
       id: Date.now(),
       value: newInterest.trim(),
     };
-
+ 
     // Use functional update to guarantee we're working with latest state
     setInterests((prevInterests) => {
       const updatedInterests = [...prevInterests, newEntry];
@@ -123,8 +121,8 @@ function UserProfileForm() {
       };
       console.log("Formatted values: in listing page", formattedValues);
       // Submit the data
-      await createProfile.mutateAsync(formattedValues);
-
+      const response = await createProfile.mutateAsync(formattedValues);
+      console.log("Response from api", response);
       // Show success message
       message.success("Profile created successfully!");
 
@@ -287,8 +285,7 @@ function UserProfileForm() {
                     ]}
                   >
                     <InputNumber
-                      min={18}
-                      max={80}
+                      
                       placeholder="Your age"
                       style={{ width: "100%" }}
                     />
@@ -569,7 +566,7 @@ function UserProfileForm() {
                         <TextArea
                           placeholder="Add a Location"
                           autoSize
-                          minLength={5}
+                          
                         />
                       </Space>
                     </div>
@@ -605,7 +602,7 @@ function UserProfileForm() {
                     ]}
                   >
                     <InputNumber
-                      min={2}
+                      
                       placeholder="Minimum stay in months"
                       style={{ width: "100%" }}
                     />

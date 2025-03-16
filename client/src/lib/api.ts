@@ -111,28 +111,50 @@ export const useQueryOptions = {
     staleTime: Infinity,
     retry: false
 };
-
 export function useCreateProfile() {
     const queryClient = useQueryClient();
-
     return useMutation({
-        mutationFn: (data: UserProfileFormValues) => {
-            console.log("data in api", data);
+        mutationFn: async (data: UserProfileFormValues) => {
+            console.log("Original data:", data);
+            
             const formattedData = {
                 ...data,
-                // Handle the moveInDate conversion properly
                 moveInDate: data.moveInDate,
-                // Ensure maxRent is a number
                 maxRent: data.maxRent ? Number(data.maxRent) : undefined,
-                // Ensure age is a number
                 age: Number(data.age)
             };
-            return api.user.$post({
-                json: formattedData
-            }).then(res => res.json());
+            
+            console.log("Formatted data being sent:", JSON.stringify(formattedData, null, 2));
+            
+            try {
+                // Use fetch directly for more debugging control
+                const response = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formattedData)
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server response:', response.status, errorText);
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        console.error('Error details:', errorJson);
+                        throw new Error(errorJson.message || `Request failed with status ${response.status}`);
+                    } catch (e) {
+                        throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+                    }
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Request error:', error);
+                throw error;
+            }
         },
         onSuccess: () => {
-            // Invalidate and refetch relevant queries
             queryClient.invalidateQueries({ queryKey: ['allUsers'] });
         },
     });

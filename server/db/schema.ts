@@ -18,7 +18,7 @@ export const roommateUsers = pgTable('roommate_users', {
   interests: text('interests').array(),
   desiredRoomType: text('desired_room_type').$type<'apartment' | 'house' | 'studio' | 'other'>(),
   maxRent: numeric('max_rent'),
-  preferredLocations: text('preferred_locations').array(),
+  preferredLocations: text('preferred_locations'),
   moveInDate: date('move_in_date'),
   minimumStay: integer('minimum_stay'),
   bio: text('bio'),

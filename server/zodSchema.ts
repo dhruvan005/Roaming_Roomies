@@ -27,7 +27,7 @@ export const RoommateUserSchema = z.object({
     // Roommate Matching Criteria
     desiredRoomType: z.enum(['apartment', 'house', 'studio', 'other']).optional(),
     maxRent: z.number().positive().optional(),
-    preferredLocations: z.array(z.string()).optional(),
+    preferredLocations: z.string(), 
     moveInDate: z.coerce.date().optional(),
     minimumStay: z.number().int().positive().optional(),
 

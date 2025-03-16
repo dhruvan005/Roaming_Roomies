@@ -63,64 +63,61 @@ export const userRoutes = new Hono()
             }, 500);
         }
     })
-    .post(
-        '/',
-        zValidator('json', RoommateUserSchema),
-        async (c) => {
-            try {
-                const requestData = await c.req.json();
+    .post('/', zValidator('json', RoommateUserSchema), async (c) => {
+        try {
+            const requestData = await c.req.json();
+            console.log('Request Data: in Post route', requestData);
+            // Convert moveInDate to Date object if it exists
+            if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
+                requestData.moveInDate = new Date(requestData.moveInDate);
+            }
 
-                // Convert moveInDate to Date object if it exists
-                if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
-                    requestData.moveInDate = new Date(requestData.moveInDate);
-                }
+            const validatedData = RoommateUserSchema.parse(requestData);
+            console.log('Validated Data: in UserRoute', validatedData);
+            // Check if email already exists
+            const existingUser = await db
+                .select()
+                .from(roommateUsers)
+                .where(eq(roommateUsers.email, validatedData.email))
+                .limit(1);
 
-                const validatedData = RoommateUserSchema.parse(requestData);
-
-                // Check if email already exists
-                const existingUser = await db
-                    .select()
-                    .from(roommateUsers)
-                    .where(eq(roommateUsers.email, validatedData.email))
-                    .limit(1);
-
-                if (existingUser.length > 0) {
-                    return c.json({
-                        success: false,
-                        message: 'User with this email already exists'
-                    }, 409);
-                }
-
-                // Insert new user
-                const newUser = await db.insert(roommateUsers)
-                    .values({
-                        ...validatedData,
-                        // Convert date to PostgreSQL date format if exists
-                        moveInDate: validatedData.moveInDate
-                            ? new Date(validatedData.moveInDate).toISOString()
-                            : null,
-                        // Convert optional arrays and objects to PostgreSQL compatible format
-                        interests: validatedData.interests || [],
-                        preferredLocations: validatedData.preferredLocations || [],
-
-                        maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
-                    })
-                    .returning();
-
-                return c.json({
-                    success: true,
-                    message: 'User created successfully',
-                    data: newUser
-                }, 201);
-            } catch (error) {
-                console.error('Detailed Error:', error);
+            if (existingUser.length > 0) {
                 return c.json({
                     success: false,
-                    message: 'Error creating user',
-                    error: error instanceof Error ? error.message : 'Unknown error'
-                }, 500);
+                    message: 'User with this email already exists'
+                }, 409);
             }
+
+            // Insert new user
+            const newUser = await db.insert(roommateUsers)
+                .values({
+                    ...validatedData,
+                    // Convert date to PostgreSQL date format if exists
+                    moveInDate: validatedData.moveInDate
+                        ? new Date(validatedData.moveInDate).toISOString()
+                        : null,
+                    // Convert optional arrays and objects to PostgreSQL compatible format
+                    interests: validatedData.interests || [],
+                    preferredLocations: validatedData.preferredLocations || '',
+
+                    maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
+                })
+                .returning();
+
+            return c.json({
+                success: true,
+                message: 'User created successfully',
+                data: newUser
+            }, 201);
+        } catch (error) {
+            console.error('Detailed Error:', error);
+            return c.json({
+                success: false,
+                message: 'Error creating user',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            }, 500);
         }
+    }
     )
     .get('/:id', async (c) => {
         try {

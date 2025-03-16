@@ -15,6 +15,13 @@
       "when": 1742046110340,
       "tag": "0001_loud_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742146009172,
+      "tag": "0002_square_miss_america",
+      "breakpoints": true
     }
   ]
 }
