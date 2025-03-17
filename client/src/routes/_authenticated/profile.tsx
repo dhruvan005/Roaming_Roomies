@@ -33,7 +33,6 @@ function Profile() {
             </div>
           )}
           <Button
-            
             className="bg-red-900 cursor-pointer hover:bg-red-500 hover:text-black"
           >
             <a href="/api/logout"> Logout</a>

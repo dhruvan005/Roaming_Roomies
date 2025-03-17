@@ -6,15 +6,15 @@ import * as schema from './schema';
 const connectionString = process.env.DATABASE_URL!;
 // console.log('Connecting to database:', connectionString);
 const connectionOptions = {
-    max: 10,          
+    max: 10,
     idle_timeout: 30,  // timeout in seconds
     connect_timeout: 15,
-    max_lifetime: 60 * 60 ,  
+    max_lifetime: 60 * 60,
 
     // Retry Configuration
     retry: {
-        times: 3,        
-        interval: 1000  
+        times: 3,
+        interval: 1000
     }
 }
 

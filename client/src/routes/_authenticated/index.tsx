@@ -18,6 +18,7 @@ function HomeComponent() {
       <div className="h-20"></div>
       <div className="text-center text-md md:text-xl">
         <h2>
+          Welcome to {" "}
           <span className="font-bold">Roaming Roomies</span> brings places and
           people together !!
         </h2>
@@ -30,7 +31,7 @@ function HomeComponent() {
               className="min-h-20 flex items-center justify-center"
               href="/roomListing"
             >
-              Create your Profile !
+              Create your Room Listing !
               <img
                 className="h-30 transition-transform duration-300 ease-in-out transform hover:scale-110"
                 src={Home}
@@ -55,7 +56,7 @@ function HomeComponent() {
       </div>
       <Divider />
       {/* <UserList /> */}
-      <Information  />
+      {/* <Information  /> */}
     </div>
   );
 }

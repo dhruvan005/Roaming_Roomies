@@ -11,12 +11,9 @@ app.use('/api/*', cors())
 // app.use('*', errorHandler());
 
 
-// app.get('/hi', (c) => {
-//   return c.text('Hello Hono! hi i am a new developer')
-// })
-
 const apiRoutes = app.basePath("/api").route("/user", userRoutes).route("/", authRoute);
 
+// Don't forgot to change the callback URL in the Kinde dashboard
 
 // Serve static files
 

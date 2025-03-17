@@ -154,6 +154,7 @@ function UserProfileForm() {
           </Title>
           <Divider />
           <Form
+            encType="multipart/form-data"
             form={form}
             layout="vertical"
             onFinish={onFinish}
