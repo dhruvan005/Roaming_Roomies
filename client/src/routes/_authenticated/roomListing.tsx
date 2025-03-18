@@ -38,17 +38,26 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
+import { profile } from "console";
+import { clearScreenDown } from "readline";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
+
   const createProfile = useCreateProfile();
   const navigate = useNavigate();
 
   const [newInterest, setNewInterest] = useState("");
-  const [interests, setInterests] = useState<{ id: number; value: string }[]>([]);
+  const [interests, setInterests] = useState<{ id: number; value: string }[]>(
+    []
+  );
+  const [fileList, setFileList] = useState<File[]>([]); // Ensure correct type
 
-  // Add interest with useCallback to ensure stability
+  const handleChange = ({ fileList: newFileList }: { fileList: any[] }) => {
+    setFileList(newFileList.slice(-1)); // Keep only the latest file
+  };
+
   const addInterest = useCallback(() => {
     if (!newInterest.trim()) return;
 
@@ -56,7 +65,7 @@ function UserProfileForm() {
       id: Date.now(),
       value: newInterest.trim(),
     };
- 
+
     // Use functional update to guarantee we're working with latest state
     setInterests((prevInterests) => {
       const updatedInterests = [...prevInterests, newEntry];
@@ -72,16 +81,12 @@ function UserProfileForm() {
     setNewInterest("");
   }, [newInterest]);
 
-  // Remove interest with useCallback
   const removeInterest = useCallback((idToRemove: number) => {
-    // Use functional update pattern for reliable state updates
     setInterests((prevInterests) => {
-      // Create new filtered array
       const updatedInterests = prevInterests.filter(
         (item) => item.id !== idToRemove
       );
 
-      // Update form with the same array we're using for state
       form.setFieldsValue({
         interests: updatedInterests.map((item) => item.value),
       });
@@ -90,55 +95,91 @@ function UserProfileForm() {
     });
   }, []);
 
-  // For debugging - logs whenever interests change
-  // useEffect(() => {
-  //   console.log("Interest state updated:", interests);
-  // }, [interests]);
-
-  // Reset all interests
   const clearAllInterests = useCallback(() => {
     setInterests([]);
     form.setFieldsValue({ interests: [] });
   }, []);
 
   // Example form submission handler
-  const handleSubmit = useCallback(() => {
-    // Get final interests from state, not from form
-    const finalInterests = interests.map((item) => item.value);
-    console.log("Submitting interests:", finalInterests);
+  // const handleSubmit = useCallback(() => {
+  //   // Get final interests from state, not from form
+  //   const finalInterests = interests.map((item) => item.value);
+  //   console.log("Submitting interests:", finalInterests);
 
-    // Your form submission logic here
-  }, [interests]);
+  //   // Your form submission logic here
+  // }, [interests]);
 
-  const onFinish = async (values: UserProfileFormValues) => {
+  const [uploading, setUploading] = useState(false);
+
+  const beforeUpload = (file: File) => {
+    setFileList([file]); // Store only the last selected file
+    return false; // Prevent Ant Design from automatically uploading
+  };
+
+  const uploadToCloudinary = async (file: File) => {
+    const CLOUDINARY_UPLOAD_URL =
+      "https://api.cloudinary.com/v1_1/dhruvandev/image/upload";
+    const UPLOAD_PRESET = "roamingRoomies";
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
     try {
-      // Format the values
-      const formattedValues: UserProfileFormValues = {
-        ...values,
-        moveInDate: values.moveInDate?.toISOString() as any,
-        interests: interests.map((interest) => interest.value),
-      };
-      // console.log("Formatted values: in listing page", formattedValues);
-     
-      const response = await createProfile.mutateAsync(formattedValues);
-      // console.log("Response from api", response);
-      message.success("Profile created successfully!");
+      const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
 
-      // Optionally navigate to another page
-      navigate({ to: "/allUsers" });
+      const data = await response.json();
+      console.log("Cloudinary Response:", data);
+
+      if (data.secure_url) {
+        return data.secure_url; // Return uploaded image URL
+      } else {
+        throw new Error("Failed to upload image.");
+      }
     } catch (error) {
-      
-      message.error("Failed to create profile. Please try again.");
-      // console.error("Profile creation error:", error);
+      console.error("Cloudinary upload error:", error);
+      message.error("Image upload failed!");
+      return null;
     }
   };
 
-  function normFile(e: any) {
-    if (Array.isArray(e)) {
-      return e;
+  const onFinish = async (values: UserProfileFormValues) => {
+    try {
+      setUploading(true);
+
+      let imageUrl = null;
+      console.log("File List:", fileList);
+      if (fileList.length > 0) {
+        imageUrl = await uploadToCloudinary(fileList[0]); // Upload when form submits
+      }
+
+      setUploading(false);
+
+      if (!imageUrl) {
+        message.error("Please upload an image before submitting.");
+        return;
+      }
+
+      const formattedValues = {
+        ...values,
+        profileImageUrl: imageUrl, // Store uploaded image URL
+        moveInDate: values.moveInDate,
+      };
+
+      console.log("Final Form Data:", formattedValues);
+
+      await createProfile.mutateAsync(formattedValues);
+      message.success("Profile created successfully!");
+      navigate({ to: "/allUsers" });
+    } catch (error) {
+      setUploading(false);
+      message.error("Failed to create profile. Please try again.");
     }
-    return e && e.fileList;
-  }
+  };
+
   return (
     <Layout>
       <Content style={{ padding: "16px", margin: "0 auto" }}>
@@ -284,7 +325,6 @@ function UserProfileForm() {
                     ]}
                   >
                     <InputNumber
-                      
                       placeholder="Your age"
                       style={{ width: "100%" }}
                     />
@@ -326,25 +366,32 @@ function UserProfileForm() {
                   </Form.Item>
                 </Col>
                 <Col xs={24}>
-                  <Form.Item label="Profile Photo">
-                    <Form.Item
-                      name="profilePic"
-                      valuePropName="fileList"
-                      getValueFromEvent={normFile}
-                      noStyle
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Please upload a profile picture",
-                      //   },
-                      // ]}
+                  <Form.Item
+                    label="Profile Photo"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please upload a profile photo",
+                      },
+                      {
+                        max: 1,
+                        message: "Only one image allowed",
+                      },
+                    ]}
+                  >
+                    <Upload
+                      beforeUpload={beforeUpload}
+                      fileList={fileList.map((file) => ({
+                        uid: file.name,
+                        name: file.name,
+                        status: "done",
+                      }))} // Show selected file without uploading
+                      showUploadList={true}
                     >
-                      <Upload>
-                        <Button icon={<UploadOutlined />}>
-                          Click to Upload
-                        </Button>
-                      </Upload>
-                    </Form.Item>
+                      <Button icon={<UploadOutlined />}>
+                        Click to Select Image
+                      </Button>
+                    </Upload>
                   </Form.Item>
                 </Col>
               </Row>
@@ -562,11 +609,7 @@ function UserProfileForm() {
                         direction="horizontal"
                         style={{ marginBottom: 16 }}
                       >
-                        <TextArea
-                          placeholder="Add a Location"
-                          autoSize
-                          
-                        />
+                        <TextArea placeholder="Add a Location" autoSize />
                       </Space>
                     </div>
                   </Form.Item>
@@ -601,7 +644,6 @@ function UserProfileForm() {
                     ]}
                   >
                     <InputNumber
-                      
                       placeholder="Minimum stay in months"
                       style={{ width: "100%" }}
                     />

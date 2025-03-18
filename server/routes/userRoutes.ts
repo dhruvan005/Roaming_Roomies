@@ -4,6 +4,7 @@ import { roommateUsers } from '../db/schema'; // Adjust the import path
 import { eq, and, or, gte, lte, sql } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { RoommateUserSchema } from '../zodSchema';
+import { cloudinary } from '../config/cloudinary';
 
 export const userRoutes = new Hono()
     .get('/', async (c) => {
@@ -63,18 +64,21 @@ export const userRoutes = new Hono()
             }, 500);
         }
     })
-    .post('/', zValidator('json', RoommateUserSchema), async (c) => {
+    .post("/", zValidator("json", RoommateUserSchema), async (c) => {
         try {
             const requestData = await c.req.json();
-            console.log('Request Data: in Post route', requestData);
+            console.log("Request Data: in Post route", requestData);
 
-            if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
+            if (requestData.moveInDate && typeof requestData.moveInDate === "string") {
                 requestData.moveInDate = new Date(requestData.moveInDate);
             }
 
-            const validatedData = RoommateUserSchema.parse(requestData);
-            // console.log('Validated Data: in UserRoute', validatedData);
-            // Check if email already exists
+
+            const validatedData = RoommateUserSchema.parse({
+                ...requestData,
+                profileImageUrl: requestData.profilePic,
+            });
+
             const existingUser = await db
                 .select()
                 .from(roommateUsers)
@@ -82,40 +86,33 @@ export const userRoutes = new Hono()
                 .limit(1);
 
             if (existingUser.length > 0) {
-                return c.json({
-                    success: false,
-                    message: 'User with this email already exists'
-                }, 409);
+                return c.json({ success: false, message: "User with this email already exists" }, 409);
             }
 
-            
-            const newUser = await db.insert(roommateUsers)
+            const newUser = await db
+                .insert(roommateUsers)
                 .values({
                     ...validatedData,
-                    moveInDate: validatedData.moveInDate
-                        ? new Date(validatedData.moveInDate).toISOString()
-                        : null,
+                    moveInDate: validatedData.moveInDate ? new Date(validatedData.moveInDate).toISOString() : null,
                     interests: validatedData.interests || [],
-                    preferredLocations: validatedData.preferredLocations || '',
-                    maxRent: validatedData.maxRent?.toString() || null // Convert maxRent to string
+                    preferredLocations: validatedData.preferredLocations || "",
+                    maxRent: validatedData.maxRent?.toString() || null,
+
                 })
                 .returning();
 
-            return c.json({
-                success: true,
-                message: 'User created successfully',
-                data: newUser
-            }, 201);
+            return c.json({ success: true, message: "User created successfully", data: newUser }, 201);
         } catch (error) {
-            // console.error('Detailed Error:', error);
-            return c.json({
-                success: false,
-                message: 'Error creating user',
-                error: error instanceof Error ? error.message : 'Unknown error'
-            }, 500);
+            return c.json(
+                {
+                    success: false,
+                    message: "Error creating user",
+                    error: error instanceof Error ? error.message : "Unknown error",
+                },
+                500
+            );
         }
-    }
-    )
+    })
     .get('/:id', async (c) => {
         try {
             const { id } = c.req.param();

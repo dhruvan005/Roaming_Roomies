@@ -78,5 +78,5 @@ export interface UserProfileFormValues {
 
   // Bio Information
   bio: string;
-  profileImageUrl: string;
+  profileImage: string;
 }
