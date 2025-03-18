@@ -32,6 +32,6 @@ export const RoommateUserSchema = z.object({
     minimumStay: z.number().int().positive().optional(),
 
     // Profile Additional Details
-    bio: z.string().max(500, { message: "Bio must be 500 characters or less" }).optional(),
+    bio: z.string().max(200, { message: "Bio must be 200 characters or less" }).optional(),
     profileImageUrl: z.string().url().optional()
 });

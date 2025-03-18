@@ -66,7 +66,7 @@ export const userRoutes = new Hono()
     .post('/', zValidator('json', RoommateUserSchema), async (c) => {
         try {
             const requestData = await c.req.json();
-            // console.log('Request Data: in Post route', requestData);
+            console.log('Request Data: in Post route', requestData);
 
             if (requestData.moveInDate && typeof requestData.moveInDate === 'string') {
                 requestData.moveInDate = new Date(requestData.moveInDate);
@@ -88,7 +88,7 @@ export const userRoutes = new Hono()
                 }, 409);
             }
 
-            // Insert new user
+            
             const newUser = await db.insert(roommateUsers)
                 .values({
                     ...validatedData,
