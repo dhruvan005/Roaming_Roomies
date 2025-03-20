@@ -55,8 +55,8 @@ function HomeComponent() {
         </div>
       </div>
       <Divider />
-      {/* <UserList /> */}
-      {/* <Information  /> */}
+      {/* <UserList />
+      <Information  /> */}
     </div>
   );
 }

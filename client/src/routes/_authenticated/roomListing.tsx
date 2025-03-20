@@ -38,8 +38,6 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
-import { profile } from "console";
-import { clearScreenDown } from "readline";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
@@ -52,7 +50,7 @@ function UserProfileForm() {
   const [interests, setInterests] = useState<{ id: number; value: string }[]>(
     []
   );
-  const [fileList, setFileList] = useState<File[]>([]); // Ensure correct type
+  const [fileList, setFileList] = useState<File[]>([]); 
 
   const handleChange = ({ fileList: newFileList }: { fileList: any[] }) => {
     setFileList(newFileList.slice(-1)); // Keep only the latest file
@@ -152,8 +150,9 @@ function UserProfileForm() {
 
       let imageUrl = null;
       console.log("File List:", fileList);
+
       if (fileList.length > 0) {
-        imageUrl = await uploadToCloudinary(fileList[0]); // Upload when form submits
+        imageUrl = await uploadToCloudinary(fileList[0]); // Upload image
       }
 
       setUploading(false);
@@ -165,12 +164,13 @@ function UserProfileForm() {
 
       const formattedValues = {
         ...values,
-        profileImageUrl: imageUrl, // Store uploaded image URL
+        profileImageUrl: imageUrl,
         moveInDate: values.moveInDate,
       };
 
       console.log("Final Form Data:", formattedValues);
-
+    
+      // **Proceed with profile creation**
       await createProfile.mutateAsync(formattedValues);
       message.success("Profile created successfully!");
       navigate({ to: "/allUsers" });
@@ -298,7 +298,7 @@ function UserProfileForm() {
                     label="Phone"
                     rules={[
                       {
-                        pattern: /^[0-9-+\s()]*$/,
+                        pattern: /^[0-9+\-\s()]{10}$/,
                         message: "Please enter a valid phone number",
                       },
                     ]}
@@ -368,14 +368,11 @@ function UserProfileForm() {
                 <Col xs={24}>
                   <Form.Item
                     label="Profile Photo"
+                    name={["profileImageUrl"]}
                     rules={[
                       {
                         required: true,
                         message: "Please upload a profile photo",
-                      },
-                      {
-                        max: 1,
-                        message: "Only one image allowed",
                       },
                     ]}
                   >
@@ -385,7 +382,7 @@ function UserProfileForm() {
                         uid: file.name,
                         name: file.name,
                         status: "done",
-                      }))} // Show selected file without uploading
+                      }))}
                       showUploadList={true}
                     >
                       <Button icon={<UploadOutlined />}>

@@ -1,6 +1,5 @@
 
 export interface User {
-
   firstName: string;
   lastName: string;
   email: string;
@@ -26,7 +25,6 @@ export interface User {
   updatedAt: Date;
 }
 
-
 export interface ApiResponse {
   success: boolean;
   page: number;
@@ -51,6 +49,7 @@ export interface UserProfileFormValues {
   | "other"
   | "prefer_not_to_say";
   occupation: string;
+  profileImage: string;
 
   // Lifestyle Preferences
   sleepSchedule:
@@ -72,11 +71,10 @@ export interface UserProfileFormValues {
   interests: string[];
   desiredRoomType: "apartment" | "house" | "studio" | "other";
   maxRent: number ;
-  preferredLocations: string[];
+  preferredLocations: string;
   moveInDate: Date ; // Uses Moment.js from Ant Design's DatePicker
   minimumStay: number ;
 
   // Bio Information
   bio: string;
-  profileImage: string;
 }

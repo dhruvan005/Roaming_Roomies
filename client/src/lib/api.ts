@@ -115,27 +115,22 @@ export function useCreateProfile() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (data: UserProfileFormValues) => {
-            // console.log("Original data:", data);
-            
             const formattedData = {
                 ...data,
                 moveInDate: data.moveInDate,
                 maxRent: data.maxRent ? Number(data.maxRent) : undefined,
                 age: Number(data.age)
             };
-            
+
             // console.log("Formatted data being sent:", JSON.stringify(formattedData, null, 2));
-            
+
             try {
                 // Use fetch directly for more debugging control
-                const response = await fetch('/api/user', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formattedData)
+                const response = await api.user.$post({
+                    json: formattedData
+
                 });
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     // console.error('Server response:', response.status, errorText);
@@ -147,7 +142,7 @@ export function useCreateProfile() {
                         throw new Error(`Request failed with status ${response.status}: ${errorText}`);
                     }
                 }
-                
+
                 return await response.json();
             } catch (error) {
                 // console.error('Request error:', error);

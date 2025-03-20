@@ -5,6 +5,7 @@ import { eq, and, or, gte, lte, sql } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { RoommateUserSchema } from '../zodSchema';
 import { cloudinary } from '../config/cloudinary';
+import { clearScreenDown } from 'readline';
 
 export const userRoutes = new Hono()
     .get('/', async (c) => {
@@ -67,24 +68,23 @@ export const userRoutes = new Hono()
     .post("/", zValidator("json", RoommateUserSchema), async (c) => {
         try {
             const requestData = await c.req.json();
-            console.log("Request Data: in Post route", requestData);
+            // console.log("Request Data: in Post route", requestData);
 
             if (requestData.moveInDate && typeof requestData.moveInDate === "string") {
                 requestData.moveInDate = new Date(requestData.moveInDate);
             }
-
-
+            // console.log("Request Profile pic : in Post route", requestData.profileImageUrl);
             const validatedData = RoommateUserSchema.parse({
                 ...requestData,
-                profileImageUrl: requestData.profilePic,
-            });
-
+                profileImageUrl: requestData.profileImageUrl,
+            })
+            // console.log("Validated Data: ", validatedData);
             const existingUser = await db
                 .select()
                 .from(roommateUsers)
                 .where(eq(roommateUsers.email, validatedData.email))
                 .limit(1);
-
+            // console.log("Existing User: ", existingUser);
             if (existingUser.length > 0) {
                 return c.json({ success: false, message: "User with this email already exists" }, 409);
             }
@@ -99,8 +99,8 @@ export const userRoutes = new Hono()
                     maxRent: validatedData.maxRent?.toString() || null,
 
                 })
-                .returning();
-
+                .returning()
+            // console.log("New User: ", newUser);
             return c.json({ success: true, message: "User created successfully", data: newUser }, 201);
         } catch (error) {
             return c.json(
@@ -110,40 +110,35 @@ export const userRoutes = new Hono()
                     error: error instanceof Error ? error.message : "Unknown error",
                 },
                 500
-            );
+            )
         }
     })
     .get('/:id', async (c) => {
         try {
-            const { id } = c.req.param();
-
+            const { id } = c.req.param()
             const [user] = await db
                 .select()
                 .from(roommateUsers)
-                .where(eq(roommateUsers.id, id));
-
+                .where(eq(roommateUsers.id, id))
             if (!user) {
                 return c.json({
                     success: false,
                     message: 'User not found'
                 }, 404);
             }
-
             return c.json({
                 success: true,
                 data: user
             });
         } catch (error) {
-            console.error('Error fetching user:', error);
+            console.error('Error fetching user:', error)
             return c.json({
                 success: false,
                 message: 'Error fetching user',
                 error: error instanceof Error ? error.message : 'Unknown error'
-            }, 500);
+            }, 500)
         }
-    });
-
-
+    })
 
 /**
  * PUT (Update) user by ID
@@ -197,9 +192,7 @@ export const userRoutes = new Hono()
 //     }
 // );
 
-/**
- * DELETE user by ID
- */
+
 // userRoutes.delete('/:id', async (c) => {
 //     try {
 //         const { id } = c.req.param();

@@ -39,7 +39,7 @@ function Profile() {
 
         {data && (
           <div className="space-y-4 mb-3 text-gray-300">
-            {data.user.picture && (
+            {/* {data.user.picture && (
               <div className="flex  justify-center mb-6">
                 <img
                   src={data.user.picture}
@@ -47,7 +47,7 @@ function Profile() {
                   className="w-24 h-24 rounded-full border-2 border-gray-600"
                 />
               </div>
-            )}
+            )} */}
             <div className="p-4 bg-gray-700/50 rounded-lg">
               <div className="mb-3">
                 <span className="font-bold text-gray-400">Name:</span>
@@ -60,9 +60,6 @@ function Profile() {
             </div>
           </div>
         )}
-
-  
-    
         <Button className="bg-gray-500/50 " type="primary" href="/api/logout">
           Logout
         </Button>
