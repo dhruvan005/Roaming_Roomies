@@ -51,7 +51,7 @@ function Profile() {
             <div className="p-4 bg-gray-700/50 rounded-lg">
               <div className="mb-3">
                 <span className="font-bold text-gray-400">Name:</span>
-                <span className="ml-2">{data.user.given_name}</span>
+                <span className="ml-2">{data.user.given_name} {data.user.family_name}</span>
               </div>
               <div className="">
                 <span className="font-bold text-gray-400">Email:</span>

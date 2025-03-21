@@ -110,7 +110,9 @@ export const useQueryOptions = {
     },
     staleTime: Infinity,
     retry: false
-};
+}
+
+
 export function useCreateProfile() {
     const queryClient = useQueryClient();
     return useMutation({

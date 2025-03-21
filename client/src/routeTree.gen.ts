@@ -11,14 +11,22 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedRoomListingImport } from './routes/_authenticated/roomListing'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedLayoutImport } from './routes/_authenticated/layout'
 import { Route as AuthenticatedAllUsersImport } from './routes/_authenticated/allUsers'
 import { Route as AuthenticatedAboutImport } from './routes/_authenticated/about'
 
 // Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedRoute = AuthenticatedImport.update({
   id: '/_authenticated',
@@ -40,6 +48,12 @@ const AuthenticatedRoomListingRoute = AuthenticatedRoomListingImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedLayoutRoute = AuthenticatedLayoutImport.update({
+  id: '/layout',
+  path: '/layout',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -66,6 +80,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
     '/_authenticated/about': {
       id: '/_authenticated/about'
       path: '/about'
@@ -78,6 +99,13 @@ declare module '@tanstack/react-router' {
       path: '/allUsers'
       fullPath: '/allUsers'
       preLoaderRoute: typeof AuthenticatedAllUsersImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/layout': {
+      id: '/_authenticated/layout'
+      path: '/layout'
+      fullPath: '/layout'
+      preLoaderRoute: typeof AuthenticatedLayoutImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/profile': {
@@ -109,6 +137,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedAllUsersRoute: typeof AuthenticatedAllUsersRoute
+  AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRoomListingRoute: typeof AuthenticatedRoomListingRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -117,6 +146,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedAllUsersRoute: AuthenticatedAllUsersRoute,
+  AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRoomListingRoute: AuthenticatedRoomListingRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
@@ -128,16 +158,20 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/roomListing': typeof AuthenticatedRoomListingRoute
   '/': typeof AuthenticatedIndexRoute
 }
 
 export interface FileRoutesByTo {
+  '/login': typeof LoginRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/roomListing': typeof AuthenticatedRoomListingRoute
   '/': typeof AuthenticatedIndexRoute
@@ -146,8 +180,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/allUsers': typeof AuthenticatedAllUsersRoute
+  '/_authenticated/layout': typeof AuthenticatedLayoutRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/roomListing': typeof AuthenticatedRoomListingRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -155,14 +191,31 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/about' | '/allUsers' | '/profile' | '/roomListing' | '/'
+  fullPaths:
+    | ''
+    | '/login'
+    | '/about'
+    | '/allUsers'
+    | '/layout'
+    | '/profile'
+    | '/roomListing'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/allUsers' | '/profile' | '/roomListing' | '/'
+  to:
+    | '/login'
+    | '/about'
+    | '/allUsers'
+    | '/layout'
+    | '/profile'
+    | '/roomListing'
+    | '/'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/login'
     | '/_authenticated/about'
     | '/_authenticated/allUsers'
+    | '/_authenticated/layout'
     | '/_authenticated/profile'
     | '/_authenticated/roomListing'
     | '/_authenticated/'
@@ -171,10 +224,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -187,7 +242,8 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_authenticated"
+        "/_authenticated",
+        "/login"
       ]
     },
     "/_authenticated": {
@@ -195,10 +251,14 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/about",
         "/_authenticated/allUsers",
+        "/_authenticated/layout",
         "/_authenticated/profile",
         "/_authenticated/roomListing",
         "/_authenticated/"
       ]
+    },
+    "/login": {
+      "filePath": "login.tsx"
     },
     "/_authenticated/about": {
       "filePath": "_authenticated/about.tsx",
@@ -206,6 +266,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/allUsers": {
       "filePath": "_authenticated/allUsers.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/layout": {
+      "filePath": "_authenticated/layout.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/profile": {
