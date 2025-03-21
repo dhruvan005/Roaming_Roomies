@@ -29,7 +29,7 @@ const UserList: React.FC = () => {
         <Button onClick={handleRefresh}>Refresh Data</Button>
       </div>
 
-      <h2 className="text-center text-xl font-semibold">
+      <h2 className="text-center text-2xl  font-semibold">
         Find Your Future Roommate !!
       </h2>
       <div className="h-2"></div>
