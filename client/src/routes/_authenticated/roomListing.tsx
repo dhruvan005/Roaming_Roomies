@@ -38,13 +38,45 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
+import { VenusAndMars } from 'lucide-react';
+import { set } from "zod";
+
 
 function UserProfileForm() {
   const [form] = Form.useForm();
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
-
+  useEffect(() => {
+    if (data?.user) {
+      form.setFieldsValue({
+        firstName: data.user.given_name,
+        lastName: data.user.family_name,
+        email: data.user.email,
+        // Keep other default values
+        phone: "",
+        age: null,
+        gender: undefined,
+        occupation: "",
+        sleepSchedule: undefined,
+        cleanlinessLevel: 3,
+        dietaryPreferences: "vegetarian",
+        smokingTolerance: false,
+        petTolerance: false,
+        alcoholTolerance: false,
+        interests: [],
+        desiredRoomType: undefined,
+        maxRent: null,
+        preferredLocations: [],
+        moveInDate: null,
+        minimumStay: null,
+        bio: "",
+        profileImageUrl: "",
+      });
+    }
+  }, [data, form]);
+  // console.log("User Data:", data);
   const createProfile = useCreateProfile();
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
 
   const [newInterest, setNewInterest] = useState("");
   const [interests, setInterests] = useState<{ id: number; value: string }[]>(
@@ -147,9 +179,10 @@ function UserProfileForm() {
   const onFinish = async (values: UserProfileFormValues) => {
     try {
       setUploading(true);
+      setSubmitting(true);
 
       let imageUrl = null;
-      console.log("File List:", fileList);
+      // console.log("File List:", fileList);
 
       if (fileList.length > 0) {
         imageUrl = await uploadToCloudinary(fileList[0]); // Upload image
@@ -159,6 +192,8 @@ function UserProfileForm() {
 
       if (!imageUrl) {
         message.error("Please upload an image before submitting.");
+        setUploading(false);
+      setSubmitting(false);
         return;
       }
 
@@ -168,14 +203,19 @@ function UserProfileForm() {
         moveInDate: values.moveInDate,
       };
 
-      console.log("Final Form Data:", formattedValues);
+      // console.log("Final Form Data:", formattedValues);
     
       // **Proceed with profile creation**
       await createProfile.mutateAsync(formattedValues);
-      message.success("Profile created successfully!");
+      message.success("Your form has been submitted successfully!");
+    
+      // Reset states
+      setUploading(false);
+      setSubmitting(false);
       navigate({ to: "/allUsers" });
     } catch (error) {
       setUploading(false);
+      setSubmitting(false);
       message.error("Failed to create profile. Please try again.");
     }
   };
@@ -212,12 +252,11 @@ function UserProfileForm() {
               occupation: "",
               sleepSchedule: undefined,
               cleanlinessLevel: 3,
-              dietaryPreferences: undefined,
+              dietaryPreferences: "vegetarian",
               smokingTolerance: false,
               petTolerance: false,
               alcoholTolerance: false,
               interests: [],
-              personalityTraits: {},
               desiredRoomType: undefined,
               maxRent: null,
               preferredLocations: [],
@@ -338,8 +377,10 @@ function UserProfileForm() {
                     rules={[
                       { required: true, message: "Please select your gender" },
                     ]}
+                    
                   >
                     <Select placeholder="Select gender">
+                      
                       <Option value="male">Male</Option>
                       <Option value="female">Female</Option>
                       <Option value="non_binary">Non-binary</Option>
@@ -495,6 +536,8 @@ function UserProfileForm() {
                 name="interests"
                 label="Your Interests"
                 extra="Add your hobbies, activities, and other interests"
+                required
+              
               >
                 <div>
                   <Space direction="horizontal" style={{ marginBottom: 16 }}>

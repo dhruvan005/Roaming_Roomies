@@ -6,7 +6,7 @@ import { Component as LayoutComponent } from "./_authenticated/layout";
 export const isAuthenticated = async () => {
   try {
     const data = await useQueryOptions.queryFn();
-    // console.log("User data:", data);
+    console.log("User data:", data);
     return data?.user ? true : false;
   } catch (error) {
     console.error("Authentication error:", error);

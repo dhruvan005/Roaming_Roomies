@@ -7,12 +7,14 @@ import { User } from "lucide-react";
 import UserList from "../../components/UserList";
 import Information from "../../components/Information";
 import { Divider } from "antd";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: HomeComponent,
 });
 
 function HomeComponent() {
+  const navigate = useNavigate();
   return (
     <div className="container mx-auto p-5 md:p-0">
       <div className="h-25"></div>
@@ -28,7 +30,8 @@ function HomeComponent() {
           <div className="text-center mb-4 md:mb-0">
             <Button
               className="min-h-20 flex items-center justify-center"
-              href="/roomListing"
+              // href="/HouseListing"
+              onClick={() => navigate({ to: "/HouseListing" })}
             >
               Rent your House !
               <img
@@ -41,7 +44,8 @@ function HomeComponent() {
           <div className="text-center">
             <Button
               className="min-h-20 flex items-center justify-center"
-              href="/roomListing"
+              // href="/roomListing"
+              onClick={() => navigate({ to: "/roomListing" })}
             >
               Looking for Roommate ?
               <img

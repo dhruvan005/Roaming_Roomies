@@ -19,6 +19,7 @@ import { Route as AuthenticatedProfileImport } from './routes/_authenticated/pro
 import { Route as AuthenticatedLayoutImport } from './routes/_authenticated/layout'
 import { Route as AuthenticatedAllUsersImport } from './routes/_authenticated/allUsers'
 import { Route as AuthenticatedAboutImport } from './routes/_authenticated/about'
+import { Route as AuthenticatedHouseListingImport } from './routes/_authenticated/HouseListing'
 
 // Create/Update Routes
 
@@ -69,6 +70,12 @@ const AuthenticatedAboutRoute = AuthenticatedAboutImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedHouseListingRoute = AuthenticatedHouseListingImport.update({
+  id: '/HouseListing',
+  path: '/HouseListing',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -86,6 +93,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/HouseListing': {
+      id: '/_authenticated/HouseListing'
+      path: '/HouseListing'
+      fullPath: '/HouseListing'
+      preLoaderRoute: typeof AuthenticatedHouseListingImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/about': {
       id: '/_authenticated/about'
@@ -135,6 +149,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedHouseListingRoute: typeof AuthenticatedHouseListingRoute
   AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedAllUsersRoute: typeof AuthenticatedAllUsersRoute
   AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
@@ -144,6 +159,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedHouseListingRoute: AuthenticatedHouseListingRoute,
   AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedAllUsersRoute: AuthenticatedAllUsersRoute,
   AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
@@ -159,6 +175,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
   '/layout': typeof AuthenticatedLayoutRoute
@@ -169,6 +186,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
   '/layout': typeof AuthenticatedLayoutRoute
@@ -181,6 +199,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/HouseListing': typeof AuthenticatedHouseListingRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/allUsers': typeof AuthenticatedAllUsersRoute
   '/_authenticated/layout': typeof AuthenticatedLayoutRoute
@@ -194,6 +213,7 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/login'
+    | '/HouseListing'
     | '/about'
     | '/allUsers'
     | '/layout'
@@ -203,6 +223,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/HouseListing'
     | '/about'
     | '/allUsers'
     | '/layout'
@@ -213,6 +234,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/HouseListing'
     | '/_authenticated/about'
     | '/_authenticated/allUsers'
     | '/_authenticated/layout'
@@ -249,6 +271,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/HouseListing",
         "/_authenticated/about",
         "/_authenticated/allUsers",
         "/_authenticated/layout",
@@ -259,6 +282,10 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/_authenticated/HouseListing": {
+      "filePath": "_authenticated/HouseListing.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/about": {
       "filePath": "_authenticated/about.tsx",

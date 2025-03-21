@@ -21,6 +21,9 @@ const keyToRouteMap = {
   "5": "/profile",
 };
 
+import { useQueryOptions } from "../../lib/api";
+import { useQuery } from "@tanstack/react-query";
+
 // Define a function to get the key based on pathname
 function getKeyFromPath(pathname: string): string {
   if (pathname === "/" || pathname === "") return "1";
@@ -34,7 +37,6 @@ export const Component = () => {
   const { token } = useToken();
   const router = useRouter();
   const navigate = useNavigate();
-  
   // State to track the selected menu item
   const [selectedKey, setSelectedKey] = React.useState(() => {
     const currentPathname = router.state.location.pathname;
@@ -108,7 +110,7 @@ export const Component = () => {
           />
         </Sider>
         <Layout>
-          <Content style={{ flex: "1 0 auto" }}>
+          <Content style={{ flex: "1 0 auto" }}  >
             <Outlet />
           </Content>
           <Footer
@@ -129,3 +131,4 @@ export const Component = () => {
 export const Route = createFileRoute("/_authenticated/layout")({
   component: () => <Outlet />, // Just pass through to children
 });
+
