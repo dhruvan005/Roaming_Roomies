@@ -16,50 +16,56 @@ export const Route = createFileRoute("/_authenticated/")({
 function HomeComponent() {
   const navigate = useNavigate();
   return (
-    <div className="container mx-auto p-5 md:p-0">
-      <div className="h-25"></div>
-      <div className="text-center text-md md:text-xl">
-        <h2 className="text-2xl  md:text-3xl">
-          Welcome to <span className="font-bold">Roaming Roomies</span> brings
-          places and people together !!
-        </h2>
-      </div>
-      <div className="h-9"></div>
-      <div>
-        <div className="text-center flex flex-col md:flex-row items-center gap-5 justify-center">
-          <div className="text-center mb-4 md:mb-0">
-            <Button
-              className="min-h-20 flex items-center justify-center"
-              // href="/HouseListing"
-              onClick={() => navigate({ to: "/HouseListing" })}
-            >
-              Rent your House !
-              <img
-                className="h-30 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                src={People}
-                alt=""
-              />
-            </Button>
-          </div>
-          <div className="text-center">
-            <Button
-              className="min-h-20 flex items-center justify-center"
-              // href="/roomListing"
-              onClick={() => navigate({ to: "/roomListing" })}
-            >
-              Looking for Roommate ?
-              <img
-                className="h-25 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                src={Home}
-                alt="profileCreation"
-              />
-            </Button>
-          </div>
+    <div className="container mx-auto p-4 lg:p-8 min-h-screen flex flex-col">
+     
+      <div className="flex-grow flex flex-col items-center justify-center py-8 md:py-12 lg:py-16">
+      
+        <div className="text-center max-w-3xl mb-10 md:mb-16">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+            Welcome to{" "}
+            <span className="text-primary font-extrabold">Roaming Roomies</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700">
+            Bringing places and people together!
+          </p>
+        </div>
+
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-3xl  ">
+          <Button
+            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group"
+            onClick={() => navigate({ to: "/HouseListing" })}
+            size="large"
+          >
+            <span className="text-lg md:text-xl font-medium">
+              Rent your House!
+            </span>
+            <img
+              className="h-18 md:h-25 transition-transform duration-300 ease-in-out group-hover:scale-110"
+              src={People}
+              alt="House icon"
+            />
+          </Button>
+
+          <Button
+            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group"
+            onClick={() => navigate({ to: "/roomListing" })}
+            size="large"
+          >
+            <span className="text-lg md:text-xl font-medium">
+              Looking for Roommate?
+            </span>
+            <img
+              className="h-16 md:h-25 transition-transform duration-300 ease-in-out group-hover:scale-110"
+              src={Home}
+              alt="Roommate icon"
+            />
+          </Button>
         </div>
       </div>
-      {/* <Divider /> */}
-      {/* <UserList />
-      <Information  /> */}
+
+      {/* <Divider />
+      <UserList /> */}
     </div>
   );
 }
