@@ -6,7 +6,6 @@ const UserList: React.FC = () => {
   // Use the optimized query hook
   const { isPending, isError, data, error } = useUsers();
   const [list, setList] = useState<any[]>([]);
-
   useEffect(() => {
     
     if (data?.users) {

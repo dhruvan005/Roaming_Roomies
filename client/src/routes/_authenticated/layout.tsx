@@ -21,9 +21,6 @@ const keyToRouteMap = {
   "5": "/profile",
 };
 
-import { useQueryOptions } from "../../lib/api";
-import { useQuery } from "@tanstack/react-query";
-
 // Define a function to get the key based on pathname
 function getKeyFromPath(pathname: string): string {
   if (pathname === "/" || pathname === "") return "1";
