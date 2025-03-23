@@ -19,7 +19,7 @@ const UserList: React.FC = () => {
     dataControls.refreshUsers();
   };
 
-  // Create placeholder items for skeleton loading
+
   const skeletonItems = Array(4).fill({});
 
   return (

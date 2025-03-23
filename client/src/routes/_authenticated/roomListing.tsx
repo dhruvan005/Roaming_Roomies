@@ -29,6 +29,7 @@ import {
   UploadOutlined,
   CloudFilled,
 } from "@ant-design/icons";
+import moment from "moment";
 import { useQueryOptions } from "../../lib/api";
 import { useQuery } from "@tanstack/react-query";
 const { Title, Paragraph } = Typography;
@@ -38,9 +39,8 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
-import { VenusAndMars } from 'lucide-react';
+import { VenusAndMars } from "lucide-react";
 import { set } from "zod";
-
 
 function UserProfileForm() {
   const [form] = Form.useForm();
@@ -58,10 +58,12 @@ function UserProfileForm() {
         occupation: "",
         sleepSchedule: undefined,
         cleanlinessLevel: 3,
-        dietaryPreferences: "vegetarian",
-        smokingTolerance: false,
-        petTolerance: false,
-        alcoholTolerance: false,
+        dietaryPreference: "vegetarian",
+        smokingPreference: undefined,
+        petPreference: undefined,
+        alcoholPreference: undefined,
+        workoutPreference: undefined,
+        socialPreference: undefined,
         interests: [],
         desiredRoomType: undefined,
         maxRent: null,
@@ -82,7 +84,7 @@ function UserProfileForm() {
   const [interests, setInterests] = useState<{ id: number; value: string }[]>(
     []
   );
-  const [fileList, setFileList] = useState<File[]>([]); 
+  const [fileList, setFileList] = useState<File[]>([]);
 
   const handleChange = ({ fileList: newFileList }: { fileList: any[] }) => {
     setFileList(newFileList.slice(-1)); // Keep only the latest file
@@ -193,7 +195,7 @@ function UserProfileForm() {
       if (!imageUrl) {
         message.error("Please upload an image before submitting.");
         setUploading(false);
-      setSubmitting(false);
+        setSubmitting(false);
         return;
       }
 
@@ -203,12 +205,12 @@ function UserProfileForm() {
         moveInDate: values.moveInDate,
       };
 
-      // console.log("Final Form Data:", formattedValues);
-    
+      console.log("Final Form Data:", formattedValues);
+
       // **Proceed with profile creation**
       await createProfile.mutateAsync(formattedValues);
       message.success("Your form has been submitted successfully!");
-    
+
       // Reset states
       setUploading(false);
       setSubmitting(false);
@@ -252,10 +254,12 @@ function UserProfileForm() {
               occupation: "",
               sleepSchedule: undefined,
               cleanlinessLevel: 3,
-              dietaryPreferences: "vegetarian",
-              smokingTolerance: false,
-              petTolerance: false,
-              alcoholTolerance: false,
+              dietaryPreference: "vegetarian",
+              smokingPreference: "",
+              petPreference: "",
+              alcoholPreference: "",
+              workoutPreference: "",
+              socialPreference: "",
               interests: [],
               desiredRoomType: undefined,
               maxRent: null,
@@ -377,10 +381,8 @@ function UserProfileForm() {
                     rules={[
                       { required: true, message: "Please select your gender" },
                     ]}
-                    
                   >
                     <Select placeholder="Select gender">
-                      
                       <Option value="male">Male</Option>
                       <Option value="female">Female</Option>
                       <Option value="non_binary">Non-binary</Option>
@@ -484,8 +486,8 @@ function UserProfileForm() {
 
                 <Col xs={24} sm={12}>
                   <Form.Item
-                    name="dietaryPreferences"
-                    label="Dietary Preferences"
+                    name="dietaryPreference"
+                    label="Dietary Preference"
                   >
                     <Select placeholder="Select dietary preference">
                       <Option value="vegetarian">Vegetarian</Option>
@@ -496,37 +498,130 @@ function UserProfileForm() {
                     </Select>
                   </Form.Item>
                 </Col>
+              </Row>
+            </Card>
+
+            {/* Habits & Social Preferences Section */}
+            <Card
+              title={<Title level={4}> Habits & Social Preferences</Title>}
+              style={{ marginBottom: 24 }}
+              className="responsive-card"
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="smokingPreference"
+                    label="Smoking Preference"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Smoking Preference ",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Smoking Preference">
+                      <Option value="non_smoker">Non-Smoker</Option>
+                      <Option value="smoker">Smoker</Option>
+                      <Option value="social_smoker">Social Smoker</Option>
+                      <Option value="vaper">Vaper</Option>
+                      <Option value="trying_to_quit">Trying To Quit</Option>
+                      <Option value="smoker_when_drinking">
+                        Smoker when drinking
+                      </Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="alcoholPreference"
+                    label="Alcohol Preference"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Alcohol Preference",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Alcohol Preference">
+                      <Option value="not_for_me">Not for Me</Option>
+                      <Option value="social_drinker">
+                        Social Drinker (On weekends)
+                      </Option>
+                      <Option value="most_nigths">Most Nights</Option>
+                      <Option value="sober">Sober</Option>
+                      <Option value="sober_curious">Sober curious</Option>
+                      <Option value="trying_to_quit">Trying To Quit</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
 
                 <Col xs={24} sm={12}>
-                  <Space direction="vertical" style={{ width: "100%" }}>
-                    <Paragraph>Tolerance Options:</Paragraph>
-                    <Form.Item
-                      name="smokingTolerance"
-                      valuePropName="checked"
-                      noStyle
-                    >
-                      <Checkbox>Smoking Tolerance</Checkbox>
-                    </Form.Item>
-                    <Form.Item
-                      name="petTolerance"
-                      valuePropName="checked"
-                      noStyle
-                    >
-                      <Checkbox>Pet Tolerance</Checkbox>
-                    </Form.Item>
-                    <Form.Item
-                      name="alcoholTolerance"
-                      valuePropName="checked"
-                      noStyle
-                    >
-                      <Checkbox>Alcohol Tolerance</Checkbox>
-                    </Form.Item>
-                  </Space>
+                  <Form.Item
+                    name="workoutPreference"
+                    label="Workout Preference"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Workout Preference",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Workout Preference">
+                      <Option value="gym_rat">Gym Rat</Option>
+                      <Option value="often">Often</Option>
+                      <Option value="sometimes">Sometimes</Option>
+                      <Option value="trying_to_start">Trying To Start</Option>
+                      <Option value="never">Never</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="petPreference"
+                    label="Pet Preference"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Pet Preference",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Pet Preference">
+                      <Option value="loves_pets">Loves Pets</Option>
+                      <Option value="allergic">Allergic</Option>
+                      <Option value="no_pets">No Pets</Option>
+                      <Option value="open_to_pets">Open To Pets</Option>
+                      <Option value="has_pets">Has Pets</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="socialTrait"
+                    label="Social Trait"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Social Trait",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Social Trait">
+                      <Option value="introvert">Introvert</Option>
+                      <Option value="extrovert">Extrovert</Option>
+                      <Option value="ambivert">Ambivert</Option>
+                      <Option value="shy">Shy</Option>
+                      <Option value="outgoing">Outgoing</Option>
+                      <Option value="friendly">Friendly</Option>
+                      <Option value="quiet">Quiet</Option>
+                    </Select>
+                  </Form.Item>
                 </Col>
               </Row>
             </Card>
 
-            {/* Interests Section */}
             <Card
               title={<Title level={4}>Interests</Title>}
               style={{ marginBottom: 24 }}
@@ -537,7 +632,6 @@ function UserProfileForm() {
                 label="Your Interests"
                 extra="Add your hobbies, activities, and other interests"
                 required
-              
               >
                 <div>
                   <Space direction="horizontal" style={{ marginBottom: 16 }}>
@@ -673,20 +767,17 @@ function UserProfileForm() {
                     label="Minimum Stay (months)"
                     rules={[
                       {
-                        type: "number",
-                        min: 2,
-                        message: "Minimum 2 month",
-                      },
-                      {
                         required: true,
                         message: "Please enter minimum stay",
                       },
                     ]}
                   >
-                    <InputNumber
-                      placeholder="Minimum stay in months"
-                      style={{ width: "100%" }}
-                    />
+                    <Select placeholder="Select minimum stay">
+                      <Option value={3}>3 months</Option>
+                      <Option value={6}>6 months</Option>
+                      <Option value={12}>12 months</Option>
+                      <Option value={24}>24 months</Option>
+                    </Select>
                   </Form.Item>
                 </Col>
               </Row>
@@ -704,14 +795,14 @@ function UserProfileForm() {
                     name="bio"
                     label="Bio"
                     extra="Tell potential roommates about yourself"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Minimum 20 characters required",
-                        min: 20,
-                        max: 100,
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Minimum 20 characters required",
+                    //     min: 20,
+                    //     max: 100,
+                    //   },
+                    // ]}
                   >
                     {/* <TextArea
                       rows={4}
@@ -719,8 +810,6 @@ function UserProfileForm() {
                     /> */}
                     <TextArea
                       showCount
-                      minLength={20}
-                      maxLength={200}
                       placeholder="Share a bit about yourself, your lifestyle, and what makes you a good roommate..."
                       style={{ height: 120, resize: "none" }}
                     />
