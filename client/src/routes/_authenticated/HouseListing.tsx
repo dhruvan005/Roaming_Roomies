@@ -1,14 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Button } from 'antd'
-import { HomeOutlined } from '@ant-design/icons'
-
-export const Route = createFileRoute('/_authenticated/HouseListing')({
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
+import UC from "../../assets/under-construction.png";
+export const Route = createFileRoute("/_authenticated/HouseListing")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
+      <div className="mb-4 w-25">
+        <img src={UC} alt="" />
+      </div>
       <h1 className="text-4xl font-bold text-gray-800 mb-4">House Listing</h1>
       <div className="text-xl text-gray-600 mb-4">
         Page is Under Construction
@@ -18,8 +21,8 @@ function RouteComponent() {
         Please check back soon for exciting updates!
       </p>
       <Link to="/">
-        <Button 
-          type="primary" 
+        <Button
+          type="primary"
           size="large"
           icon={<HomeOutlined />}
           className="flex items-center gap-2 hover:opacity-90"
@@ -28,5 +31,5 @@ function RouteComponent() {
         </Button>
       </Link>
     </div>
-  )
+  );
 }

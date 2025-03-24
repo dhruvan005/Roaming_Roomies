@@ -108,7 +108,7 @@ export const useQueryOptions = {
         }
         return response.json();
     },
-    staleTime: Infinity,
+    staleTime: 30 * 60 * 1000,
     retry: false
 }
 

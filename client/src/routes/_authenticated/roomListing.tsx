@@ -27,7 +27,6 @@ import {
   MailOutlined,
   PhoneOutlined,
   UploadOutlined,
-  CloudFilled,
 } from "@ant-design/icons";
 import moment from "moment";
 import { useQueryOptions } from "../../lib/api";
@@ -40,7 +39,6 @@ import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
 import { VenusAndMars } from "lucide-react";
-import { set } from "zod";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
@@ -131,16 +129,6 @@ function UserProfileForm() {
     setInterests([]);
     form.setFieldsValue({ interests: [] });
   }, []);
-
-  // Example form submission handler
-  // const handleSubmit = useCallback(() => {
-  //   // Get final interests from state, not from form
-  //   const finalInterests = interests.map((item) => item.value);
-  //   console.log("Submitting interests:", finalInterests);
-
-  //   // Your form submission logic here
-  // }, [interests]);
-
   const [uploading, setUploading] = useState(false);
 
   const beforeUpload = (file: File) => {
@@ -826,8 +814,16 @@ function UserProfileForm() {
                 <Col>
                   <Space>
                     <Button onClick={() => form.resetFields()}>Reset</Button>
-                    <Button type="primary" htmlType="submit" size="large">
-                      Submit Profile
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      size="large"
+                      loading={submitting || uploading}
+                      disabled={submitting || uploading}
+                    >
+                      {submitting || uploading
+                        ? "Submitting..."
+                        : "Submit Profile"}
                     </Button>
                   </Space>
                 </Col>
