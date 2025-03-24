@@ -196,9 +196,13 @@ function UserProfileForm() {
       console.log("Final Form Data:", formattedValues);
 
       // **Proceed with profile creation**
-      await createProfile.mutateAsync(formattedValues);
+      const createdUser =  await createProfile.mutateAsync(formattedValues);
+      if(createdUser){
+        console.log("User Created Successfully", createdUser);
       message.success("Your form has been submitted successfully!");
-
+      }else{
+        message.error("Failed to create profile. Please try again.");
+      }
       // Reset states
       setUploading(false);
       setSubmitting(false);

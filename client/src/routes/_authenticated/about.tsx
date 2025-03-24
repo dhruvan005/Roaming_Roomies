@@ -2,16 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import UC from "../../assets/under-construction.png";
-export const Route = createFileRoute('/_authenticated/about')({
+export const Route = createFileRoute("/_authenticated/about")({
   component: AboutComponent,
 })
 
 function AboutComponent() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <div className="mb-4 w-25">
-        {/* <img src={UC} alt="" /> */}
-      </div>
+      
       <h1 className="text-4xl font-bold text-gray-800 mb-4">About Page</h1>
       <div className="text-xl text-gray-600 mb-4">
         Page is Under Construction
@@ -31,5 +29,5 @@ function AboutComponent() {
         </Button>
       </Link>
     </div>
-  )
+  );
 }

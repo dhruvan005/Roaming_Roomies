@@ -21,7 +21,7 @@ function HomeComponent() {
       <div className="flex-grow flex flex-col items-center justify-center py-8 md:py-12 lg:py-16">
       
         <div className="text-center max-w-3xl mb-10 md:mb-16">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-4">
             Welcome to{" "}
             <span className="text-primary font-extrabold">Roaming Roomies</span>
           </h1>

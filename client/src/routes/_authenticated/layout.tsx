@@ -110,7 +110,7 @@ export const Component = () => {
           <Content style={{ flex: "1 0 auto" }}  >
             <Outlet />
           </Content>
-          <Footer
+          {/* <Footer
             style={{
               height: "3vh",
               textAlign: "center",
@@ -119,7 +119,7 @@ export const Component = () => {
             }}
           >
             Roaming Roomies ©{new Date().getFullYear()}
-          </Footer>
+          </Footer> */}
         </Layout>
       </Layout>
     </div>
