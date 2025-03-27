@@ -78,7 +78,7 @@ export const userRoutes = new Hono()
                 ...requestData,
                 profileImageUrl: requestData.profileImageUrl,
             })
-            // console.log("Validated Data: ", validatedData);
+            console.log("Validated Data: ", validatedData);
             const existingUser = await db
                 .select()
                 .from(roommateUsers)
@@ -100,7 +100,7 @@ export const userRoutes = new Hono()
 
                 })
                 .returning()
-            // console.log("New User: ", newUser);
+            console.log("New User: ", newUser);
             return c.json({ success: true, message: "User created successfully", data: newUser }, 201);
         } catch (error) {
             return c.json(

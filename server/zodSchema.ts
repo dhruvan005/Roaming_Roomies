@@ -1,4 +1,4 @@
-import { z }   from 'zod';
+import { z } from 'zod';
 
 
 export const RoommateUserSchema = z.object({
@@ -15,11 +15,12 @@ export const RoommateUserSchema = z.object({
     cleanlinessLevel: z.number().int().min(1).max(5).optional(),
 
     // Lifestyle Preferences
-    dietaryPreferences: z.string().optional(),
-    smokingTolerance: z.boolean().optional(),
-    petTolerance: z.boolean().optional(),
-    alcoholTolerance: z.boolean().optional(),
-
+    dietaryPreference: z.string(),
+    smokingPreference: z.string(),
+    petPreference: z.string(),
+    alcoholPreference: z.string(),
+    workoutPreference: z.string(),
+    socialTrait: z.string(),
     // Additional Preferences
     interests: z.array(z.string()).optional(),
 
@@ -27,7 +28,7 @@ export const RoommateUserSchema = z.object({
     // Roommate Matching Criteria
     desiredRoomType: z.enum(['apartment', 'house', 'studio', 'other']).optional(),
     maxRent: z.number().positive().optional(),
-    preferredLocations: z.string(), 
+    preferredLocations: z.string(),
     moveInDate: z.coerce.date().optional(),
     minimumStay: z.number().int().positive().optional(),
 

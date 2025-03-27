@@ -89,6 +89,7 @@ export const Component = () => {
         <Sider
           breakpoint="md"
           collapsedWidth="0"
+         
           onBreakpoint={(broken) => {
             // console.log(broken);
           }}
@@ -110,16 +111,7 @@ export const Component = () => {
           <Content style={{ flex: "1 0 auto" }}  >
             <Outlet />
           </Content>
-          {/* <Footer
-            style={{
-              height: "3vh",
-              textAlign: "center",
-              backgroundColor: token.colorPrimaryBg,
-              flexShrink: 0,
-            }}
-          >
-            Roaming Roomies ©{new Date().getFullYear()}
-          </Footer> */}
+  
         </Layout>
       </Layout>
     </div>
