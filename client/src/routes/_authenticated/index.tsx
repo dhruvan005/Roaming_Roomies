@@ -17,9 +17,7 @@ function HomeComponent() {
   const navigate = useNavigate();
   return (
     <div className="container mx-auto p-4 lg:p-8 min-h-screen flex flex-col">
-     
       <div className="flex-grow flex flex-col items-center justify-center py-8 md:py-12 lg:py-16">
-      
         <div className="text-center max-w-3xl mb-10 md:mb-16">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-4">
             Welcome to{" "}
@@ -30,8 +28,7 @@ function HomeComponent() {
           </p>
         </div>
 
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-3xl  ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-3xl ">
           <Button
             className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group"
             onClick={() => navigate({ to: "/HouseListing" })}
@@ -48,7 +45,7 @@ function HomeComponent() {
           </Button>
 
           <Button
-            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group"
+            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group "
             onClick={() => navigate({ to: "/roomListing" })}
             size="large"
           >

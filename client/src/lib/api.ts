@@ -123,14 +123,10 @@ export function useCreateProfile() {
                 maxRent: data.maxRent ? Number(data.maxRent) : undefined,
                 age: Number(data.age)
             };
-
-            // console.log("Formatted data being sent:", JSON.stringify(formattedData, null, 2));
-
             try {
-                // Use fetch directly for more debugging control
+                // Send the data to the server
                 const response = await api.user.$post({
                     json: formattedData
-
                 });
 
                 if (!response.ok) {

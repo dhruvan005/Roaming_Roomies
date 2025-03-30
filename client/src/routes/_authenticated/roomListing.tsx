@@ -28,7 +28,6 @@ import {
   PhoneOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import moment from "moment";
 import { useQueryOptions } from "../../lib/api";
 import { useQuery } from "@tanstack/react-query";
 const { Title, Paragraph } = Typography;
@@ -38,7 +37,6 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
-import { VenusAndMars } from "lucide-react";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
@@ -49,7 +47,6 @@ function UserProfileForm() {
         firstName: data.user.given_name,
         lastName: data.user.family_name,
         email: data.user.email,
-        // Keep other default values
         phone: "",
         age: null,
         gender: undefined,
@@ -73,7 +70,7 @@ function UserProfileForm() {
       });
     }
   }, [data, form]);
-  // console.log("User Data:", data);
+
   const createProfile = useCreateProfile();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +85,14 @@ function UserProfileForm() {
     setFileList(newFileList.slice(-1)); // Keep only the latest file
   };
 
+  // Configure Ant Design message component
+  useEffect(() => {
+    message.config({
+      top: 100, // Distance from top
+      duration: 5, // Seconds
+      maxCount: 3, // Max messages shown
+    });
+  }, []);
   const addInterest = useCallback(() => {
     if (!newInterest.trim()) return;
 
@@ -152,7 +157,7 @@ function UserProfileForm() {
       });
 
       const data = await response.json();
-      console.log("Cloudinary Response:", data);
+      // console.log("Cloudinary Response:", data);
 
       if (data.secure_url) {
         return data.secure_url; // Return uploaded image URL
@@ -172,8 +177,6 @@ function UserProfileForm() {
       setSubmitting(true);
 
       let imageUrl = null;
-      // console.log("File List:", fileList);
-
       if (fileList.length > 0) {
         imageUrl = await uploadToCloudinary(fileList[0]); // Upload image
       }
@@ -181,7 +184,7 @@ function UserProfileForm() {
       setUploading(false);
 
       if (!imageUrl) {
-        message.error("Please upload an image before submitting.");
+        message.error("Please upload an image before submitting." , 5);
         setUploading(false);
         setSubmitting(false);
         return;
@@ -196,11 +199,11 @@ function UserProfileForm() {
       console.log("Final Form Data:", formattedValues);
 
       // **Proceed with profile creation**
-      const createdUser =  await createProfile.mutateAsync(formattedValues);
-      if(createdUser){
+      const createdUser = await createProfile.mutateAsync(formattedValues);
+      if (createdUser) {
         console.log("User Created Successfully", createdUser);
-      message.success("Your form has been submitted successfully!");
-      }else{
+        message.success("Your form has been submitted successfully!");
+      } else {
         message.error("Failed to create profile. Please try again.");
       }
       // Reset states
