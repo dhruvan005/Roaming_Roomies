@@ -1,35 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 @import "tailwindcss";
 
-.heroHeader {
-  background-color: #888888d0; /* Light blue color */
-  font-family: "Source Sans 3", sans-serif;
-  font-weight: 400;
-}
+  .heroHeader {
+    background-color: #888888d0; /* Light blue color */
+    font-family: "Source Sans 3", sans-serif;
+    font-weight: 400;
+  }
 
 .root-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .root-layout .ant-layout {
+    flex: 1;
+  }
 
-.root-layout .ant-layout {
-  flex: 1;
-}
+  .custom-list-item .ant-list-item-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+    
+  .custom-list-item .ant-list-item-action li {
+    display: flex;
+    justify-content: center;
+    margin: 0 8px;
+  }
 
-.custom-list-item .ant-list-item-action {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.custom-list-item .ant-list-item-action li {
-  display: flex;
-  justify-content: center;
-  margin: 0 8px;
-}
 
-/* UserProfileModal.css */
+  /* UserProfileModal.css */
 .user-profile-modal .ant-modal-content {
   border-radius: 12px;
   overflow: hidden;
@@ -51,6 +53,7 @@
   left: 0;
   right: 0;
   height: 100%;
+  
 }
 
 .profile-header-content {

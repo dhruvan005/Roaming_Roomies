@@ -22,7 +22,18 @@ import {
   CalendarOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
-import { Cigarette, PawPrint } from "lucide-react";
+import {
+  Cigarette,
+  PawPrint,
+  BriefcaseBusiness,
+  VenusAndMars,
+  Wine,
+  BicepsFlexed,
+  Bed,
+  CookingPot,
+  Handshake,
+  ClockIcon,
+} from "lucide-react";
 const { Title, Text, Paragraph } = Typography;
 
 interface UserProfileModalProps {
@@ -57,7 +68,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
       width={800}
       centered
       className="user-profile-modal"
-      bodyStyle={{ padding: "0", maxHeight: "80vh", overflow: "auto" }}
+      style={{ padding: "0", maxHeight: "80vh", overflow: "auto" }}
     >
       <div className="user-profile-container">
         {/* Header Section with Background */}
@@ -80,7 +91,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
           {/* Quick Stats */}
           <Row gutter={[16, 16]} className="quick-stats">
             <Col xs={8} sm={8}>
-              <Card bordered={false} className="stat-card">
+              <Card  className="stat-card">
                 <DollarOutlined className="stat-icon" />
                 <div className="stat-content">
                   <div className="stat-value">${user.maxRent}</div>
@@ -89,7 +100,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </Card>
             </Col>
             <Col xs={8} sm={8}>
-              <Card bordered={false} className="stat-card">
+              <Card  className="stat-card">
                 <CalendarOutlined className="stat-icon" />
                 <div className="stat-content">
                   <div className="stat-value">
@@ -103,7 +114,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </Card>
             </Col>
             <Col xs={8} sm={8}>
-              <Card bordered={false} className="stat-card">
+              <Card  className="stat-card">
                 <HomeOutlined className="stat-icon" />
                 <div className="stat-content">
                   <div className="stat-value">
@@ -123,17 +134,15 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {user.bio && (
                 <Card
                   title={<Title level={4}>About Me</Title>}
-                  bordered={false}
+                  
                   className="profile-card"
                 >
                   <Paragraph>{user.bio}</Paragraph>
                 </Card>
               )}
 
-              {/* Housing Preferences */}
               <Card
                 title={<Title level={4}>Housing Preferences</Title>}
-                bordered={false}
                 className="profile-card"
               >
                 <div className="info-grid">
@@ -170,13 +179,59 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       </div>
                     </div>
                   </div>
+
+                  <div className="info-item">
+                    <ClockIcon className="info-icon" />
+                    <div>
+                      <Text strong>Minimum Stay</Text>
+                      <div>{user.minimumStay} months</div>
+                    </div>
+                  </div>
                 </div>
               </Card>
 
               {/* Lifestyle & Interests */}
               <Card
-                title={<Title level={4}>Lifestyle & Interests</Title>}
-                bordered={false}
+                title={<Title level={4}>Lifestyle Preferences</Title>}
+                
+                className="profile-card"
+              >
+                <div className="info-grid">
+                  <div className="info-item">
+                    <Bed className="info-icon" />
+                    <div>
+                      <Text strong>Sleep Schedule</Text>
+                      <div>{user.sleepSchedule}</div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <BicepsFlexed className="info-icon" />
+                    <div>
+                      <Text strong>Workout Preferences</Text>
+                      <div>{user.workoutPreference.toWellFormed()}</div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <Handshake className="info-icon" />
+                    <div>
+                      <Text strong>Social Traits</Text>
+                      <div>{user.socialTrait || "Not specified"}</div>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <CookingPot className="info-icon" />
+                    <div>
+                      <Text strong>Dietary Preference</Text>
+                      <div>{user.dietaryPreference || "Not specified"}</div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+              <Card
+                title={<Title level={4}>Habits & Social Preferences</Title>}
+                
                 className="profile-card"
               >
                 <div className="info-grid">
@@ -200,9 +255,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <Cigarette className="info-icon" />
                     <div>
                       <Text strong>Smoking</Text>
-                      <div>
-                        {user.smokingPreference ? "Smoker" : "Non-smoker"}
-                      </div>
+                      <div>{user.smokingPreference}</div>
                     </div>
                   </div>
 
@@ -210,14 +263,21 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <PawPrint className="info-icon" />
                     <div>
                       <Text strong>Pets</Text>
-                      <div>{user.petPreference ? "Has pets" : "No pets"}</div>
+                      <div>{user.petPreference.toWellFormed()}</div>
                     </div>
                   </div>
 
                   <div className="info-item">
+                    <Wine className="info-icon" />
+                    <div>
+                      <Text strong>Alcohol Preference</Text>
+                      <div>{user.alcoholPreference || "Not specified"}</div>
+                    </div>
+                  </div>
+                  <div className="info-item">
                     <UserOutlined className="info-icon" />
                     <div>
-                      <Text strong>Cleanliness</Text>
+                      <Text strong>Cleanliness Level</Text>
                       <div>{user.cleanlinessLevel || "Not specified"}</div>
                     </div>
                   </div>
@@ -230,7 +290,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {/* Contact Information */}
               <Card
                 title={<Title level={4}>Contact</Title>}
-                bordered={false}
+                
                 className="profile-card"
               >
                 <div className="info-item">
@@ -257,30 +317,44 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {/* Personal Details */}
               <Card
                 title={<Title level={4}>Personal Details</Title>}
-                bordered={false}
                 className="profile-card"
               >
-                <div className="info-item">
-                  <UserOutlined className="info-icon" />
-                  <div>
-                    <Text strong>Gender</Text>
-                    <div>{user.gender || "Not specified"}</div>
-                  </div>
-                </div>
+                <div className="info aligned">
+                  <div className="info-item">
+                    <VenusAndMars className="info-icon" />
 
-                <div className="info-item">
-                  <UserOutlined className="info-icon" />
-                  <div>
-                    <Text strong>Age</Text>
-                    <div>{user.age} years old</div>
+                    <div className="">
+                      <Text strong className="label">
+                        Gender
+                      </Text>
+                      <div className="value">
+                        {user.gender || "Not specified"}
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="info-item">
-                  <UserOutlined className="info-icon" />
-                  <div>
-                    <Text strong>Occupation</Text>
-                    <div>{user.occupation || "Not specified"}</div>
+                  <div className="info-item">
+                    <UserOutlined className="info-icon" />
+
+                    <div className="">
+                      <Text strong className="label">
+                        Age
+                      </Text>
+                      <div className="value">{user.age} years old</div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <BriefcaseBusiness className="info-icon" />
+
+                    <div className="">
+                      <Text strong className="label">
+                        Occupation
+                      </Text>
+                      <div className="value">
+                        {user.occupation || "Not specified"}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>

@@ -30,7 +30,7 @@ export interface User {
   workoutPreference: string;
   socialTrait: string;
   interests: string[];
-  desiredRoomType: "apartment" | "house" | "studio" | "other";
+  desiredRoomType: "Apartment" | "House" | "Studio" | "Other";
   maxRent: number;
   preferredLocations: string;
   moveInDate: Date; // Uses Moment.js from Ant Design's DatePicker

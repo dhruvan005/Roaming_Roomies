@@ -485,11 +485,11 @@ function UserProfileForm() {
                     label="Dietary Preference"
                   >
                     <Select placeholder="Select dietary preference">
-                      <Option value="vegetarian">Vegetarian</Option>
-                      <Option value="vegan">Vegan</Option>
-                      <Option value="non_vegetarian">Non-Vegetarian</Option>
-                      <Option value="gluten_free">Gluten-Free</Option>
-                      <Option value="other">Other</Option>
+                      <Option value="Vegetarian">Vegetarian</Option>
+                      <Option value="Vegan">Vegan</Option>
+                      <Option value="Non-Vegetarian">Non-Vegetarian</Option>
+                      <Option value="Gluten-Free">Gluten-Free</Option>
+                      <Option value="Other">Other</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -515,12 +515,12 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select Smoking Preference">
-                      <Option value="non_smoker">Non-Smoker</Option>
-                      <Option value="smoker">Smoker</Option>
-                      <Option value="social_smoker">Social Smoker</Option>
-                      <Option value="vaper">Vaper</Option>
-                      <Option value="trying_to_quit">Trying To Quit</Option>
-                      <Option value="smoker_when_drinking">
+                      <Option value="Non-Smoker">Non-Smoker</Option>
+                      <Option value="Smoker">Smoker</Option>
+                      <Option value="Social-Smoker">Social Smoker</Option>
+                      <Option value="Vaper">Vaper</Option>
+                      <Option value="Trying-To-Quit">Trying To Quit</Option>
+                      <Option value="Smoker-When-Drinking">
                         Smoker when drinking
                       </Option>
                     </Select>
@@ -538,14 +538,14 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select Alcohol Preference">
-                      <Option value="not_for_me">Not for Me</Option>
-                      <Option value="social_drinker">
+                      <Option value="Not-for-Me">Not for Me</Option>
+                      <Option value="Social-Drinker">
                         Social Drinker (On weekends)
                       </Option>
-                      <Option value="most_nigths">Most Nights</Option>
-                      <Option value="sober">Sober</Option>
-                      <Option value="sober_curious">Sober curious</Option>
-                      <Option value="trying_to_quit">Trying To Quit</Option>
+                      <Option value="Most-Nigths">Most Nights</Option>
+                      <Option value="Sober">Sober</Option>
+                      <Option value="Sober-Curious">Sober curious</Option>
+                      <Option value="Trying-To-Quit">Trying To Quit</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -562,11 +562,11 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select Workout Preference">
-                      <Option value="gym_rat">Gym Rat</Option>
-                      <Option value="often">Often</Option>
-                      <Option value="sometimes">Sometimes</Option>
-                      <Option value="trying_to_start">Trying To Start</Option>
-                      <Option value="never">Never</Option>
+                      <Option value="Gym-Rat">Gym Rat</Option>
+                      <Option value="Often">Often</Option>
+                      <Option value="Sometimes">Sometimes</Option>
+                      <Option value="Trying-To-Start">Trying To Start</Option>
+                      <Option value="Never">Never</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -583,11 +583,11 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select Pet Preference">
-                      <Option value="loves_pets">Loves Pets</Option>
-                      <Option value="allergic">Allergic</Option>
-                      <Option value="no_pets">No Pets</Option>
-                      <Option value="open_to_pets">Open To Pets</Option>
-                      <Option value="has_pets">Has Pets</Option>
+                      <Option value="Loves-Pets">Loves Pets</Option>
+                      <Option value="Allergic">Allergic</Option>
+                      <Option value="No-Pets">No Pets</Option>
+                      <Option value="Open-To-Pets">Open To Pets</Option>
+                      <Option value="Has-Pets">Has Pets</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -604,13 +604,13 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select Social Trait">
-                      <Option value="introvert">Introvert</Option>
-                      <Option value="extrovert">Extrovert</Option>
-                      <Option value="ambivert">Ambivert</Option>
-                      <Option value="shy">Shy</Option>
-                      <Option value="outgoing">Outgoing</Option>
-                      <Option value="friendly">Friendly</Option>
-                      <Option value="quiet">Quiet</Option>
+                      <Option value="Introvert">Introvert</Option>
+                      <Option value="Extrovert">Extrovert</Option>
+                      <Option value="Ambivert">Ambivert</Option>
+                      <Option value="Shy">Shy</Option>
+                      <Option value="Outgoing">Outgoing</Option>
+                      <Option value="Friendly">Friendly</Option>
+                      <Option value="Quiet">Quiet</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -689,10 +689,10 @@ function UserProfileForm() {
                     ]}
                   >
                     <Select placeholder="Select room type">
-                      <Option value="apartment">Apartment</Option>
-                      <Option value="house">House</Option>
-                      <Option value="studio">Studio</Option>
-                      <Option value="other">Other</Option>
+                      <Option value="Apartment">Apartment</Option>
+                      <Option value="House">House</Option>
+                      <Option value="Studio">Studio</Option>
+                      <Option value="Other">Other</Option>
                     </Select>
                   </Form.Item>
                 </Col>
