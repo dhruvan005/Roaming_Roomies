@@ -7,21 +7,10 @@ import {
   Row,
   Col,
   Tag,
-  Divider,
   Typography,
-  Space,
+  Divider,
 } from "antd";
-import { User } from "../types";
-import {
-  HomeOutlined,
-  DollarOutlined,
-  UserOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  EnvironmentOutlined,
-  CalendarOutlined,
-  HeartOutlined,
-} from "@ant-design/icons";
+import { UserType } from "../types";
 import {
   Cigarette,
   PawPrint,
@@ -33,12 +22,21 @@ import {
   CookingPot,
   Handshake,
   ClockIcon,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  MapPin,
+  CircleDollarSign,
+  Home,
+  HeartIcon,
 } from "lucide-react";
+
 const { Title, Text, Paragraph } = Typography;
 
 interface UserProfileModalProps {
   isOpen: boolean;
-  user: User | null;
+  user: UserType | null;
   onClose: () => void;
 }
 
@@ -49,6 +47,14 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
 }) => {
   if (!user) return null;
 
+  const formatDate = (date: string | Date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <Modal
       title={null}
@@ -58,7 +64,9 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
         <Button
           key="message"
           onClick={() => console.log("Message sent to", user.email)}
+          style={{ marginRight: 8 }}
         >
+          <Mail size={16} style={{ marginRight: 6 }} />
           Message
         </Button>,
         <Button key="close" type="primary" onClick={onClose}>
@@ -67,20 +75,39 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
       ]}
       width={800}
       centered
-      className="user-profile-modal"
-      style={{ padding: "0", maxHeight: "80vh", overflow: "auto" }}
+      className="no-scrollbar user-profile-modal custom-modal-body "
+      styles={{
+        body: {
+          padding: 0,
+          maxHeight: "80vh",
+          overflow: "auto",
+          borderRadius: 12,
+        },
+      }}
     >
       <div className="user-profile-container">
-        {/* Header Section with Background */}
         <div className="profile-header">
           <div className="profile-header-bg" />
           <div className="profile-header-content">
-            <Avatar src={user.profileImageUrl} size={120} />
+            <Avatar
+              src={user.profileImageUrl}
+              size={120}
+              style={{
+                border: "4px solid white",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+            />
             <div className="profile-name-section">
-              <Title level={2} style={{ margin: "0 0 4px" }}>
+              <Title
+                level={2}
+                style={{ margin: "12px 0 4px", textAlign: "center" }}
+              >
                 {user.firstName} {user.lastName}
               </Title>
-              <Text type="secondary">
+              <Text
+                type="secondary"
+                style={{ fontSize: 16, textAlign: "center", display: "block" }}
+              >
                 {user.occupation} • {user.age} years old
               </Text>
             </div>
@@ -88,44 +115,6 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         <div className="profile-body">
-          {/* Quick Stats */}
-          <Row gutter={[16, 16]} className="quick-stats">
-            <Col xs={8} sm={8}>
-              <Card  className="stat-card">
-                <DollarOutlined className="stat-icon" />
-                <div className="stat-content">
-                  <div className="stat-value">${user.maxRent}</div>
-                  <div className="stat-label">Budget</div>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={8} sm={8}>
-              <Card  className="stat-card">
-                <CalendarOutlined className="stat-icon" />
-                <div className="stat-content">
-                  <div className="stat-value">
-                    {new Date(user.moveInDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </div>
-                  <div className="stat-label">Move-in</div>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={8} sm={8}>
-              <Card  className="stat-card">
-                <HomeOutlined className="stat-icon" />
-                <div className="stat-content">
-                  <div className="stat-value">
-                    {user.desiredRoomType.split(" ")[0]}
-                  </div>
-                  <div className="stat-label">Room Type</div>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-
           {/* Main Content */}
           <Row gutter={[24, 24]}>
             {/* Left Column */}
@@ -133,116 +122,273 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {/* About Me */}
               {user.bio && (
                 <Card
-                  title={<Title level={4}>About Me</Title>}
-                  
-                  className="profile-card"
+                  title={
+                    <Title level={4} style={{ margin: 0 }}>
+                      About Me
+                    </Title>
+                  }
+                  className="custom-card-no-border custom-card-header custom-card-body"
+                  style={{
+                    marginBottom: 24,
+                    borderRadius: 8,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                  }}
                 >
-                  <Paragraph>{user.bio}</Paragraph>
+                  <Paragraph
+                    style={{ margin: 0, fontSize: 15, lineHeight: 1.6 }}
+                  >
+                    {user.bio}
+                  </Paragraph>
                 </Card>
               )}
 
               <Card
-                title={<Title level={4}>Housing Preferences</Title>}
-                className="profile-card"
+                title={
+                  <Title level={4} style={{ margin: 0 }}>
+                    Housing Preferences
+                  </Title>
+                }
+                className="custom-card-no-border custom-card-header custom-card-body"
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 8,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                }}
               >
-                <div className="info-grid">
-                  <div className="info-item">
-                    <HomeOutlined className="info-icon" />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 16,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Home
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Room Type</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Room Type
+                      </Text>
                       <div>{user.desiredRoomType}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <DollarOutlined className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <CircleDollarSign
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Budget</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Budget
+                      </Text>
                       <div>${user.maxRent}/month</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <EnvironmentOutlined className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <MapPin
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Preferred Areas</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Preferred Areas
+                      </Text>
                       <div>{user.preferredLocations || "Not specified"}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <CalendarOutlined className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Calendar
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Available From</Text>
-                      <div>
-                        {new Date(user.moveInDate).toLocaleDateString()}
-                      </div>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Available From
+                      </Text>
+                      <div>{formatDate(user.moveInDate)}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <ClockIcon className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <ClockIcon
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Minimum Stay</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Minimum Stay
+                      </Text>
                       <div>{user.minimumStay} months</div>
                     </div>
                   </div>
                 </div>
               </Card>
 
-              {/* Lifestyle & Interests */}
+              {/* Lifestyle Preferences */}
               <Card
-                title={<Title level={4}>Lifestyle Preferences</Title>}
-                
-                className="profile-card"
+                title={
+                  <Title level={4} style={{ margin: 0 }}>
+                    Lifestyle Preferences
+                  </Title>
+                }
+                className="custom-card-no-border custom-card-header custom-card-body"
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 8,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                }}
               >
-                <div className="info-grid">
-                  <div className="info-item">
-                    <Bed className="info-icon" />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 16,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Bed
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Sleep Schedule</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Sleep Schedule
+                      </Text>
                       <div>{user.sleepSchedule}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <BicepsFlexed className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <BicepsFlexed
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Workout Preferences</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Workout Habits
+                      </Text>
                       <div>{user.workoutPreference.toWellFormed()}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <Handshake className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Handshake
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Social Traits</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Social Traits
+                      </Text>
                       <div>{user.socialTrait || "Not specified"}</div>
                     </div>
                   </div>
-                  <div className="info-item">
-                    <CookingPot className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <CookingPot
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Dietary Preference</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Dietary Preference
+                      </Text>
                       <div>{user.dietaryPreference || "Not specified"}</div>
                     </div>
                   </div>
                 </div>
               </Card>
+
+              {/* Habits & Social Preferences */}
               <Card
-                title={<Title level={4}>Habits & Social Preferences</Title>}
-                
-                className="profile-card"
+                title={
+                  <Title level={4} style={{ margin: 0 }}>
+                    Habits & Social Preferences
+                  </Title>
+                }
+                className="custom-card-no-border custom-card-header custom-card-body"
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 8,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                }}
               >
-                <div className="info-grid">
-                  <div className="info-item">
-                    <HeartOutlined className="info-icon" />
-                    <div>
-                      <Text strong>Interests</Text>
-                      <div className="tags-container">
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 16,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gridColumn: "1 / -1",
+                    }}
+                  >
+                    <HeartIcon
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
+                    <div style={{ width: "100%" }}>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 4 }}
+                      >
+                        Interests
+                      </Text>
+                      <div
+                        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+                      >
                         {user.interests
                           ? user.interests.map((interest, index) => (
-                              <Tag key={index} color="blue">
+                              <Tag
+                                key={index}
+                                color="blue"
+                                style={{ margin: 0 }}
+                              >
                                 {interest.trim()}
                               </Tag>
                             ))
@@ -251,33 +397,73 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <Cigarette className="info-icon" />
+                  <Divider
+                    style={{ margin: "8px 0 16px", gridColumn: "1 / -1" }}
+                  />
+
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Cigarette
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Smoking</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Smoking
+                      </Text>
                       <div>{user.smokingPreference}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <PawPrint className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <PawPrint
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Pets</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Pets
+                      </Text>
                       <div>{user.petPreference.toWellFormed()}</div>
                     </div>
                   </div>
 
-                  <div className="info-item">
-                    <Wine className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <Wine
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Alcohol Preference</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Alcohol
+                      </Text>
                       <div>{user.alcoholPreference || "Not specified"}</div>
                     </div>
                   </div>
-                  <div className="info-item">
-                    <UserOutlined className="info-icon" />
+                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                    <User
+                      size={18}
+                      color="#1890ff"
+                      style={{ marginRight: 12, marginTop: 2 }}
+                    />
                     <div>
-                      <Text strong>Cleanliness Level</Text>
+                      <Text
+                        strong
+                        style={{ display: "block", marginBottom: 2 }}
+                      >
+                        Cleanliness
+                      </Text>
                       <div>{user.cleanlinessLevel || "Not specified"}</div>
                     </div>
                   </div>
@@ -289,72 +475,140 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <Col xs={24} md={8}>
               {/* Contact Information */}
               <Card
-                title={<Title level={4}>Contact</Title>}
-                
-                className="profile-card"
+                title={
+                  <Title level={4} style={{ margin: 0 }}>
+                    Contact
+                  </Title>
+                }
+                className="custom-card-no-border custom-card-header custom-card-body"
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 8,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                }}
               >
-                <div className="info-item">
-                  <PhoneOutlined className="info-icon" />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: 16,
+                  }}
+                >
+                  <Phone
+                    size={18}
+                    color="#1890ff"
+                    style={{ marginRight: 12, marginTop: 2 }}
+                  />
                   <div>
-                    <Text strong>Phone</Text>
+                    <Text strong style={{ display: "block", marginBottom: 2 }}>
+                      Phone
+                    </Text>
                     <div>{user.phone || "Not provided"}</div>
                   </div>
                 </div>
 
-                <div className="info-item">
-                  <MailOutlined className="info-icon" />
-                  <div>
-                    <Text strong>Email</Text>
-                    <div>{user.email || "Not provided"}</div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: 16,
+                  }}
+                >
+                  <Mail
+                    size={18}
+                    color="#1890ff"
+                    style={{ marginRight: 12, marginTop: 2, flexShrink: 0 }}
+                  />
+                  <div style={{ minWidth: 0, width: "100%" }}>
+                    <Text strong style={{ display: "block", marginBottom: 2 }}>
+                      Email
+                    </Text>
+                    <div
+                      style={{
+                        wordBreak: "break-word",
+                        overflowWrap: "break-word",
+                      }}
+                    >
+                      {user.email || "Not provided"}
+                    </div>
                   </div>
                 </div>
 
-                <Button type="primary" block style={{ marginTop: 16 }}>
+                <Button
+                  type="primary"
+                  block
+                  style={{ marginTop: 8 }}
+                  icon={<Mail size={16} style={{ marginRight: 6 }} />}
+                >
                   Contact {user.firstName}
                 </Button>
               </Card>
 
               {/* Personal Details */}
               <Card
-                title={<Title level={4}>Personal Details</Title>}
-                className="profile-card"
+                title={
+                  <Title level={4} style={{ margin: 0 }}>
+                    Personal Details
+                  </Title>
+                }
+                className="custom-card-no-border custom-card-header custom-card-body"
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 8,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                }}
               >
-                <div className="info aligned">
-                  <div className="info-item">
-                    <VenusAndMars className="info-icon" />
-
-                    <div className="">
-                      <Text strong className="label">
-                        Gender
-                      </Text>
-                      <div className="value">
-                        {user.gender || "Not specified"}
-                      </div>
-                    </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: 16,
+                  }}
+                >
+                  <VenusAndMars
+                    size={18}
+                    color="#1890ff"
+                    style={{ marginRight: 12, marginTop: 2 }}
+                  />
+                  <div>
+                    <Text strong style={{ display: "block", marginBottom: 2 }}>
+                      Gender
+                    </Text>
+                    <div>{user.gender || "Not specified"}</div>
                   </div>
+                </div>
 
-                  <div className="info-item">
-                    <UserOutlined className="info-icon" />
-
-                    <div className="">
-                      <Text strong className="label">
-                        Age
-                      </Text>
-                      <div className="value">{user.age} years old</div>
-                    </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: 16,
+                  }}
+                >
+                  <User
+                    size={18}
+                    color="#1890ff"
+                    style={{ marginRight: 12, marginTop: 2 }}
+                  />
+                  <div>
+                    <Text strong style={{ display: "block", marginBottom: 2 }}>
+                      Age
+                    </Text>
+                    <div>{user.age} years old</div>
                   </div>
+                </div>
 
-                  <div className="info-item">
-                    <BriefcaseBusiness className="info-icon" />
-
-                    <div className="">
-                      <Text strong className="label">
-                        Occupation
-                      </Text>
-                      <div className="value">
-                        {user.occupation || "Not specified"}
-                      </div>
-                    </div>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <BriefcaseBusiness
+                    size={18}
+                    color="#1890ff"
+                    style={{ marginRight: 12, marginTop: 2 }}
+                  />
+                  <div>
+                    <Text strong style={{ display: "block", marginBottom: 2 }}>
+                      Occupation
+                    </Text>
+                    <div>{user.occupation || "Not specified"}</div>
                   </div>
                 </div>
               </Card>

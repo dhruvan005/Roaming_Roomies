@@ -1,5 +1,5 @@
 
-export interface User {
+export interface UserType {
   id: string;
   firstName: string;
   lastName: string;
@@ -48,7 +48,7 @@ export interface ApiResponse {
   page: number;
   limit: number;
   total: string;
-  users: User[];
+  users: UserType[];
 }
 export interface UserProfileFormValues {
   firstName: string;
