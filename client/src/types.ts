@@ -13,7 +13,7 @@ export interface User {
   | "other"
   | "prefer_not_to_say";
   occupation: string;
-  profileImage: string;
+  profileImageUrl: string;
 
   // Lifestyle Preferences
   sleepSchedule:
@@ -22,16 +22,13 @@ export interface User {
   | "average"
   | "irregular";
   cleanlinessLevel: number;
-  dietaryPreferences:
-  | "vegetarian"
-  | "vegan"
-  | "non_vegetarian"
-  | "gluten_free"
-  | "other"
-  ;
-  smokingTolerance: boolean;
-  petTolerance: boolean;
-  alcoholTolerance: boolean;
+  
+  dietaryPreference: string;
+  smokingPreference: string;
+  petPreference: string;
+  alcoholPreference: string;
+  workoutPreference: string;
+  socialTrait: string;
   interests: string[];
   desiredRoomType: "apartment" | "house" | "studio" | "other";
   maxRent: number;

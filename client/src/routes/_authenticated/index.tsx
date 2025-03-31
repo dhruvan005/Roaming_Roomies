@@ -8,6 +8,7 @@ import UserList from "../../components/UserList";
 import Information from "../../components/Information";
 import { Divider } from "antd";
 import { useNavigate } from "@tanstack/react-router";
+import UserListItem from "../../components/UserListItem";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: HomeComponent,
