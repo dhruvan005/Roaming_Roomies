@@ -1,19 +1,11 @@
-// add kinde auth id to the database
-// then fatch using the kinde auth id
-// then show the user profile
-
-
-
-
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Skeleton } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryOptions } from "../../lib/api";
-import { Button } from "antd";
-import { api } from "../../lib/api"; // Add this line to import the api object
+import { Button , Avatar } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Spin, Alert } from "antd";
-import { UserAddOutlined } from "@ant-design/icons";
+import { getUserByEmail } from "../../lib/api";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: Profile,
@@ -22,50 +14,23 @@ export const Route = createFileRoute("/_authenticated/profile")({
 function Profile() {
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
   const navigate = useNavigate();
+  console.log("Profile Data: of the logged in user", data?.user.email);
 
-  // Get current authenticated user
-  const { data: userData, isPending: isUserLoading } =
-    useQuery(useQueryOptions);
+  // Check if the user profile created or not
+  // If not, redirect to the profile creation page
+  const { data: userData, isPending: isUserPending } = getUserByEmail(
+    data?.user?.email || ""
+  );
 
+  console.log("profile created or not", userData);
 
-  // // Check if user profile exists using the user's email
-  // const { data: profileData, isPending: isProfileLoading } = useQuery({
-  //   queryKey: ["userProfile", userData?.user?.email],
-  //   queryFn: async () => {
-  //     // Only fetch if we have the user email
-  //     if (!userData?.user?.email) return null;
-     
-  //     // Use the user API endpoint to check for profile by email
-  //     const response = await api.user.$get({
-  //       query: { email: userData.user.email },
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch user profile");
-  //     }
-
-  //     const data = await response.json();
-  //     console.log(" user profile data... ", data);
-  //     // If users array has entries, profile exists
-  //     return {
-  //       exists: data.users && data.users.length > 0,
-  //       profileData: data.users && data.users.length > 0 ? data.users[0] : null,
-  //     };
-  //   },
-  //   // Don't run query until we have the user email
-  //   enabled: !!userData?.user?.email,
-  // });
-
-  // const isLoading = isUserLoading || isProfileLoading;
-  // const profileExists = profileData?.exists;
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <Spin size="large" tip="Loading user information..." />
-  //     </div>
-  //   );
-  // }
+  useEffect(() => {
+    if (isUserPending) {
+      console.log("Loading user data...");
+    } else {
+      console.log("User data loaded:", userData);
+    }
+  }, [userData, isUserPending]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -91,27 +56,28 @@ function Profile() {
           </div>
         )}
 
-        {data && (
+        {userData && (
           <div className="space-y-4 mb-3 text-gray-300">
-            {/* {data.user.picture && (
-              <div className="flex  justify-center mb-6">
-                <img
-                  src={data.user.picture}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full border-2 border-gray-600"
-                />
-              </div>
-            )} */}
             <div className="p-4 bg-gray-700/50 rounded-lg">
+              <div className="flex justify-center mb-4">
+              <Avatar
+              src={userData.data.profileImageUrl}
+              size={120}
+              style={{
+                border: "4px solid white",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+            />
+              </div>
               <div className="mb-3">
-                <span className="font-bold text-gray-400">Name:</span>
+                <span className="font-bold text-gray-400">Name: </span>
                 <span className="ml-2">
-                  {data.user.given_name} {data.user.family_name}
+                  {userData.data.firstName} {userData.data.lastName}
                 </span>
               </div>
               <div className="">
                 <span className="font-bold text-gray-400">Email:</span>
-                <span className="ml-2">{data.user.email}</span>
+                <span className="ml-2">{userData.data.email}</span>
               </div>
             </div>
           </div>
@@ -120,49 +86,6 @@ function Profile() {
         <Button className="bg-gray-500/50 " type="primary" href="/api/logout">
           Logout
         </Button>
-
-        {/* <div className="mt-6">
-          {profileExists ? (
-            <Alert
-              message="Profile Status"
-              description="You have created a user profile. You can view or edit it from your profile page."
-              type="success"
-              showIcon
-              className="mb-6 max-w-md"
-            />
-          ) : (
-            <Alert
-              message="Profile Status"
-              description="You haven't created a user profile yet. Create a profile to connect with potential roommates."
-              type="warning"
-              showIcon
-              className="mb-6 max-w-md"
-              action={
-                <Button
-                  type="primary"
-                  size="small"
-                  onClick={() => navigate({ to: "/roomListing" })}
-                >
-                  Create Profile
-                </Button>
-              }
-            />
-          )}
-
-          <div className="flex gap-4">
-            {!profileExists && (
-              <Button
-                type="default"
-                size="large"
-                icon={<UserAddOutlined />}
-                className="flex items-center gap-2"
-                onClick={() => navigate({ to: "/roomListing" })}
-              >
-                Create Profile
-              </Button>
-            )}
-          </div>
-        </div> */}
       </div>
     </div>
   );

@@ -10,6 +10,8 @@ import { ApiResponse } from "../types";
 import { createRouter } from '@tanstack/react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfileFormValues } from '../types';
+import { UserType } from "@kinde-oss/kinde-typescript-sdk";
+import { GetApiResponse } from "../types";
 // Create a typed Hono client
 // Make sure the base URL is correct for your API
 const client = hc<ApiRoutes>("/");
@@ -57,6 +59,20 @@ export async function parseApiResponse(response: Response): Promise<ApiResponse>
     }
 }
 
+export async function parseUserApiResponse(response: Response) {
+    if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unknown error');
+        throw new Error(`API Error (${response.status}): ${errorText}`);
+    }
+
+    try {
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to parse response as JSON:', error);
+        throw new Error('Invalid response format from API');
+    }
+}
+
 // User API functions
 export const userApi = {
     // Get all users
@@ -68,6 +84,12 @@ export const userApi = {
         const response = await api.user.$get({ query: { page: 2 } }); // Example query parameter for pagination
         return parseApiResponse(response);
     },
+    // Get a single user by email
+    getByEmail: async (email: string) => {
+        const response = await api.user[":email"].$get({ param: { email } });
+        console.log("getByEmail response", response);
+        return parseUserApiResponse(response);             
+    },
 
 
     // Add more API functions as needed
@@ -78,6 +100,19 @@ export function useUsers() {
     return useQuery({
         queryKey: ["allUsers"],
         queryFn: userApi.getAll,
+        // Apply default settings that prevent auto-refetching
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        // Override with any custom options
+    });
+}
+export function getUserByEmail(email: string) {
+    return useQuery({
+        queryKey: ["getByEmail", email],
+        queryFn: ({ queryKey }) => {
+            const [, email] = queryKey as [string, string];
+            return userApi.getByEmail(email);
+        },
         // Apply default settings that prevent auto-refetching
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
@@ -152,3 +187,4 @@ export function useCreateProfile() {
         },
     });
 }
+

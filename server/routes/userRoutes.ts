@@ -113,13 +113,13 @@ export const userRoutes = new Hono()
             )
         }
     })
-    .get('/:id', async (c) => {
+    .get('/:email', async (c) => {
         try {
-            const { id } = c.req.param()
+            const { email } = c.req.param()
             const [user] = await db
                 .select()
                 .from(roommateUsers)
-                .where(eq(roommateUsers.id, id))
+                .where(eq(roommateUsers.email, email))
             if (!user) {
                 return c.json({
                     success: false,
@@ -139,87 +139,4 @@ export const userRoutes = new Hono()
             }, 500)
         }
     })
-
-/**
- * PUT (Update) user by ID
- */
-// userRoutes.put(
-//     '/:id',
-//     zValidator('json', RoommateUserSchema.partial()),
-//     async (c) => {
-//         try {
-//             const { id } = c.req.param();
-//             const validatedData = c.req.valid('json');
-
-//             // Update user
-//             const [updatedUser] = await db.update(roommateUsers)
-//                 .set({
-//                     ...validatedData,
-//                     updatedAt: new Date().toISOString(),
-//                     // Convert optional fields
-//                     moveInDate: validatedData.moveInDate
-//                         ? new Date(validatedData.moveInDate).toISOString()
-//                         : undefined,
-//                     interests: validatedData.interests,
-//                     preferredLocations: validatedData.preferredLocations,
-//                     personalityTraits: validatedData.personalityTraits
-//                         ? JSON.stringify(validatedData.personalityTraits)
-//                         : undefined
-//                 })
-//                 .where(eq(roommateUsers.id, id))
-//                 .returning();
-
-//             if (!updatedUser) {
-//                 return c.json({
-//                     success: false,
-//                     message: 'User not found'
-//                 }, 404);
-//             }
-
-//             return c.json({
-//                 success: true,
-//                 message: 'User updated successfully',
-//                 data: updatedUser
-//             });
-//         } catch (error) {
-//             console.error('Error updating user:', error);
-//             return c.json({
-//                 success: false,
-//                 message: 'Error updating user',
-//                 error: error instanceof Error ? error.message : 'Unknown error'
-//             }, 500);
-//         }
-//     }
-// );
-
-
-// userRoutes.delete('/:id', async (c) => {
-//     try {
-//         const { id } = c.req.param();
-
-//         const [deletedUser] = await db.delete(roommateUsers)
-//             .where(eq(roommateUsers.id, id))
-//             .returning();
-
-//         if (!deletedUser) {
-//             return c.json({
-//                 success: false,
-//                 message: 'User not found'
-//             }, 404);
-//         }
-
-//         return c.json({
-//             success: true,
-//             message: 'User deleted successfully',
-//             data: deletedUser
-//         });
-//     } catch (error) {
-//         console.error('Error deleting user:', error);
-//         return c.json({
-//             success: false,
-//             message: 'Error deleting user',
-//             error: error instanceof Error ? error.message : 'Unknown error'
-//         }, 500);
-//     }
-// });
 

@@ -22,7 +22,7 @@ export interface UserType {
   | "average"
   | "irregular";
   cleanlinessLevel: number;
-  
+
   dietaryPreference: string;
   smokingPreference: string;
   petPreference: string;
@@ -49,6 +49,11 @@ export interface ApiResponse {
   limit: number;
   total: string;
   users: UserType[];
+}
+
+export interface GetApiResponse {
+  success: boolean;
+  users: UserType;
 }
 export interface UserProfileFormValues {
   firstName: string;
