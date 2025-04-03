@@ -9,6 +9,7 @@ import {
   Tag,
   Typography,
   Divider,
+  Tooltip,
 } from "antd";
 import { UserType } from "../types";
 import {
@@ -61,17 +62,24 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
       open={isOpen}
       onCancel={onClose}
       footer={[
-        <Button
-          key="message"
-          onClick={() => console.log("Message sent to", user.email)}
-          style={{ marginRight: 8 }}
-        >
-          <Mail size={16} style={{ marginRight: 6 }} />
-          Message
-        </Button>,
-        <Button key="close" type="primary" onClick={onClose}>
-          Close
-        </Button>,
+        <div>
+          <Tooltip title="Coming soon" placement="top">
+            <Button
+              key="message"
+              disabled
+              onClick={() => console.log("Message sent to", user.email)}
+              style={{ marginRight: 8 }}
+            >
+              <Mail size={16} style={{ marginRight: 6 }} />
+              Message
+            </Button>
+            ,
+          </Tooltip>
+          <Button key="close" type="primary" onClick={onClose}>
+            Close
+          </Button>
+          ,
+        </div>,
       ]}
       width={800}
       centered
@@ -534,14 +542,16 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                 </div>
 
-                <Button
-                  type="primary"
-                  block
-                  style={{ marginTop: 8 }}
-                  icon={<Mail size={16} style={{ marginRight: 6 }} />}
-                >
-                  Contact {user.firstName}
-                </Button>
+                <Tooltip title="Coming soon" placement="top">
+                  <Button
+                    type="primary"
+                    disabled
+                    style={{ marginTop: 8 }}
+                    icon={<Mail size={16} style={{ marginRight: 6 }} />}
+                  >
+                    Contact {user.firstName}
+                  </Button>
+                </Tooltip>
               </Card>
 
               {/* Personal Details */}

@@ -88,7 +88,7 @@ export const userApi = {
     getByEmail: async (email: string) => {
         const response = await api.user[":email"].$get({ param: { email } });
         console.log("getByEmail response", response);
-        return parseUserApiResponse(response);             
+        return parseUserApiResponse(response);
     },
 
 
@@ -100,11 +100,10 @@ export function useUsers() {
     return useQuery({
         queryKey: ["allUsers"],
         queryFn: userApi.getAll,
-    
+
         refetchOnWindowFocus: false,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        // Override with any custom options
-        
+        staleTime: 10 * 60 * 1000, // 10 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
     });
 }
 export function getUserByEmail(email: string) {
@@ -116,8 +115,8 @@ export function getUserByEmail(email: string) {
         },
         // Apply default settings that prevent auto-refetching
         refetchOnWindowFocus: false,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        // Override with any custom options
+        staleTime: 10 * 60 * 1000, // 10 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
     });
 }
 
@@ -144,7 +143,8 @@ export const useQueryOptions = {
         }
         return response.json();
     },
-    staleTime: 30 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
     retry: false
 }
 
