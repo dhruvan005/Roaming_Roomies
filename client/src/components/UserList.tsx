@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { List } from "antd";
 import { useUsers, dataControls } from "../lib/api";
-import { User } from "../types";
+import { UserType } from "../types";
 import UserListHeader from "./UserListHeader";
 import UserListItem from "./UserListItem";
 import UserProfileModal from "./UserProfileModal";
 import LoadingSkeleton from "./LoadingSkeleton";
 
 const UserList: React.FC = () => {
+  const [list, setList] = useState<UserType[]>([]);
   const { isPending, isError, data, error } = useUsers();
   const [likedUsers, setLikedUsers] = useState<Set<string>>(new Set());
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [list, setList] = useState<User[]>([]);
 
   useEffect(() => {
     if (data?.users) {
@@ -37,7 +37,7 @@ const UserList: React.FC = () => {
     console.log(`Liked user with ID: ${userId}`);
   };
 
-  const showUserDetails = (user: User) => {
+  const showUserDetails = (user: UserType) => {
     setSelectedUser(user);
     setIsModalOpen(true);
   };
@@ -57,7 +57,7 @@ const UserList: React.FC = () => {
           className="demo-loadmore-list"
           itemLayout="horizontal"
           dataSource={list}
-          renderItem={(user: User) => (
+          renderItem={(user: UserType) => (
             <UserListItem
               user={user}
               isLiked={likedUsers.has(user.id)}

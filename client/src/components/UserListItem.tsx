@@ -1,10 +1,10 @@
 import React from "react";
 import { List, Avatar } from "antd";
 import { Heart } from "lucide-react";
-import { User } from "../types";
+import { UserType } from "../types";
 
 interface UserListItemProps {
-  user: User;
+  user: UserType;
   isLiked: boolean;
   onLike: () => void;
   onShowDetails: () => void;

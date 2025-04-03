@@ -46,8 +46,8 @@ function Profile() {
           </p>
         </div>
 
-        {isPending && (
-          <Skeleton className="h-[100px] w-full rounded-xl" active />
+        {isUserPending && (
+          <Skeleton className="h-[100px]  w-full rounded-xl" active />
         )}
 
         {isError && (

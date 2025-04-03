@@ -100,10 +100,11 @@ export function useUsers() {
     return useQuery({
         queryKey: ["allUsers"],
         queryFn: userApi.getAll,
-        // Apply default settings that prevent auto-refetching
+    
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
         // Override with any custom options
+        
     });
 }
 export function getUserByEmail(email: string) {
