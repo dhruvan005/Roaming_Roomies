@@ -778,7 +778,6 @@ function UserProfileForm() {
               </Row>
             </Card>
 
-            {/* Bio Section */}
             <Card
               title={<Title level={4}>About You</Title>}
               style={{ marginBottom: 24 }}
@@ -790,14 +789,6 @@ function UserProfileForm() {
                     name="bio"
                     label="Bio"
                     extra="Tell potential roommates about yourself"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Minimum 20 characters required",
-                    //     min: 20,
-                    //     max: 100,
-                    //   },
-                    // ]}
                   >
                     {/* <TextArea
                       rows={4}

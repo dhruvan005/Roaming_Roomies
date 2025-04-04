@@ -132,7 +132,7 @@ export const dataControls = {
         queryClient.setQueryData(["allUsers"], newData);
     },
     loadMoreUsers: userApi.loadMore,
-};
+}
 
 export const useQueryOptions = {
     queryKey: ['currentUser'],

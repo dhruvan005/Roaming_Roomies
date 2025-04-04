@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Skeleton } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryOptions } from "../../lib/api";
-import { Button , Avatar } from "antd";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Button, Avatar } from "antd";
+import {  useNavigate } from "@tanstack/react-router";
 import { getUserByEmail } from "../../lib/api";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -22,13 +22,13 @@ function Profile() {
     data?.user?.email || ""
   );
 
-  console.log("profile created or not", userData);
+  // console.log("profile created or not", userData);
 
   useEffect(() => {
     if (isUserPending) {
-      console.log("Loading user data...");
+      // console.log("Loading user data...");
     } else {
-      console.log("User data loaded:", userData);
+      // console.log("User data loaded:", userData);
     }
   }, [userData, isUserPending]);
 
@@ -60,19 +60,19 @@ function Profile() {
           <div className="space-y-4 mb-3 text-gray-300">
             <div className="p-4 bg-gray-700/50 rounded-lg">
               <div className="flex justify-center mb-4">
-              <Avatar
-              src={userData.data.profileImageUrl}
-              size={120}
-              style={{
-                border: "4px solid white",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-              }}
-            />
+                <Avatar
+                  src={userData?.data?.profileImageUrl}
+                  size={120}
+                  style={{
+                    border: "4px solid white",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
               </div>
               <div className="mb-3">
                 <span className="font-bold text-gray-400">Name: </span>
                 <span className="ml-2">
-                  {userData.data.firstName} {userData.data.lastName}
+                  {userData?.data?.firstName} {userData?.data?.lastName}
                 </span>
               </div>
               <div className="">
@@ -82,10 +82,17 @@ function Profile() {
             </div>
           </div>
         )}
-
-        <Button className="bg-gray-500/50 " type="primary" href="/api/logout">
-          Logout
-        </Button>
+        <div className="text-center text-gray-400 mb-4 flex flex-col gap-4">
+          <p className="text-sm font-normal">
+            You can edit your profile information here.
+          </p>
+          <Button className="bg-gray-500/50 " type="primary" href="/api/logout">
+            Edit Profile
+          </Button>
+          <Button className="bg-gray-500/50 " type="primary">
+            Logout
+          </Button>
+        </div>
       </div>
     </div>
   );
