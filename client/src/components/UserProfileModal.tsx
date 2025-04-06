@@ -73,13 +73,13 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <Mail size={16} style={{ marginRight: 6 }} />
               Message
             </Button>
-            ,
+            
           </Tooltip>
           <Button key="close" type="primary" onClick={onClose}>
             Close
           </Button>
-          ,
-        </div>,
+          
+        </div>
       ]}
       width={800}
       centered

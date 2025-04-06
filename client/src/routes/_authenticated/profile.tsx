@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Skeleton } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryOptions } from "../../lib/api";
 import { Button, Avatar } from "antd";
-import {  useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { getUserByEmail } from "../../lib/api";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -46,9 +46,9 @@ function Profile() {
           </p>
         </div>
 
-        {isUserPending && (
+        {/* {isUserPending && (
           <Skeleton className="h-[100px]  w-full rounded-xl" active />
-        )}
+        )} */}
 
         {isError && (
           <div className="text-red-500 text-center p-4">
@@ -77,19 +77,37 @@ function Profile() {
               </div>
               <div className="">
                 <span className="font-bold text-gray-400">Email:</span>
-                <span className="ml-2">{userData.data.email}</span>
+                <span className="ml-2">{userData?.data?.email}</span>
               </div>
             </div>
+
+            <p className="text-sm font-normal">
+              You can edit your profile information here.
+            </p>
+            <Button
+              className="bg-gray-500/50 w-full "
+              type="primary"
+              href="/api/logout"
+            >
+              Edit Profile
+            </Button>
+          </div>
+        )}
+
+        {!userData && (
+          <div className="text-gray-400 text-center mb-4">
+            <p className="text-sm mb-2 font-normal">
+              No profile found. Please create a profile.
+            </p>
+            <Link to="/roomListing">
+              <Button className="bg-gray-500/50 w-full" type="primary">
+                Create Profile
+              </Button>
+            </Link>
           </div>
         )}
         <div className="text-center text-gray-400 mb-4 flex flex-col gap-4">
-          <p className="text-sm font-normal">
-            You can edit your profile information here.
-          </p>
-          <Button className="bg-gray-500/50 " type="primary" href="/api/logout">
-            Edit Profile
-          </Button>
-          <Button className="bg-gray-500/50 " type="primary">
+          <Button className="bg-gray-500/50 " type="primary" href="/logout">
             Logout
           </Button>
         </div>

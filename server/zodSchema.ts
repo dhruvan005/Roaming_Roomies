@@ -7,7 +7,7 @@ export const RoommateUserSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     phone: z.string().optional(),
     age: z.number().int().min(18, { message: "Must be at least 18 years old" }).max(100, { message: "Age must be reasonable" }),
-    gender: z.enum(['male', 'female', 'non_binary', 'other', 'prefer_not_to_say']),
+    gender: z.string(),
     occupation: z.string().optional(),
 
     // Roommate Preferences
@@ -26,7 +26,7 @@ export const RoommateUserSchema = z.object({
 
 
     // Roommate Matching Criteria
-    desiredRoomType: z.enum(['apartment', 'house', 'studio', 'other']).optional(),
+    desiredRoomType: z.string(),
     maxRent: z.number().positive().optional(),
     preferredLocations: z.string(),
     moveInDate: z.coerce.date().optional(),

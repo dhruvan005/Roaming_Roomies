@@ -157,8 +157,17 @@ export function useCreateProfile() {
                 ...data,
                 moveInDate: data.moveInDate,
                 maxRent: data.maxRent ? Number(data.maxRent) : undefined,
-                age: Number(data.age)
+                age: Number(data.age),
+                // Convert desiredRoomType to lowercase if present
+                desiredRoomType: data.desiredRoomType ? data.desiredRoomType.toLowerCase() : '',
+                // Ensure preferredLocations is a string
+                preferredLocations: Array.isArray(data.preferredLocations)
+                    ? data.preferredLocations.join(', ')
+                    : data.preferredLocations,
+                // Ensure interests is properly formatted
+                interests: Array.isArray(data.interests) ? data.interests : []
             };
+            console.log("Formatted Data: ", formattedData);
             try {
                 // Send the data to the server
                 const response = await api.user.$post({
@@ -167,10 +176,10 @@ export function useCreateProfile() {
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    // console.error('Server response:', response.status, errorText);
+                    console.error('Server response:', response.status, errorText);
                     try {
                         const errorJson = JSON.parse(errorText);
-                        // console.error('Error details:', errorJson);
+                        console.error('Error details:', errorJson);
                         throw new Error(errorJson.message || `Request failed with status ${response.status}`);
                     } catch (e) {
                         throw new Error(`Request failed with status ${response.status}: ${errorText}`);

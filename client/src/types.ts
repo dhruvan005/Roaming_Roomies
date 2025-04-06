@@ -6,21 +6,12 @@ export interface UserType {
   email: string;
   phone: string;
   age: number;
-  gender:
-  | "male"
-  | "female"
-  | "non_binary"
-  | "other"
-  | "prefer_not_to_say";
+  gender: string;
   occupation: string;
   profileImageUrl: string;
 
   // Lifestyle Preferences
-  sleepSchedule:
-  | "early_bird"
-  | "night_owl"
-  | "average"
-  | "irregular";
+  sleepSchedule: string;
   cleanlinessLevel: number;
 
   dietaryPreference: string;
@@ -30,7 +21,7 @@ export interface UserType {
   workoutPreference: string;
   socialTrait: string;
   interests: string[];
-  desiredRoomType: "Apartment" | "House" | "Studio" | "Other";
+  desiredRoomType: string;
   maxRent: number;
   preferredLocations: string;
   moveInDate: Date; // Uses Moment.js from Ant Design's DatePicker
@@ -61,7 +52,7 @@ export interface UserProfileFormValues {
   email: string;
   phone?: string;
   age: number;
-  gender: "male" | "female" | "non_binary" | "other" | "prefer_not_to_say";
+  gender: string;
   occupation?: string;
 
   // Lifestyle Preferences
@@ -75,7 +66,7 @@ export interface UserProfileFormValues {
   socialTrait: string;
 
   interests?: string[];
-  desiredRoomType?: "apartment" | "house" | "studio" | "other";
+  desiredRoomType?: string;
   maxRent?: number;
   preferredLocations: string;
   moveInDate?: Date;
