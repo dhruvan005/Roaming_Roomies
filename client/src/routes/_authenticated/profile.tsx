@@ -46,9 +46,9 @@ function Profile() {
           </p>
         </div>
 
-        {/* {isUserPending && (
+        {isUserPending && (
           <Skeleton className="h-[100px]  w-full rounded-xl" active />
-        )} */}
+        )}
 
         {isError && (
           <div className="text-red-500 text-center p-4">
@@ -87,7 +87,7 @@ function Profile() {
             <Button
               className="bg-gray-500/50 w-full "
               type="primary"
-              href="/api/logout"
+              href="/editProfile"
             >
               Edit Profile
             </Button>

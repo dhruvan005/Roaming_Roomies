@@ -5,7 +5,7 @@ import { useUsers, dataControls } from "../../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import UserList from "../../components/UserList";
 // import { useState } from "react";
-import { ApiResponse, User } from "../../types";
+import { ApiResponse, UserType } from "../../types";
 export const Route = createFileRoute("/_authenticated/allUsers")({
   component: RouteComponent,
 });

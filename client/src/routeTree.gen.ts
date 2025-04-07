@@ -17,6 +17,7 @@ import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index
 import { Route as AuthenticatedRoomListingImport } from './routes/_authenticated/roomListing'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedLayoutImport } from './routes/_authenticated/layout'
+import { Route as AuthenticatedEditProfileImport } from './routes/_authenticated/editProfile'
 import { Route as AuthenticatedAllUsersImport } from './routes/_authenticated/allUsers'
 import { Route as AuthenticatedAboutImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedHouseListingImport } from './routes/_authenticated/HouseListing'
@@ -55,6 +56,12 @@ const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
 const AuthenticatedLayoutRoute = AuthenticatedLayoutImport.update({
   id: '/layout',
   path: '/layout',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedEditProfileRoute = AuthenticatedEditProfileImport.update({
+  id: '/editProfile',
+  path: '/editProfile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -115,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAllUsersImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/editProfile': {
+      id: '/_authenticated/editProfile'
+      path: '/editProfile'
+      fullPath: '/editProfile'
+      preLoaderRoute: typeof AuthenticatedEditProfileImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/layout': {
       id: '/_authenticated/layout'
       path: '/layout'
@@ -152,6 +166,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedHouseListingRoute: typeof AuthenticatedHouseListingRoute
   AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedAllUsersRoute: typeof AuthenticatedAllUsersRoute
+  AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRoomListingRoute: typeof AuthenticatedRoomListingRoute
@@ -162,6 +177,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHouseListingRoute: AuthenticatedHouseListingRoute,
   AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedAllUsersRoute: AuthenticatedAllUsersRoute,
+  AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRoomListingRoute: AuthenticatedRoomListingRoute,
@@ -178,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/editProfile': typeof AuthenticatedEditProfileRoute
   '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/roomListing': typeof AuthenticatedRoomListingRoute
@@ -189,6 +206,7 @@ export interface FileRoutesByTo {
   '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
+  '/editProfile': typeof AuthenticatedEditProfileRoute
   '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/roomListing': typeof AuthenticatedRoomListingRoute
@@ -202,6 +220,7 @@ export interface FileRoutesById {
   '/_authenticated/HouseListing': typeof AuthenticatedHouseListingRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/allUsers': typeof AuthenticatedAllUsersRoute
+  '/_authenticated/editProfile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/layout': typeof AuthenticatedLayoutRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/roomListing': typeof AuthenticatedRoomListingRoute
@@ -216,6 +235,7 @@ export interface FileRouteTypes {
     | '/HouseListing'
     | '/about'
     | '/allUsers'
+    | '/editProfile'
     | '/layout'
     | '/profile'
     | '/roomListing'
@@ -226,6 +246,7 @@ export interface FileRouteTypes {
     | '/HouseListing'
     | '/about'
     | '/allUsers'
+    | '/editProfile'
     | '/layout'
     | '/profile'
     | '/roomListing'
@@ -237,6 +258,7 @@ export interface FileRouteTypes {
     | '/_authenticated/HouseListing'
     | '/_authenticated/about'
     | '/_authenticated/allUsers'
+    | '/_authenticated/editProfile'
     | '/_authenticated/layout'
     | '/_authenticated/profile'
     | '/_authenticated/roomListing'
@@ -274,6 +296,7 @@ export const routeTree = rootRoute
         "/_authenticated/HouseListing",
         "/_authenticated/about",
         "/_authenticated/allUsers",
+        "/_authenticated/editProfile",
         "/_authenticated/layout",
         "/_authenticated/profile",
         "/_authenticated/roomListing",
@@ -293,6 +316,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/allUsers": {
       "filePath": "_authenticated/allUsers.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/editProfile": {
+      "filePath": "_authenticated/editProfile.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/layout": {
