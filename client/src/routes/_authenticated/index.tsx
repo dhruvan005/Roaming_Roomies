@@ -47,7 +47,7 @@ function HomeComponent() {
 
           <Button
             className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group "
-            onClick={() => navigate({ to: "/roomListing" })}
+            onClick={() => navigate({ to: "/roommateListing" })}
             size="large"
           >
             <span className="text-lg md:text-xl font-medium">

@@ -129,12 +129,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
           // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
         >
-          <Title
-            level={2}
-            style={{ textAlign: "center", marginBottom: "24px" }}
-          >
-            User Profile Form
-          </Title>
+          
           <Divider />
           <Form
             form={form}

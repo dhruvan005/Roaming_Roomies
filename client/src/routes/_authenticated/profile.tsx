@@ -99,7 +99,7 @@ function Profile() {
             <p className="text-sm mb-2 font-normal">
               No profile found. Please create a profile.
             </p>
-            <Link to="/roomListing">
+            <Link to="/roommateListing">
               <Button className="bg-gray-500/50 w-full" type="primary">
                 Create Profile
               </Button>
