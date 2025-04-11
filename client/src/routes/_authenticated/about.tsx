@@ -4,12 +4,11 @@ import { HomeOutlined } from "@ant-design/icons";
 import UC from "../../assets/under-construction.png";
 export const Route = createFileRoute("/_authenticated/about")({
   component: AboutComponent,
-})
+});
 
 function AboutComponent() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      
       <h1 className="text-4xl font-bold text-gray-800 mb-4">About Page</h1>
       <div className="text-xl text-gray-600 mb-4">
         Page is Under Construction

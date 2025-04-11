@@ -37,39 +37,37 @@ const { Content } = Layout;
 import { useCreateProfile } from "../../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../../types";
+import UserForm from "../../components/UserForm";
 
 function UserProfileForm() {
   const [form] = Form.useForm();
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
-  useEffect(() => {
-    if (data?.user) {
-      form.setFieldsValue({
-        firstName: data.user.given_name,
-        lastName: data.user.family_name,
-        email: data.user.email,
-        phone: "",
-        age: null,
-        gender: undefined,
-        occupation: "",
-        sleepSchedule: undefined,
-        cleanlinessLevel: 3,
-        dietaryPreference: "vegetarian",
-        smokingPreference: undefined,
-        petPreference: undefined,
-        alcoholPreference: undefined,
-        workoutPreference: undefined,
-        socialPreference: undefined,
-        interests: [],
-        desiredRoomType: undefined,
-        maxRent: null,
-        preferredLocations: [],
-        moveInDate: null,
-        minimumStay: null,
-        bio: "",
-        profileImageUrl: "",
-      });
-    }
-  }, [data, form]);
+  const initialValues = {
+    id: 0,
+    firstName: data?.user?.given_name || "",
+    lastName: data?.user?.family_name || "",
+    email: data?.user?.email || "",
+    phone: "",
+    age: null,
+    gender: undefined,
+    occupation: "",
+    sleepSchedule: undefined,
+    cleanlinessLevel: 3,
+    dietaryPreference: "vegetarian",
+    smokingPreference: "",
+    petPreference: "",
+    alcoholPreference: "",
+    workoutPreference: "",
+    socialPreference: "",
+    interests: [],
+    desiredRoomType: undefined,
+    maxRent: null,
+    preferredLocations: [],
+    moveInDate: null,
+    minimumStay: null,
+    bio: "",
+    profileImageUrl: "",
+  };
 
   const createProfile = useCreateProfile();
   const navigate = useNavigate();
@@ -189,7 +187,7 @@ function UserProfileForm() {
         setSubmitting(false);
         return;
       }
-
+      
       const formattedValues = {
         ...values,
         profileImageUrl: imageUrl,
@@ -219,7 +217,16 @@ function UserProfileForm() {
 
   return (
     <Layout>
-      <Content style={{ padding: "16px", margin: "0 auto" }}>
+      <UserForm 
+      initialValues={initialValues}
+      onFinish={onFinish}
+      uploading={uploading}
+      submitting={submitting}
+      beforeUpload={beforeUpload}
+      fileList={fileList}
+      
+      />
+      {/* <Content style={{ padding: "16px", margin: "0 auto" }}>
         <Card
           // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
@@ -265,7 +272,7 @@ function UserProfileForm() {
               profileImageUrl: "",
             }}
           >
-            {/* Personal Information Section */}
+           
             <Card
               title={<Title level={4}>Personal Information</Title>}
               style={{ marginBottom: 24 }}
@@ -432,7 +439,7 @@ function UserProfileForm() {
               </Row>
             </Card>
 
-            {/* Lifestyle Preferences Section */}
+           
             <Card
               title={<Title level={4}>Lifestyle Preferences</Title>}
               style={{ marginBottom: 24 }}
@@ -496,7 +503,7 @@ function UserProfileForm() {
               </Row>
             </Card>
 
-            {/* Habits & Social Preferences Section */}
+           
             <Card
               title={<Title level={4}> Habits & Social Preferences</Title>}
               style={{ marginBottom: 24 }}
@@ -670,7 +677,7 @@ function UserProfileForm() {
               </Form.Item>
             </Card>
 
-            {/* Housing Preferences Section */}
+            
             <Card
               title={<Title level={4}>Housing Preferences</Title>}
               style={{ marginBottom: 24 }}
@@ -790,10 +797,7 @@ function UserProfileForm() {
                     label="Bio"
                     extra="Tell potential roommates about yourself"
                   >
-                    {/* <TextArea
-                      rows={4}
-                      placeholder="Share a bit about yourself, your lifestyle, and what makes you a good roommate..."
-                    /> */}
+                    
                     <TextArea
                       showCount
                       placeholder="Share a bit about yourself, your lifestyle, and what makes you a good roommate..."
@@ -806,7 +810,7 @@ function UserProfileForm() {
               </Row>
             </Card>
 
-            {/* Submit Button */}
+          
             <Form.Item>
               <Row justify="end">
                 <Col>
@@ -829,7 +833,7 @@ function UserProfileForm() {
             </Form.Item>
           </Form>
         </Card>
-      </Content>
+      </Content> */}
     </Layout>
   );
 }
