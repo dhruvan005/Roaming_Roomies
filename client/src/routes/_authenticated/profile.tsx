@@ -107,7 +107,14 @@ function Profile() {
           </div>
         )}
         <div className="text-center text-gray-400 mb-4 flex flex-col gap-4">
-          <Button className="bg-gray-500/50 " type="primary" href="/logout">
+          <Button className="bg-gray-500/50 " type="primary" onClick={() => {
+            window.location.href = "/api/logout";
+            // After logout API call, redirect to login page
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 500);
+          }} 
+          >
             Logout
           </Button>
         </div>
