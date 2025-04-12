@@ -1,6 +1,6 @@
 # Roaming Roomies
 
-![Roaming Roomies Leanding Page](https://res.cloudinary.com/dhruvandev/image/upload/captureit_4-12-2025_at_15-56-46_o98bll.png)
+![Roaming Roomies Leanding Page](https://res.cloudinary.com/dhruvandev/image/upload/RR_landing_page_puhrzi.png)
 
 ## 🏠 About
 
@@ -9,9 +9,9 @@ Roaming Roomies is a modern platform designed to connect compatible roommates ba
 ## ✨ Features
 
 ### User-Focused Experience
-- **Smart Matching Algorithm**: Connect with roommates who share your social preferences, lifestyle habits, and daily routines
+- **Smart Matching**: Connect with roommates who share your social preferences, lifestyle habits, and daily routines
 - **Detailed User Profiles**: Create comprehensive profiles with preferences for sleep schedules, cleanliness standards, dietary habits, and more
-- **Verified Profiles**: All users go through a verification process to ensure safety and authenticity
+
 
 ### Intuitive Interface
 - **Modern UI/UX**: Clean, responsive design with interactive elements
@@ -21,7 +21,7 @@ Roaming Roomies is a modern platform designed to connect compatible roommates ba
 ### Roommate Finding Process
 1. **Create Your Profile**: Share your lifestyle, habits, and preferences
 2. **Browse Listings**: Explore available rooms that match your criteria
-3. **Connect & Move In**: Message potential roommates, schedule viewings, and find your new home
+
 
 ### Property Listing Process
 1. **List Your Space**: Create detailed listings with photos, amenities, and house rules
