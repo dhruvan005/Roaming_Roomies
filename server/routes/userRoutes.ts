@@ -32,19 +32,17 @@ export const userRoutes = new Hono()
 
             if (age) whereConditions.push(eq(roommateUsers.age, Number(age)));
             if (gender) whereConditions.push(eq(roommateUsers.gender, gender as 'male' | 'female' | 'non_binary' | 'other' | 'prefer_not_to_say'));
-            if (minRent) whereConditions.push(gte(roommateUsers.maxRent, minRent.toString())); // Convert minRent to string
-            if (maxRent) whereConditions.push(lte(roommateUsers.maxRent, maxRent.toString())); // Convert maxRent to string
+            if (minRent) whereConditions.push(gte(roommateUsers.maxRent, minRent.toString()));
+            if (maxRent) whereConditions.push(lte(roommateUsers.maxRent, maxRent.toString()));
             if (desiredRoomType) whereConditions.push(eq(roommateUsers.desiredRoomType, desiredRoomType as 'apartment' | 'house' | 'studio' | 'other'));
             if (cleanlinessLevel) whereConditions.push(eq(roommateUsers.cleanlinessLevel, Number(cleanlinessLevel)));
 
-            // Fetch users with filtering and pagination
             const users = await db.select()
                 .from(roommateUsers)
                 .where(and(...whereConditions))
                 .limit(limitNum)
                 .offset(offset);
 
-            // Count total matching users
             const [{ count }] = await db.select({ count: sql<number>`count(*)` })
                 .from(roommateUsers)
                 .where(and(...whereConditions));
@@ -57,7 +55,6 @@ export const userRoutes = new Hono()
                 users: users
             });
         } catch (error) {
-            // console.error('Error fetching users:', error);
             return c.json({
                 success: false,
                 message: 'Error fetching users',
@@ -70,21 +67,18 @@ export const userRoutes = new Hono()
             const requestData = await c.req.json();
             console.log("Request Data: in Post route", requestData);
 
-            if (requestData.moveInDate && typeof requestData.moveInDate === "string") {
-                requestData.moveInDate = new Date(requestData.moveInDate);
-            }
-            // console.log("Request Profile pic : in Post route", requestData.profileImageUrl);
             const validatedData = RoommateUserSchema.parse({
                 ...requestData,
                 profileImageUrl: requestData.profileImageUrl,
-            })
+            });
             console.log("Validated Data: ", validatedData);
+
             const existingUser = await db
                 .select()
                 .from(roommateUsers)
                 .where(eq(roommateUsers.email, validatedData.email))
                 .limit(1);
-            // console.log("Existing User: ", existingUser);
+
             if (existingUser.length > 0) {
                 return c.json({ success: false, message: "User with this email already exists" }, 409);
             }
@@ -93,13 +87,13 @@ export const userRoutes = new Hono()
                 .insert(roommateUsers)
                 .values({
                     ...validatedData,
-                    moveInDate: validatedData.moveInDate ? new Date(validatedData.moveInDate).toISOString() : null,
+                    moveInDate: validatedData.moveInDate || null,
                     interests: validatedData.interests || [],
                     preferredLocations: validatedData.preferredLocations || "",
                     maxRent: validatedData.maxRent?.toString() || null,
-
                 })
-                .returning()
+                .returning();
+
             console.log("New User: ", newUser);
             return c.json({ success: true, message: "User created successfully", data: newUser }, 201);
         } catch (error) {
@@ -110,33 +104,35 @@ export const userRoutes = new Hono()
                     error: error instanceof Error ? error.message : "Unknown error",
                 },
                 500
-            )
+            );
         }
     })
     .get('/:email', async (c) => {
         try {
-            const { email } = c.req.param()
+            const { email } = c.req.param();
             const [user] = await db
                 .select()
                 .from(roommateUsers)
-                .where(eq(roommateUsers.email, email))
+                .where(eq(roommateUsers.email, email));
+
             if (!user) {
                 return c.json({
                     success: false,
                     message: 'User not found'
                 }, 404);
             }
+
             return c.json({
                 success: true,
                 data: user
             });
         } catch (error) {
-            console.error('Error fetching user:', error)
+            console.error('Error fetching user:', error);
             return c.json({
                 success: false,
                 message: 'Error fetching user',
                 error: error instanceof Error ? error.message : 'Unknown error'
-            }, 500)
+            }, 500);
         }
-    })
+    });
 

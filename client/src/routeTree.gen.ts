@@ -14,10 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedRoomListingImport } from './routes/_authenticated/roomListing'
+import { Route as AuthenticatedRoommateListingImport } from './routes/_authenticated/roommateListing'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedLayoutImport } from './routes/_authenticated/layout'
-import { Route as AuthenticatedEditProfileImport } from './routes/_authenticated/editProfile'
 import { Route as AuthenticatedAllUsersImport } from './routes/_authenticated/allUsers'
 import { Route as AuthenticatedAboutImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedHouseListingImport } from './routes/_authenticated/HouseListing'
@@ -41,11 +40,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const AuthenticatedRoomListingRoute = AuthenticatedRoomListingImport.update({
-  id: '/roomListing',
-  path: '/roomListing',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
+const AuthenticatedRoommateListingRoute =
+  AuthenticatedRoommateListingImport.update({
+    id: '/roommateListing',
+    path: '/roommateListing',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
   id: '/profile',
@@ -56,12 +56,6 @@ const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
 const AuthenticatedLayoutRoute = AuthenticatedLayoutImport.update({
   id: '/layout',
   path: '/layout',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedEditProfileRoute = AuthenticatedEditProfileImport.update({
-  id: '/editProfile',
-  path: '/editProfile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -122,13 +116,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAllUsersImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/editProfile': {
-      id: '/_authenticated/editProfile'
-      path: '/editProfile'
-      fullPath: '/editProfile'
-      preLoaderRoute: typeof AuthenticatedEditProfileImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/layout': {
       id: '/_authenticated/layout'
       path: '/layout'
@@ -143,11 +130,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/roomListing': {
-      id: '/_authenticated/roomListing'
-      path: '/roomListing'
-      fullPath: '/roomListing'
-      preLoaderRoute: typeof AuthenticatedRoomListingImport
+    '/_authenticated/roommateListing': {
+      id: '/_authenticated/roommateListing'
+      path: '/roommateListing'
+      fullPath: '/roommateListing'
+      preLoaderRoute: typeof AuthenticatedRoommateListingImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/': {
@@ -166,10 +153,9 @@ interface AuthenticatedRouteChildren {
   AuthenticatedHouseListingRoute: typeof AuthenticatedHouseListingRoute
   AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedAllUsersRoute: typeof AuthenticatedAllUsersRoute
-  AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedLayoutRoute: typeof AuthenticatedLayoutRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedRoomListingRoute: typeof AuthenticatedRoomListingRoute
+  AuthenticatedRoommateListingRoute: typeof AuthenticatedRoommateListingRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
@@ -177,10 +163,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHouseListingRoute: AuthenticatedHouseListingRoute,
   AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedAllUsersRoute: AuthenticatedAllUsersRoute,
-  AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedLayoutRoute: AuthenticatedLayoutRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedRoomListingRoute: AuthenticatedRoomListingRoute,
+  AuthenticatedRoommateListingRoute: AuthenticatedRoommateListingRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
@@ -194,10 +179,9 @@ export interface FileRoutesByFullPath {
   '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
-  '/editProfile': typeof AuthenticatedEditProfileRoute
   '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/roomListing': typeof AuthenticatedRoomListingRoute
+  '/roommateListing': typeof AuthenticatedRoommateListingRoute
   '/': typeof AuthenticatedIndexRoute
 }
 
@@ -206,10 +190,9 @@ export interface FileRoutesByTo {
   '/HouseListing': typeof AuthenticatedHouseListingRoute
   '/about': typeof AuthenticatedAboutRoute
   '/allUsers': typeof AuthenticatedAllUsersRoute
-  '/editProfile': typeof AuthenticatedEditProfileRoute
   '/layout': typeof AuthenticatedLayoutRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/roomListing': typeof AuthenticatedRoomListingRoute
+  '/roommateListing': typeof AuthenticatedRoommateListingRoute
   '/': typeof AuthenticatedIndexRoute
 }
 
@@ -220,10 +203,9 @@ export interface FileRoutesById {
   '/_authenticated/HouseListing': typeof AuthenticatedHouseListingRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/allUsers': typeof AuthenticatedAllUsersRoute
-  '/_authenticated/editProfile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/layout': typeof AuthenticatedLayoutRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/roomListing': typeof AuthenticatedRoomListingRoute
+  '/_authenticated/roommateListing': typeof AuthenticatedRoommateListingRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 
@@ -235,10 +217,9 @@ export interface FileRouteTypes {
     | '/HouseListing'
     | '/about'
     | '/allUsers'
-    | '/editProfile'
     | '/layout'
     | '/profile'
-    | '/roomListing'
+    | '/roommateListing'
     | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -246,10 +227,9 @@ export interface FileRouteTypes {
     | '/HouseListing'
     | '/about'
     | '/allUsers'
-    | '/editProfile'
     | '/layout'
     | '/profile'
-    | '/roomListing'
+    | '/roommateListing'
     | '/'
   id:
     | '__root__'
@@ -258,10 +238,9 @@ export interface FileRouteTypes {
     | '/_authenticated/HouseListing'
     | '/_authenticated/about'
     | '/_authenticated/allUsers'
-    | '/_authenticated/editProfile'
     | '/_authenticated/layout'
     | '/_authenticated/profile'
-    | '/_authenticated/roomListing'
+    | '/_authenticated/roommateListing'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
@@ -296,10 +275,9 @@ export const routeTree = rootRoute
         "/_authenticated/HouseListing",
         "/_authenticated/about",
         "/_authenticated/allUsers",
-        "/_authenticated/editProfile",
         "/_authenticated/layout",
         "/_authenticated/profile",
-        "/_authenticated/roomListing",
+        "/_authenticated/roommateListing",
         "/_authenticated/"
       ]
     },
@@ -318,10 +296,6 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/allUsers.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/editProfile": {
-      "filePath": "_authenticated/editProfile.tsx",
-      "parent": "/_authenticated"
-    },
     "/_authenticated/layout": {
       "filePath": "_authenticated/layout.tsx",
       "parent": "/_authenticated"
@@ -330,8 +304,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/profile.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/roomListing": {
-      "filePath": "_authenticated/roomListing.tsx",
+    "/_authenticated/roommateListing": {
+      "filePath": "_authenticated/roommateListing.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/": {

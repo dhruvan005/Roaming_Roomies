@@ -1,4 +1,3 @@
-
 export interface UserType {
   id: string;
   firstName: string;
@@ -46,6 +45,7 @@ export interface GetApiResponse {
   success: boolean;
   users: UserType;
 }
+
 export interface UserProfileFormValues {
   firstName: string;
   lastName: string;
@@ -69,7 +69,7 @@ export interface UserProfileFormValues {
   desiredRoomType?: string;
   maxRent?: number;
   preferredLocations: string;
-  moveInDate?: Date;
+  moveInDate?: string | null;
   minimumStay?: number;
 
   bio?: string;

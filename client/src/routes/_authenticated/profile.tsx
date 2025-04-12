@@ -87,7 +87,7 @@ function Profile() {
             <Button
               className="bg-gray-500/50 w-full "
               type="primary"
-              href="/editProfile"
+              href="/roommateListing"
             >
               Edit Profile
             </Button>

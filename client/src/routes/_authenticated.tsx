@@ -6,21 +6,22 @@ import { queryClient } from "../lib/api";
 
 export const isAuthenticated = async () => {
   try {
-    // First check if we already have the data in cache
-    const cachedData = await useQueryOptions.queryFn();
-    // console.log("Cached data:", cachedData);
-    // it checks if the user is already authenticated
-    // If the user is already authenticated, return true
+    // First check if we already have the data in cache using getQueryData
+    const cachedData = queryClient.getQueryData(useQueryOptions.queryKey) as { user?: any } | undefined;
+    
+    // If we have valid cached data, use it
     if (cachedData?.user) {
+      console.log("Using cached user data");
       return true;
     }
-    // if user is not found in chache,then fetch the data
+    
     // Only fetch if not in cache
     const data = await queryClient.fetchQuery({
       ...useQueryOptions,
       staleTime: 5 * 60 * 1000, // Cache valid for 5 minutes
-    });
-    console.log("Fetched data:", data);
+    }) as { user?: any };
+    
+    console.log("Fetched user data");
     return data?.user ? true : false;
   } catch (error) {
     console.error("Authentication error:", error);

@@ -29,7 +29,7 @@ export const RoommateUserSchema = z.object({
     desiredRoomType: z.string(),
     maxRent: z.number().positive().optional(),
     preferredLocations: z.string(),
-    moveInDate: z.coerce.date().optional(),
+    moveInDate: z.string().nullable().optional(),
     minimumStay: z.number().int().positive().optional(),
 
     // Profile Additional Details

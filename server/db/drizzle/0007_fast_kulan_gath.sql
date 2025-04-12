@@ -1,0 +1,1 @@
+ALTER TABLE "roommate_users" ALTER COLUMN "move_in_date" SET DATA TYPE text;

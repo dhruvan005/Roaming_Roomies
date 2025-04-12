@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { kindeClient, sessionManager } from "../kinde";
 import { getUser } from "../kinde"
+import { cache } from "hono/cache";
 
 export const authRoute = new Hono()
     .get("/login", async (c) => {
@@ -23,6 +24,10 @@ export const authRoute = new Hono()
     })
     .get("/me", getUser, async (c) => {
         const user = c.var.user;
-        // console.log("user", user);
+        
+        // Add cache headers to prevent unnecessary requests
+        c.header('Cache-Control', 'private, max-age=300'); // Cache for 5 minutes
+        c.header('ETag', JSON.stringify(user).length.toString()); // Simple ETag implementation
+        
         return c.json({ user });
     });

@@ -21,7 +21,7 @@ export const roommateUsers = pgTable('roommate_users', {
   desiredRoomType: text('desired_room_type'),
   maxRent: numeric('max_rent'),
   preferredLocations: text('preferred_locations'),
-  moveInDate: date('move_in_date'),
+  moveInDate: text('move_in_date'),
   minimumStay: integer('minimum_stay'),
   bio: text('bio'),
   profileImageUrl: text('profile_image_url'),

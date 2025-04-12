@@ -137,14 +137,15 @@ export const dataControls = {
 export const useQueryOptions = {
     queryKey: ['currentUser'],
     queryFn: async () => {
+        console.log('Executing /api/me fetch');
         const response = await api.me.$get();
         if (!response.ok) {
             throw new Error('Failed to fetch user');
         }
         return response.json();
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // Increase to 30 minutes
+    gcTime: 60 * 60 * 1000,    // Increase to 60 minutes
     retry: false
 }
 
@@ -158,13 +159,8 @@ export function useCreateProfile() {
                 moveInDate: data.moveInDate,
                 maxRent: data.maxRent ? Number(data.maxRent) : undefined,
                 age: Number(data.age),
-                // Convert desiredRoomType to lowercase if present
                 desiredRoomType: data.desiredRoomType ? data.desiredRoomType.toLowerCase() : '',
-                // Ensure preferredLocations is a string
-                preferredLocations: Array.isArray(data.preferredLocations)
-                    ? data.preferredLocations.join(', ')
-                    : data.preferredLocations,
-                // Ensure interests is properly formatted
+                preferredLocations: data.preferredLocations || '',
                 interests: Array.isArray(data.interests) ? data.interests : []
             };
             console.log("Formatted Data: ", formattedData);
@@ -197,4 +193,3 @@ export function useCreateProfile() {
         },
     });
 }
-
