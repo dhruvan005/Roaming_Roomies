@@ -64,6 +64,15 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
+      
+      // Initialize interests state with existing interests from initialValues
+      if (initialValues.interests && Array.isArray(initialValues.interests)) {
+        const formattedInterests = initialValues.interests.map((interest: any, index: number) => ({
+          id: index + Date.now(),
+          value: typeof interest === 'string' ? interest : interest.value || interest
+        }));
+        setInterests(formattedInterests);
+      }
     }
   }, [initialValues, form]);
 
@@ -75,11 +84,8 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
       value: newInterest.trim(),
     };
 
-    // Use functional update to guarantee we're working with latest state
     setInterests((prevInterests) => {
       const updatedInterests = [...prevInterests, newEntry];
-
-      // Update form here with the actual updated array
       form.setFieldsValue({
         interests: updatedInterests.map((item) => item.value),
       });
@@ -129,7 +135,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
           // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
         >
-          
+
           <Divider />
           <Form
             form={form}
@@ -138,7 +144,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
             onFinish={onFinish}
             requiredMark="optional"
             scrollToFirstError
-            // onFinish={handleFormSubmit}
+          // onFinish={handleFormSubmit}
           >
             {/* Personal Information Section */}
             <Card
@@ -326,10 +332,10 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select sleep schedule">
-                      <Option value="early_bird">
+                      <Option value="earlybird">
                         Early Bird (Before 10 PM)
                       </Option>
-                      <Option value="night_owl">
+                      <Option value="nightowl">
                         Night Owl (After Midnight)
                       </Option>
                       <Option value="average">
@@ -392,10 +398,10 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     <Select placeholder="Select Smoking Preference">
                       <Option value="Non-Smoker">Non-Smoker</Option>
                       <Option value="Smoker">Smoker</Option>
-                      <Option value="Social-Smoker">Social Smoker</Option>
+                      <Option value="Social Smoker">Social Smoker</Option>
                       <Option value="Vaper">Vaper</Option>
-                      <Option value="Trying-To-Quit">Trying To Quit</Option>
-                      <Option value="Smoker-When-Drinking">
+                      <Option value="Trying To Quit">Trying To Quit</Option>
+                      <Option value="Smoker when drinking">
                         Smoker when drinking
                       </Option>
                     </Select>
@@ -413,14 +419,14 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select Alcohol Preference">
-                      <Option value="Not-for-Me">Not for Me</Option>
-                      <Option value="Social-Drinker">
+                      <Option value="Not for Me">Not for Me</Option>
+                      <Option value="Social Drinker (On weekends)">
                         Social Drinker (On weekends)
                       </Option>
-                      <Option value="Most-Nigths">Most Nights</Option>
+                      <Option value="Most Nights">Most Nights</Option>
                       <Option value="Sober">Sober</Option>
-                      <Option value="Sober-Curious">Sober curious</Option>
-                      <Option value="Trying-To-Quit">Trying To Quit</Option>
+                      <Option value="Sober curious">Sober curious</Option>
+                      <Option value="Trying To Quit">Trying To Quit</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -437,10 +443,10 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select Workout Preference">
-                      <Option value="Gym-Rat">Gym Rat</Option>
+                      <Option value="Gym Rat">Gym Rat</Option>
                       <Option value="Often">Often</Option>
                       <Option value="Sometimes">Sometimes</Option>
-                      <Option value="Trying-To-Start">Trying To Start</Option>
+                      <Option value="Trying To Start">Trying To Start</Option>
                       <Option value="Never">Never</Option>
                     </Select>
                   </Form.Item>
@@ -458,11 +464,11 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select Pet Preference">
-                      <Option value="Loves-Pets">Loves Pets</Option>
+                      <Option value="Loves Pets">Loves Pets</Option>
                       <Option value="Allergic">Allergic</Option>
-                      <Option value="No-Pets">No Pets</Option>
-                      <Option value="Open-To-Pets">Open To Pets</Option>
-                      <Option value="Has-Pets">Has Pets</Option>
+                      <Option value="No Pets">No Pets</Option>
+                      <Option value="Open To Pets">Open To Pets</Option>
+                      <Option value="Has Pets">Has Pets</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -608,14 +614,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                       },
                     ]}
                   >
-                    <div>
-                      <Space
-                        direction="horizontal"
-                        style={{ marginBottom: 16 }}
-                      >
-                        <TextArea placeholder="Add a Location" autoSize />
-                      </Space>
-                    </div>
+                    <Input placeholder="Add neighborhoods, cities, or areas" />
                   </Form.Item>
                 </Col>
 

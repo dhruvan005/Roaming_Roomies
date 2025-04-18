@@ -22,7 +22,7 @@ function HomeComponent() {
         <div className="text-center max-w-3xl mb-10 md:mb-16">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-4">
             Welcome to{" "}
-            <span className="text-primary font-extrabold">Roaming Roomies</span>
+            <span className="font-extrabold bg-blue-100 text-blue-600/90 p-1 rounded-xs">Roaming Roomies</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-700">
             Bringing places and people together!
@@ -31,39 +31,46 @@ function HomeComponent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-3xl ">
           <Button
-            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group"
+            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 py-4 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group bg-white border border-gray-100"
             onClick={() => navigate({ to: "/HouseListing" })}
             size="large"
           >
-            <span className="text-lg md:text-xl font-medium">
-              Rent your House!
-            </span>
+            <div className="flex flex-col items-start text-left">
+              <span className="text-lg md:text-xl font-medium mb-1">
+                I Have a Room
+              </span>
+              <span className="text-gray-500 text-xs md:text-sm">
+                Share your space with roommates
+              </span>
+            </div>
             <img
-              className="h-18 md:h-25 transition-transform duration-300 ease-in-out group-hover:scale-110"
+              className="h-16 md:h-20 transition-transform duration-300 ease-in-out group-hover:scale-110"
               src={People}
               alt="House icon"
             />
           </Button>
 
           <Button
-            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group "
+            className="flex items-center justify-between min-h-12 md:min-h-18 px-6 py-4 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out group bg-white border border-gray-100"
             onClick={() => navigate({ to: "/roommateListing" })}
             size="large"
           >
-            <span className="text-lg md:text-xl font-medium">
-              Looking for Roommate?
-            </span>
+            <div className="flex flex-col items-start text-left">
+              <span className="text-lg md:text-xl font-medium mb-1">
+                I Need a Room
+              </span>
+              <span className="text-gray-500 text-xs md:text-sm">
+                Find your perfect roommate
+              </span>
+            </div>
             <img
-              className="h-16 md:h-25 transition-transform duration-300 ease-in-out group-hover:scale-110"
+              className="h-16 md:h-20 transition-transform duration-300 ease-in-out group-hover:scale-110"
               src={Home}
               alt="Roommate icon"
             />
           </Button>
         </div>
       </div>
-
-      {/* <Divider />
-      <UserList /> */}
     </div>
   );
 }

@@ -19,6 +19,7 @@ import {
 	message,
 	Layout,
 	Upload,
+	Spin,
 } from "antd";
 import {
 	PlusOutlined,
@@ -31,7 +32,7 @@ import {
 import { useQueryOptions, useCreateProfile } from "../../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -182,7 +183,11 @@ function UserProfileForm() {
 	};
 
 	if (isUserPending || isProfilePending) {
-		return <div>Loading...</div>;
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+				<Spin size="large" tip="Loading..." />
+			</div>
+		);
 	}
 
 	if (isUserError || isProfileError) {
@@ -193,7 +198,7 @@ function UserProfileForm() {
 	const initialValues = userProfile?.data ? {
 		...userProfile.data,
 		interests: userProfile.data.interests || [],
-		preferredLocations: userProfile.data.preferredLocations || "",
+		preferredLocations: userProfile.data.preferredLocations || userProfile.data.preferredLocation || "",
 		moveInDate: userProfile.data.moveInDate
 			? dayjs(userProfile.data.moveInDate)
 			: undefined,
