@@ -134,5 +134,49 @@ export const userRoutes = new Hono()
                 error: error instanceof Error ? error.message : 'Unknown error'
             }, 500);
         }
+    })
+    .put('/:email', zValidator("json", RoommateUserSchema), async (c) => {
+        try {
+            const { email } = c.req.param();
+            const requestData = await c.req.json();
+            
+            const validatedData = RoommateUserSchema.parse({
+                ...requestData,
+                profileImageUrl: requestData.profileImageUrl,
+            });
+
+            const existingUser = await db
+                .select()
+                .from(roommateUsers)
+                .where(eq(roommateUsers.email, email))
+                .limit(1);
+
+            if (existingUser.length === 0) {
+                return c.json({ success: false, message: "User not found" }, 404);
+            }
+
+            const updatedUser = await db
+                .update(roommateUsers)
+                .set({
+                    ...validatedData,
+                    moveInDate: validatedData.moveInDate || null,
+                    interests: validatedData.interests || [],
+                    preferredLocations: validatedData.preferredLocations || "",
+                    maxRent: validatedData.maxRent?.toString() || null,
+                })
+                .where(eq(roommateUsers.email, email))
+                .returning();
+
+            return c.json({ success: true, message: "User updated successfully", data: updatedUser });
+        } catch (error) {
+            return c.json(
+                {
+                    success: false,
+                    message: "Error updating user",
+                    error: error instanceof Error ? error.message : "Unknown error",
+                },
+                500
+            );
+        }
     });
 

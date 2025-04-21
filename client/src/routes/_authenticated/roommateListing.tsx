@@ -3,32 +3,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
 	Form,
 	Input,
-	InputNumber,
 	Select,
-	DatePicker,
-	Checkbox,
-	Slider,
-	Button,
 	Card,
 	Typography,
-	Divider,
-	Row,
-	Col,
-	Tag,
-	Space,
 	message,
 	Layout,
-	Upload,
 	Spin,
 } from "antd";
-import {
-	PlusOutlined,
-	CloseOutlined,
-	UserOutlined,
-	MailOutlined,
-	PhoneOutlined,
-	UploadOutlined,
-} from "@ant-design/icons";
+
 import { useQueryOptions, useCreateProfile } from "../../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -163,7 +145,12 @@ function UserProfileForm() {
 				moveInDate: values.moveInDate,
 			};
 
-			const createdUser = await createProfile.mutateAsync(formattedValues);
+			const createdUser = await createProfile.mutateAsync({
+				values: formattedValues,
+				isEditing,
+				email: currentUser?.user?.email,
+			});
+
 			if (createdUser) {
 				message.success(
 					isEditing
@@ -184,8 +171,15 @@ function UserProfileForm() {
 
 	if (isUserPending || isProfilePending) {
 		return (
-			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-				<Spin size="large" tip="Loading..." />
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					height: "100vh",
+				}}
+			>
+				<Spin size='large' tip='Loading...' />
 			</div>
 		);
 	}
@@ -195,14 +189,19 @@ function UserProfileForm() {
 	}
 
 	// Prepare initial values for the UserForm component
-	const initialValues = userProfile?.data ? {
-		...userProfile.data,
-		interests: userProfile.data.interests || [],
-		preferredLocations: userProfile.data.preferredLocations || userProfile.data.preferredLocation || "",
-		moveInDate: userProfile.data.moveInDate
-			? dayjs(userProfile.data.moveInDate)
-			: undefined,
-	} : undefined;
+	const initialValues = userProfile?.data
+		? {
+				...userProfile.data,
+				interests: userProfile.data.interests || [],
+				preferredLocations:
+					userProfile.data.preferredLocations ||
+					userProfile.data.preferredLocation ||
+					"",
+				moveInDate: userProfile.data.moveInDate
+					? dayjs(userProfile.data.moveInDate)
+					: undefined,
+			}
+		: undefined;
 
 	return (
 		<Layout>
@@ -214,7 +213,7 @@ function UserProfileForm() {
 					>
 						{isEditing ? "Edit Profile" : "Create Profile"}
 					</Title>
-					<UserForm 
+					<UserForm
 						initialValues={initialValues}
 						onFinish={onFinish}
 						uploading={uploading}

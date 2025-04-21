@@ -153,22 +153,31 @@ export const useQueryOptions = {
 export function useCreateProfile() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (data: UserProfileFormValues) => {
+        mutationFn: async (data: { values: UserProfileFormValues, isEditing: boolean, email?: string }) => {
             const formattedData = {
-                ...data,
-                moveInDate: data.moveInDate,
-                maxRent: data.maxRent ? Number(data.maxRent) : undefined,
-                age: Number(data.age),
-                desiredRoomType: data.desiredRoomType ? data.desiredRoomType.toLowerCase() : '',
-                preferredLocations: data.preferredLocations || '',
-                interests: Array.isArray(data.interests) ? data.interests : []
+                ...data.values,
+                moveInDate: data.values.moveInDate,
+                maxRent: data.values.maxRent ? Number(data.values.maxRent) : undefined,
+                age: Number(data.values.age),
+                desiredRoomType: data.values.desiredRoomType ? data.values.desiredRoomType.toLowerCase() : '',
+                preferredLocations: data.values.preferredLocations || '',
+                interests: Array.isArray(data.values.interests) ? data.values.interests : []
             };
             console.log("Formatted Data: ", formattedData);
             try {
-                // Send the data to the server
-                const response = await api.user.$post({
-                    json: formattedData
-                });
+                let response;
+                if (data.isEditing && data.email) {
+                    // Use PUT for updates
+                    response = await api.user[":email"].$put({
+                        param: { email: data.email },
+                        json: formattedData
+                    });
+                } else {
+                    // Use POST for new profiles
+                    response = await api.user.$post({
+                        json: formattedData
+                    });
+                }
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -184,7 +193,6 @@ export function useCreateProfile() {
 
                 return await response.json();
             } catch (error) {
-                // console.error('Request error:', error);
                 throw error;
             }
         },
