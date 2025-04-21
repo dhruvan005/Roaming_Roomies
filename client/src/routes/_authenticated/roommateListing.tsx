@@ -21,15 +21,16 @@ const { Content } = Layout;
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues, GetApiResponse } from "../../types";
 import UserForm from "../../components/UserForm";
+import { CloudCog } from "lucide-react";
+
 
 function UserProfileForm() {
-	const [form] = Form.useForm();
 	const {
 		isPending: isUserPending,
 		isError: isUserError,
 		data: currentUser,
 	} = useQuery(useQueryOptions);
-
+	
 	const {
 		data: userProfile,
 		isPending: isProfilePending,
@@ -52,21 +53,15 @@ function UserProfileForm() {
 	const createProfile = useCreateProfile();
 	const navigate = useNavigate();
 
+	// console.log("currentUser", currentUser);
+	// console.log("userProfile", userProfile);
+	// console.log("isUserPending", isUserPending);
+	// console.log("isEditing", isEditing);
+
 	useEffect(() => {
 		if (userProfile?.data) {
 			setIsEditing(true);
-			// Set form values with existing profile data
-			const formattedData = {
-				...userProfile.data,
-				interests: userProfile.data.interests || [],
-				preferredLocations: userProfile.data.preferredLocations || "",
-				moveInDate: userProfile.data.moveInDate
-					? dayjs(userProfile.data.moveInDate)
-					: undefined,
-			};
-			form.setFieldsValue(formattedData);
-
-			// Set image preview if exists
+			
 			if (userProfile.data.profileImageUrl) {
 				setFileList([
 					{
@@ -78,12 +73,10 @@ function UserProfileForm() {
 				]);
 			}
 		} else if (!isProfilePending) {
-			// If profile doesn't exist and we're not waiting for the query
 			setIsEditing(false);
-			form.resetFields();
 			setFileList([]);
 		}
-	}, [userProfile, isProfilePending, form]);
+	}, [userProfile, isProfilePending]);
 
 	const handleChange = ({ fileList: newFileList }: { fileList: any[] }) => {
 		setFileList(newFileList.slice(-1)); // Keep only the latest file
@@ -201,7 +194,11 @@ function UserProfileForm() {
 					? dayjs(userProfile.data.moveInDate)
 					: undefined,
 			}
-		: undefined;
+		: {
+			firstName: currentUser?.user?.given_name,
+			lastName: currentUser?.user?.family_name,
+			email: currentUser?.user?.email,
+		};
 
 	return (
 		<Layout>

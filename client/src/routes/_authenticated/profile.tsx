@@ -26,7 +26,7 @@ function Profile() {
 
   useEffect(() => {
     if (isUserPending) {
-      // console.log("Loading user data...");
+      console.log("Loading user data...");
     } else {
       // console.log("User data loaded:", userData);
     }

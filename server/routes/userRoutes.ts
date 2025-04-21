@@ -65,13 +65,13 @@ export const userRoutes = new Hono()
     .post("/", zValidator("json", RoommateUserSchema), async (c) => {
         try {
             const requestData = await c.req.json();
-            console.log("Request Data: in Post route", requestData);
+            // console.log("Request Data: in Post route", requestData);
 
             const validatedData = RoommateUserSchema.parse({
                 ...requestData,
                 profileImageUrl: requestData.profileImageUrl,
             });
-            console.log("Validated Data: ", validatedData);
+            // console.log("Validated Data: ", validatedData);
 
             const existingUser = await db
                 .select()
@@ -93,8 +93,7 @@ export const userRoutes = new Hono()
                     maxRent: validatedData.maxRent?.toString() || null,
                 })
                 .returning();
-
-            console.log("New User: ", newUser);
+            // console.log("New User: ", newUser);
             return c.json({ success: true, message: "User created successfully", data: newUser }, 201);
         } catch (error) {
             return c.json(
