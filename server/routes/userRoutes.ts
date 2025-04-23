@@ -41,13 +41,13 @@ export const userRoutes = new Hono()
                 .where(and(...whereConditions))
                 .limit(limitNum)
                 .offset(offset);
-            console.log("Users: ", users);
+            // console.log("Users: ", users);
 
             const [{ count }] = await db.select({ count: sql<number>`count(*)` })
                 .from(roommateUsers)
                 .where(and(...whereConditions));
 
-            console.log("Count Result:", count);
+            // console.log("Count Result:", count);
 
             const total = Number(count) || 0;
             return c.json({
@@ -80,7 +80,7 @@ export const userRoutes = new Hono()
                 .select()
                 .from(roommateUsers)
                 .where(eq(roommateUsers.email, validatedData.email))
-                .limit(1);
+                .limit(10);
 
             if (existingUser.length > 0) {
                 return c.json({ success: false, message: "User with this email already exists" }, 409);
@@ -152,7 +152,7 @@ export const userRoutes = new Hono()
                 .select()
                 .from(roommateUsers)
                 .where(eq(roommateUsers.email, email))
-                .limit(1);
+                .limit(10);
 
             if (existingUser.length === 0) {
                 return c.json({ success: false, message: "User not found" }, 404);

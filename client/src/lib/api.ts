@@ -79,8 +79,8 @@ export async function parseUserApiResponse(response: Response) {
 // User API functions
 export const userApi = {
     // Get all users
-    getAll: async () => {
-        const response = await api.user.$get();
+    getAll: async ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => {
+        const response = await api.user.$get({ query: { page, limit } });
         console.log("getAll response", response);
         return parseApiResponse(response);
     },
@@ -104,7 +104,7 @@ export const userApi = {
 export function useUsers() {
     return useQuery({
         queryKey: ["allUsers"],
-        queryFn: userApi.getAll,
+        queryFn: () => userApi.getAll({ page: 1, limit: 10 }),
 
         refetchOnWindowFocus: false,
         staleTime: 10 * 60 * 1000, // 10 minutes
@@ -142,7 +142,10 @@ export const dataControls = {
     updateUsersData: (newData: any) => {
         queryClient.setQueryData(["allUsers"], newData);
     },
-    loadMoreUsers: userApi.loadMore,
+    loadMoreUsers: async (page: number, limit: number) => {
+        const response = await userApi.getAll({ page, limit });
+        queryClient.setQueryData(["allUsers"], response); // Update the cache with the new data
+    },
 }
 
 export const useQueryOptions = {
