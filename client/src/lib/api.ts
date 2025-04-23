@@ -3,15 +3,11 @@ import { ApiRoutes } from "../../../server/index";
 import {
     QueryClient,
     useQuery,
-    QueryKey,
-    QueryOptions
 } from "@tanstack/react-query";
 import { ApiResponse } from "../types";
-import { createRouter } from '@tanstack/react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfileFormValues } from '../types';
-import { UserType } from "@kinde-oss/kinde-typescript-sdk";
-import { GetApiResponse } from "../types";
+
 // Create a typed Hono client
 // Make sure the base URL is correct for your API
 const client = hc<ApiRoutes>("/");
@@ -84,19 +80,12 @@ export const userApi = {
         console.log("getAll response", response);
         return parseApiResponse(response);
     },
-    loadMore: async () => {
-        const response = await api.user.$get({ query: { page: 2 } }); // Example query parameter for pagination
-
-        return parseApiResponse(response);
-    },
     // Get a single user by email
     getByEmail: async (email: string) => {
         const response = await api.user[":email"].$get({ param: { email } });
         console.log("getByEmail response", response);
         return parseUserApiResponse(response);
     },
-
-
     // Add more API functions as needed
 };
 
@@ -142,6 +131,7 @@ export const dataControls = {
     updateUsersData: (newData: any) => {
         queryClient.setQueryData(["allUsers"], newData);
     },
+    // this is used for the pagination
     loadMoreUsers: async (page: number, limit: number) => {
         const response = await userApi.getAll({ page, limit });
         queryClient.setQueryData(["allUsers"], response); // Update the cache with the new data
@@ -151,7 +141,6 @@ export const dataControls = {
 export const useQueryOptions = {
     queryKey: ['currentUser'],
     queryFn: async () => {
-        console.log('Executing /api/me fetch');
         const response = await api.me.$get();
         if (!response.ok) {
             throw new Error('Failed to fetch user');

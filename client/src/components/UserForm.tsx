@@ -19,6 +19,8 @@ import {
   message,
   Layout,
   Upload,
+  Image,
+  Modal,
 } from "antd";
 import {
   PlusOutlined,
@@ -53,10 +55,14 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
   uploading,
   submitting,
   beforeUpload,
-  fileList,
+  fileList: initialFileList,
 }) => {
+  const [fileList, setFileList] = useState(initialFileList || []);
   const [form] = Form.useForm();
   const [newInterest, setNewInterest] = useState("");
+  const [previewImage, setPreviewImage] = useState<string | undefined>(
+    undefined
+  );
   const [interests, setInterests] = useState<{ id: number; value: string }[]>(
     []
   );
@@ -64,13 +70,18 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
-      
+
       // Initialize interests state with existing interests from initialValues
       if (initialValues.interests && Array.isArray(initialValues.interests)) {
-        const formattedInterests = initialValues.interests.map((interest: any, index: number) => ({
-          id: index + Date.now(),
-          value: typeof interest === 'string' ? interest : interest.value || interest
-        }));
+        const formattedInterests = initialValues.interests.map(
+          (interest: any, index: number) => ({
+            id: index + Date.now(),
+            value:
+              typeof interest === "string"
+                ? interest
+                : interest.value || interest,
+          })
+        );
         setInterests(formattedInterests);
       }
     }
@@ -128,6 +139,12 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
     }
   };
 
+  const [previewVisible, setPreviewVisible] = useState(false);
+
+  const handlePreviewClose = useCallback(() => {
+    setPreviewVisible(false);
+  }, []);
+
   return (
     <div>
       <Content style={{ padding: "16px", margin: "0 auto" }}>
@@ -135,7 +152,6 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
           // variant={borderless}
           style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
         >
-
           <Divider />
           <Form
             form={form}
@@ -144,7 +160,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
             onFinish={onFinish}
             requiredMark="optional"
             scrollToFirstError
-          // onFinish={handleFormSubmit}
+            // onFinish={handleFormSubmit}
           >
             {/* Personal Information Section */}
             <Card
@@ -297,18 +313,46 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                   >
                     <Upload
                       beforeUpload={beforeUpload}
-                      fileList={fileList.map((file) => ({
-                        uid: file.name,
-                        name: file.name,
-                        status: "done",
-                      }))}
+                      fileList={fileList}
+                      onChange={({ fileList: newFileList }) => {
+                        setFileList(newFileList); // Update the fileList state
+                      }}
+                      onPreview={(file) => {
+                        setPreviewImage(file.thumbUrl || file.url); // Set the preview image
+                        setPreviewVisible(true); // Open the modal
+                      }}
                       showUploadList={true}
+                      listType="picture-card" // Enables image preview
                     >
-                      <Button icon={<UploadOutlined />}>
-                        Click to Select Image
-                      </Button>
+                      {fileList.length < 1 && (
+                        <Button icon={<UploadOutlined />}>
+                          Click to Select Image
+                        </Button>
+                      )}
                     </Upload>
+
+                    {/*  Show the existing image in edit mode */}
+                    {fileList.length === 0 &&
+                      initialFileList.length > 0 &&
+                      initialFileList[0].url && (
+                        <Image
+                          src={initialFileList[0].url} // Display the existing image in edit mode
+                          alt="Profile Preview"
+                          style={{
+                            marginTop: 16,
+                            maxWidth: "100%",
+                            maxHeight: 200,
+                          }}
+                        />
+                      )}
                   </Form.Item>
+
+                  {fileList.length > 0 && (
+                    <Image
+                      src={fileList[0].thumbUrl || fileList[0].url} // Show the preview image
+                      alt="Preview"
+                    />
+                  )}
                 </Col>
               </Row>
             </Card>

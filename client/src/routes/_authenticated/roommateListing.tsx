@@ -52,7 +52,7 @@ function UserProfileForm() {
 	const [submitting, setSubmitting] = useState(false);
 	const createProfile = useCreateProfile();
 	const navigate = useNavigate();
-
+	// console.log("fileList", fileList); it is heaving the profile image
 	// console.log("currentUser", currentUser);
 	// console.log("userProfile", userProfile);
 	// console.log("isUserPending", isUserPending);
