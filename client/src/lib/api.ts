@@ -52,7 +52,10 @@ export async function parseApiResponse(response: Response): Promise<ApiResponse>
     }
 
     try {
-        return await response.json() as ApiResponse;
+
+        const res= await response.json() as ApiResponse;
+        console.log("Parsed API Response:", res);
+        return res;
     } catch (error) {
         console.error('Failed to parse response as JSON:', error);
         throw new Error('Invalid response format from API');
@@ -126,7 +129,13 @@ export const dataControls = {
     refreshUsers: () => {
         return queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     },
-
+    totalUsers: () => {
+        const queryData = queryClient.getQueryData(["allUsers"]);
+        if (queryData && typeof queryData === 'object' && 'total' in queryData) {
+            return (queryData as ApiResponse).total;
+        }
+        return 0;
+    },
     // Set users data manually (useful after adding new data)
     updateUsersData: (newData: any) => {
         queryClient.setQueryData(["allUsers"], newData);

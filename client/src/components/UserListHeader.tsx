@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "antd";
 
 interface UserListHeaderProps {
-  // totalUsers: number;
   onRefresh: () => void;
 }
 
