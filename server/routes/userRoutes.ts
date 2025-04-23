@@ -26,32 +26,35 @@ export const userRoutes = new Hono()
             const pageNum = parseInt(page as string, 10);
             const limitNum = parseInt(limit as string, 10);
             const offset = (pageNum - 1) * limitNum;
-
             // Build dynamic filter conditions
             const whereConditions: any[] = [];
-
+            
             if (age) whereConditions.push(eq(roommateUsers.age, Number(age)));
-            if (gender) whereConditions.push(eq(roommateUsers.gender, gender as 'male' | 'female' | 'non_binary' | 'other' | 'prefer_not_to_say'));
+            if (gender) whereConditions.push(eq(roommateUsers.gender, gender as string));
             if (minRent) whereConditions.push(gte(roommateUsers.maxRent, minRent.toString()));
             if (maxRent) whereConditions.push(lte(roommateUsers.maxRent, maxRent.toString()));
             if (desiredRoomType) whereConditions.push(eq(roommateUsers.desiredRoomType, desiredRoomType as 'apartment' | 'house' | 'studio' | 'other'));
             if (cleanlinessLevel) whereConditions.push(eq(roommateUsers.cleanlinessLevel, Number(cleanlinessLevel)));
-
+            
             const users = await db.select()
                 .from(roommateUsers)
                 .where(and(...whereConditions))
                 .limit(limitNum)
                 .offset(offset);
+            console.log("Users: ", users);
 
             const [{ count }] = await db.select({ count: sql<number>`count(*)` })
                 .from(roommateUsers)
                 .where(and(...whereConditions));
 
+            console.log("Count Result:", count);
+
+            const total = Number(count) || 0;
             return c.json({
                 success: true,
                 page: pageNum,
                 limit: limitNum,
-                total: count,
+                total: total,
                 users: users
             });
         } catch (error) {

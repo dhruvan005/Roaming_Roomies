@@ -37,7 +37,7 @@ export interface ApiResponse {
   success: boolean;
   page: number;
   limit: number;
-  total: string;
+  total: number;
   users: UserType[];
 }
 

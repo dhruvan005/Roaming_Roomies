@@ -81,10 +81,12 @@ export const userApi = {
     // Get all users
     getAll: async () => {
         const response = await api.user.$get();
+        console.log("getAll response", response);
         return parseApiResponse(response);
     },
     loadMore: async () => {
         const response = await api.user.$get({ query: { page: 2 } }); // Example query parameter for pagination
+
         return parseApiResponse(response);
     },
     // Get a single user by email
