@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, integer, boolean, timestamp, date, numeric } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, integer, boolean, timestamp, date, numeric, index } from 'drizzle-orm/pg-core';
 
 export const roommateUsers = pgTable('roommate_users', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -27,4 +27,8 @@ export const roommateUsers = pgTable('roommate_users', {
   profileImageUrl: text('profile_image_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    emailIdx: index('email_idx').on(table.email)
+  }
 });

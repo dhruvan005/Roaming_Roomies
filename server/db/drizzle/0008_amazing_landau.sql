@@ -1,0 +1,1 @@
+CREATE INDEX "email_idx" ON "roommate_users" USING btree ("email");

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
-import UC from "../../assets/under-construction.png";
+import MessageDemo from "../../components/MessageDemo";
 
 export const Route = createFileRoute("/_authenticated/about")({
   component: AboutComponent,
@@ -33,6 +33,7 @@ function AboutComponent() {
       >
         Back to Home
       </Button>
+     
     </div>
   );
 }

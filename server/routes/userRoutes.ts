@@ -138,12 +138,13 @@ export const userRoutes = new Hono()
         try {
             const { email } = c.req.param();
             const requestData = await c.req.json();
-            
+
             const validatedData = RoommateUserSchema.parse({
                 ...requestData,
                 profileImageUrl: requestData.profileImageUrl,
             });
 
+            // This query will use the email index automatically
             const existingUser = await db
                 .select()
                 .from(roommateUsers)
@@ -154,6 +155,7 @@ export const userRoutes = new Hono()
                 return c.json({ success: false, message: "User not found" }, 404);
             }
 
+            // Update operation will also use the email index
             const updatedUser = await db
                 .update(roommateUsers)
                 .set({
@@ -162,6 +164,8 @@ export const userRoutes = new Hono()
                     interests: validatedData.interests || [],
                     preferredLocations: validatedData.preferredLocations || "",
                     maxRent: validatedData.maxRent?.toString() || null,
+                    // Update the updatedAt timestamp
+                    updatedAt: new Date(),
                 })
                 .where(eq(roommateUsers.email, email))
                 .returning();
@@ -178,4 +182,3 @@ export const userRoutes = new Hono()
             );
         }
     });
-
