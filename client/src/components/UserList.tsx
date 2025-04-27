@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { List } from "antd";
-import { useUsers, dataControls } from "../lib/api";
+import { useUsers, dataControls, useQueryOptions } from "../lib/api";
 import { UserType } from "../types";
 import UserListHeader from "./UserListHeader";
 import UserListItem from "./UserListItem";
 import UserProfileModal from "./UserProfileModal";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { useQuery } from "@tanstack/react-query";
 
 const UserList: React.FC = () => {
   const [list, setList] = useState<UserType[]>([]);
@@ -14,11 +15,21 @@ const UserList: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Get current user data
+  const {
+    data: currentUser,
+    isPending: isCurrentUserPending,
+  } = useQuery(useQueryOptions);
+
   useEffect(() => {
-    if (data?.users) {
+    if (data?.users && currentUser?.user) {
+      // Filter out the logged-in user from the list
+      const filteredUsers = data.users.filter(user => user.email !== currentUser.user.email);
+      setList(filteredUsers);
+    } else if (data?.users) {
       setList(data.users);
     }
-  }, [data]);
+  }, [data, currentUser]);
 
   const handleRefresh = () => {
     dataControls.refreshUsers();
@@ -53,28 +64,31 @@ const UserList: React.FC = () => {
       {isPending ? (
         <LoadingSkeleton />
       ) : (
-        <List
-          className="demo-loadmore-list"
-          itemLayout="horizontal"
-          dataSource={list}
-          renderItem={(user: UserType) => (
-            <UserListItem
-              user={user}
-              isLiked={likedUsers.has(user.id)}
-              onLike={() => handleLike(user.id)}
-              onShowDetails={() => showUserDetails(user)}
-            />
-          )}
-        />
+        <div>
+          <h2>liked </h2>
+          <List
+            className="demo-loadmore-list"
+            itemLayout="horizontal"
+            dataSource={list}
+            renderItem={(user: UserType) => (
+              <UserListItem
+                user={user}
+                isLiked={likedUsers.has(user.id)}
+                onLike={() => handleLike(user.id)}
+                onShowDetails={() => showUserDetails(user)}
+              />
+            )}
+          />
+        </div>
       )}
 
-      <UserProfileModal
-        isOpen={isModalOpen}
-        user={selectedUser}
-        onClose={handleModalClose}
-      />
-    </div>
-  );
+          <UserProfileModal
+            isOpen={isModalOpen}
+            user={selectedUser}
+            onClose={handleModalClose}
+          />
+        </div>
+      );
 };
 
-export default UserList;
+      export default UserList;

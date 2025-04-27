@@ -21,6 +21,7 @@ const handlePageChange = (page: number, limit: number) => {
 function RouteComponent() {
   const { data } = useUsers();
   const totalUsers = data?.total || 0;
+  
   console.log("data", data);
 
   return (

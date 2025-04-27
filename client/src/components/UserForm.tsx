@@ -275,11 +275,11 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select gender">
-                      <Option value="male">Male</Option>
-                      <Option value="female">Female</Option>
-                      <Option value="non_binary">Non-binary</Option>
-                      <Option value="other">Other</Option>
-                      <Option value="prefer_not_to_say">
+                      <Option value="Male">Male</Option>
+                      <Option value="Female">Female</Option>
+                      <Option value="Non Binary">Non-binary</Option>
+                      <Option value="Other">Other</Option>
+                      <Option value="Prefer_Not_To_Say">
                         Prefer not to say
                       </Option>
                     </Select>
@@ -376,16 +376,16 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                     ]}
                   >
                     <Select placeholder="Select sleep schedule">
-                      <Option value="earlybird">
+                      <Option value="Early Bird">
                         Early Bird (Before 10 PM)
                       </Option>
-                      <Option value="nightowl">
+                      <Option value="Night Owl">
                         Night Owl (After Midnight)
                       </Option>
-                      <Option value="average">
+                      <Option value="Average">
                         Average (10 PM - Midnight)
                       </Option>
-                      <Option value="irregular">Irregular</Option>
+                      <Option value="Irregular">Irregular</Option>
                     </Select>
                   </Form.Item>
                 </Col>
