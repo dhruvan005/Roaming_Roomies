@@ -53,7 +53,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Home, Users, Search, CheckCircle, MessageSquare, ArrowRight, ChevronDown, Star } from "lucide-react"
+import { Home, Users, Search, CheckCircle, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
 
 export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0)
@@ -438,7 +438,7 @@ export default function LandingPage() {
             <TabsList className="grid w-full grid-cols-2 mb-12 bg-blue-50 p-1 h-12 gap-3">
               <TabsTrigger
                 value="find"
-                className="text-lg data-[state=active]:bg-blue-500 data-[state=active]:text-white transition-all duration-300 h-12"
+                className="text-lg data-[state=active]:bg-blue-500 data-[state=active]:text-white transition-all duration-300 h-10"
                 onMouseEnter={enterButton}
                 onMouseLeave={leaveButton}
               >
@@ -446,7 +446,7 @@ export default function LandingPage() {
               </TabsTrigger>
               <TabsTrigger
                 value="list"
-                className="text-lg data-[state=active]:bg-blue-500 data-[state=active]:text-white transition-all duration-300 h-12"
+                className="text-lg data-[state=active]:bg-blue-500 data-[state=active]:text-white transition-all duration-300 h-10"
                 onMouseEnter={enterButton}
                 onMouseLeave={leaveButton}
               >
@@ -645,8 +645,8 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                  92% Match
+
+                  80% Match
                 </div>
               </div>
               <div className="flex gap-4 group" onMouseEnter={enterCard} onMouseLeave={leaveCard}>
@@ -662,8 +662,8 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                  92% Match
+
+                  91% Match
                 </div>
               </div>
               <div className="flex gap-4 group" onMouseEnter={enterCard} onMouseLeave={leaveCard}>
@@ -679,8 +679,8 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                  92% Match
+
+                  85% Match
                 </div>
               </div>
             </motion.div>
@@ -709,8 +709,8 @@ export default function LandingPage() {
                       <p className="text-sm text-gray-500">Professional, Non-smoker</p>
                     </div>
                     <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                      92% Match
+
+                      87% Match
                     </div>
                   </div>
 

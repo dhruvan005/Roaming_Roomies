@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Avatar } from "antd";
+import { List, Avatar, Button, Tooltip } from "antd";
 import { Heart } from "lucide-react";
 import { UserType } from "../types";
 
@@ -21,23 +21,27 @@ const UserListItem: React.FC<UserListItemProps> = ({
       key={user.id}
       className="custom-list-item"
       actions={[
-        <a key="like" className="flex items-center justify-center mr-2">
-          <Heart
+        <Tooltip key="like" title={isLiked ? "Unlike" : "Like"}>
+          <Button 
+            type="text" 
+            shape="circle"
             onClick={onLike}
-            className={`w-6 h-6 bg-gray-200 p-1 backdrop-blur-2xl rounded-full shadow-md hover:shadow-lg transition-shadow ${
-              isLiked
-                ? "fill-red-200 text-red-500"
-                : "text-gray-600 hover:fill-red-200 hover:text-red-500"
-            }`}
+            icon={
+              <Heart 
+                className={`w-5 h-5 ${isLiked ? "fill-red-400 text-red-400" : "text-gray-500"}`} 
+              />
+            }
+            className={`flex items-center justify-center ${isLiked ? "hover:bg-red-100" : "hover:bg-gray-100"}`}
           />
-        </a>,
-        <a
+        </Tooltip>,
+        <Button
           key="more"
-          className="flex items-center text-md hover:text-blue-500"
+          type="link"
+          className="text-md"
           onClick={onShowDetails}
         >
-          Load More
-        </a>,
+          View Details
+        </Button>,
       ]}
     >
       <List.Item.Meta
