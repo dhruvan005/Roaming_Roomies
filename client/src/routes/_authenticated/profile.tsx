@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryOptions, getUserByEmail } from "../../lib/api";
 import {
@@ -35,6 +35,7 @@ import {
   HeartIcon,
   PencilIcon,
   LogOut,
+  Paintbrush
 } from "lucide-react";
 
 const { Title, Text, Paragraph } = Typography;
@@ -57,7 +58,6 @@ function Profile() {
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
   const navigate = useNavigate();
 
-  // Get user profile data
   const { data: userData, isPending: isUserPending } = getUserByEmail(
     data?.user?.email || ""
   );
@@ -167,7 +167,9 @@ function Profile() {
                         </Title>
                       </div>
                     }
-                    className="mb-6 border-gray-800"
+                    style={{
+                      marginBottom: '6px'
+                    }}
 
                   >
                     <Paragraph style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: "#4b5563" }}>
@@ -181,7 +183,7 @@ function Profile() {
                   title={
                     <div className="flex items-center">
                       <Home size={18} className="mr-2 text-blue-500" />
-                      <Title level={4} style={{ margin: 0, }}>
+                      <Title level={4} style={{ margin: 0 }}>
                         Housing Preferences
                       </Title>
                     </div>
@@ -215,7 +217,23 @@ function Profile() {
                         <div style={{ color: "#4b5563" }}>{user.desiredRoomType || "Not specified"}</div>
                       </div>
                     </div>
+                    <div style={{ display: "flex", alignItems: "flex-start" }}>
+                      <Paintbrush
+                        size={18}
+                        color="#3b82f6"
+                        style={{ marginRight: 12, marginTop: 2 }}
+                      />
 
+                      <div>
+                        <Text
+                          strong
+                          style={{ display: "block", marginBottom: 2 }}
+                        >
+                          Cleanliness level
+                        </Text>
+                        <div>{user.cleanlinessLevel || "Not specified"}</div>
+                      </div>
+                    </div>
                     <div style={{ display: "flex", alignItems: "flex-start" }}>
                       <CircleDollarSign
                         size={18}
@@ -590,12 +608,7 @@ function Profile() {
                 danger
                 size="large"
                 icon={<LogOut size={16} style={{ marginRight: 8 }} />}
-                onClick={() => {
-                  window.location.href = "/api/logout";
-                  setTimeout(() => {
-                    window.location.href = "/login";
-                  }, 500);
-                }}
+                onClick={() => navigate({ to: "/login" })}
                 className="px-8"
               >
                 Logout

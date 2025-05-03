@@ -166,15 +166,7 @@ export default function LandingPage() {
   const leaveLink = () => setCursorVariant("default")
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 md:cursor-none cursor-default">
-      {/* Custom Cursor */}
-      <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-50 hidden md:block"
-        variants={cursorVariants}
-        animate={cursorVariant}
-        transition={{ type: "spring", stiffness: 500, damping: 28 }}
-      />
-
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
       {/* Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100 via-white to-white opacity-70" />
@@ -707,7 +699,7 @@ export default function LandingPage() {
                   <div className="flex items-center gap-4 pb-4 border-b">
                     <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
                       <img
-                        src="/placeholder.svg?height=48&width=48"
+                        src="https://avatar.iran.liara.run/public/48"
                         alt="User avatar"
                         className="w-full h-full object-cover"
                       />
