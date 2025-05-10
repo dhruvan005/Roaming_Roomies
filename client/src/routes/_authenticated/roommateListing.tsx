@@ -52,11 +52,6 @@ function UserProfileForm() {
 	const [submitting, setSubmitting] = useState(false);
 	const createProfile = useCreateProfile();
 	const navigate = useNavigate();
-	// console.log("fileList", fileList); it is heaving the profile image
-	// console.log("currentUser", currentUser);
-	// console.log("userProfile", userProfile);
-	// console.log("isUserPending", isUserPending);
-	// console.log("isEditing", isEditing);
 
 	useEffect(() => {
 		if (userProfile?.data) {
@@ -150,7 +145,11 @@ function UserProfileForm() {
 						? "Profile updated successfully!"
 						: "Profile created successfully!"
 				);
-				navigate({ to: "/allUsers" });
+				if(isEditing){
+					navigate({ to: "/profile" });
+				}else{
+					navigate({ to: "/allUsers" });
+				}
 			} else {
 				message.error("Failed to save profile. Please try again.");
 			}

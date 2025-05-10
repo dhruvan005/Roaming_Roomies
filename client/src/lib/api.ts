@@ -49,7 +49,7 @@ export async function parseApiResponse(response: Response): Promise<ApiResponse>
 
     try {
 
-        const res= await response.json() as ApiResponse;
+        const res = await response.json() as ApiResponse;
         console.log("Parsed API Response:", res);
         return res;
     } catch (error) {
@@ -83,7 +83,7 @@ export const userApi = {
     // Get a single user by email
     getByEmail: async (email: string) => {
         const response = await api.user[":email"].$get({ param: { email } });
-        console.log("getByEmail response", response);
+        // console.log("getByEmail response", response);
         return parseUserApiResponse(response);
     },
     // Add more API functions as needed

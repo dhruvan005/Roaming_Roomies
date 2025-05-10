@@ -699,7 +699,7 @@ export default function LandingPage() {
                   <div className="flex items-center gap-4 pb-4 border-b">
                     <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
                       <img
-                        src="https://avatar.iran.liara.run/public/48"
+                        src="https://avatar.iran.liara.run/public/9"
                         alt="User avatar"
                         className="w-full h-full object-cover"
                       />
