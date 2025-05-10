@@ -39,6 +39,7 @@ const { Content } = Layout;
 import { useCreateProfile } from "../lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { UserProfileFormValues } from "../types";
+import { useMessage } from "./MessageProvider";
 
 interface UserProfileFormComponentProps {
   initialValues?: any;
@@ -66,12 +67,11 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
   const [interests, setInterests] = useState<{ id: number; value: string }[]>(
     []
   );
-
+  const message = useMessage();
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
 
-      // Initialize interests state with existing interests from initialValues
       if (initialValues.interests && Array.isArray(initialValues.interests)) {
         const formattedInterests = initialValues.interests.map(
           (interest: any, index: number) => ({
@@ -148,11 +148,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
   return (
     <div>
       <Content style={{ padding: "16px", margin: "0 auto" }}>
-        <Card
-          // variant={borderless}
-          style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
-        >
-          <Divider />
+        <Card variant={"borderless"}>
           <Form
             form={form}
             layout="vertical"
@@ -160,7 +156,6 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
             onFinish={onFinish}
             requiredMark="optional"
             scrollToFirstError
-            // onFinish={handleFormSubmit}
           >
             {/* Personal Information Section */}
             <Card
@@ -339,7 +334,7 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
                           src={initialFileList[0].url} // Display the existing image in edit mode
                           alt="Profile Preview"
                           style={{
-                            marginTop: 16,
+                            padding:"5px",
                             maxWidth: "100%",
                             maxHeight: 200,
                           }}
@@ -729,7 +724,6 @@ const UserForm: React.FC<UserProfileFormComponentProps> = ({
               <Row justify="end">
                 <Col>
                   <Space>
-                    <Button onClick={() => form.resetFields()}>Reset</Button>
                     <Button
                       type="primary"
                       htmlType="submit"

@@ -38,6 +38,7 @@ import {
   LogOut,
   Paintbrush,
 } from "lucide-react";
+import { useMessage } from "@/components/MessageProvider";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -57,20 +58,22 @@ export const Route = createFileRoute("/_authenticated/profile")({
 
 function Profile() {
   const queryClient = useQueryClient();
+  const message = useMessage();
   const { isPending, isError, data, error } = useQuery(useQueryOptions);
   const navigate = useNavigate();
 
-  const { data: userData, isPending: isUserPending } = getUserByEmail(
-    data?.user?.email || ""
-  );
+  const {
+    data: userData,
+    isPending: isUserPending,
+    refetch,
+  } = getUserByEmail(data?.user?.email || "");
 
   const user = userData?.data;
 
   useEffect(() => {
     // Invalidate the query cache when the component is mounted
-    console.log("Inside the query cache");
-    queryClient.invalidateQueries({ queryKey: useQueryOptions.queryKey });
-  }, [queryClient]);
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (isUserPending) {
@@ -801,7 +804,10 @@ function Profile() {
                 danger
                 size="large"
                 icon={<LogOut size={16} style={{ marginRight: 8 }} />}
-                onClick={() => navigate({ to: "/login" })}
+                onClick={() => {
+                  message.success("Loggout Successfully")
+                  navigate({ to: "/login" })}}
+
                 className="px-8"
               >
                 Logout
