@@ -8,7 +8,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
@@ -16,23 +16,19 @@ services:
       - KINDE_ISSUER_URL=${KINDE_ISSUER_URL}
       - KINDE_CLIENT_ID=${KINDE_CLIENT_ID}
       - KINDE_CLIENT_SECRET=${KINDE_CLIENT_SECRET}
-      - KINDE_REDIRECT_URI=http://localhost:3000/api/callback
-      - KINDE_LOGOUT_REDIRECT_URI=http://localhost:3000
+      - KINDE_REDIRECT_URI=https://roamingroomies.dhruvanpatel.dev/api/callback
+      - KINDE_LOGOUT_REDIRECT_URI=https://roamingroomies.dhruvanpatel.dev
       - KINDE_DOMAIN=${KINDE_DOMAIN}
+      - FRONTEND_URL=https://roamingroomies.dhruvanpatel.dev
     volumes:
-      - ./client:/app/client
+      - ./client/dist:/app/client/dist
       - ./server:/app/server
-      - /app/client/node_modules
-      - /app/node_modules
     restart: unless-stopped
-    command: bun run --watch server/index.ts
+    command: bun run server/index.ts
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test: ["CMD", "curl", "-f", "https://roamingroomies.dhruvanpatel.dev/"]
       interval: 30s
       timeout: 30s
       retries: 3
-      start_period: 5s
-
-volumes:
-  postgres_data:
+      start_period: 5s 

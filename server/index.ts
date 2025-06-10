@@ -7,18 +7,37 @@ import {userRoutes} from './routes/userRoutes'
 
 const app = new Hono()
 app.use(logger())
-app.use('/api/*', cors())
-// app.use('*', errorHandler());
 
+// Configure CORS
+app.use('/api/*', cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
+    process.env.FRONTEND_URL || ''
+  ].filter(Boolean),
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+  maxAge: 600,
+  credentials: true,
+}))
 
 const apiRoutes = app.basePath("/api").route("/user", userRoutes).route("/", authRoute);
 
 // Don't forgot to change the callback URL in the Kinde dashboard
 
 // Serve static files
-app.use('/assets/*', serveStatic({ root: './client/dist' }))
-app.use('*', serveStatic({ root: './client/dist', path: 'index.html' }))
+app.use('/assets/*', serveStatic({ 
+  root: './client/dist',
+  rewriteRequestPath: (path) => path.replace(/^\/assets/, '')
+}))
 
+// Serve index.html for all other routes (SPA fallback)
+app.use('*', serveStatic({ 
+  root: './client/dist', 
+  path: 'index.html'
+}))
 
 export default app;
 export type ApiRoutes = typeof apiRoutes;
