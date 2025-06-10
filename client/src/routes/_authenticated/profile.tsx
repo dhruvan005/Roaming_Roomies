@@ -805,9 +805,15 @@ function Profile() {
                 size="large"
                 icon={<LogOut size={16} style={{ marginRight: 8 }} />}
                 onClick={() => {
-                  message.success("Loggout Successfully")
-                  navigate({ to: "/login" })}}
-
+                  // Clear all cookies
+                  document.cookie.split(";").forEach((c) => {
+                    document.cookie = c
+                      .replace(/^ +/, "")
+                      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                  });
+                  message.success("Logged out successfully");
+                  navigate({ to: "/login" });
+                }}
                 className="px-8"
               >
                 Logout

@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - KINDE_ISSUER_URL=${KINDE_ISSUER_URL}
+      - KINDE_CLIENT_ID=${KINDE_CLIENT_ID}
+      - KINDE_CLIENT_SECRET=${KINDE_CLIENT_SECRET}
+      - KINDE_REDIRECT_URI=${KINDE_REDIRECT_URI}
+      - KINDE_LOGOUT_REDIRECT_URI=${KINDE_LOGOUT_REDIRECT_URI}
+      - KINDE_DOMAIN=${KINDE_DOMAIN}
+    volumes:
+      - ./client:/app/client
+      - ./server:/app/server
+      - /app/client/node_modules
+      - /app/node_modules
+    restart: unless-stopped
+    command: bun run --watch server/index.ts
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  postgres_data:

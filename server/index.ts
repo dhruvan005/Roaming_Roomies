@@ -16,9 +16,8 @@ const apiRoutes = app.basePath("/api").route("/user", userRoutes).route("/", aut
 // Don't forgot to change the callback URL in the Kinde dashboard
 
 // Serve static files
-
-app.use('*', serveStatic({ root: './client/dist' }))
-app.get('*', serveStatic({ path: './client/dist/index.html' }))
+app.use('/assets/*', serveStatic({ root: './client/dist' }))
+app.use('*', serveStatic({ root: './client/dist', path: 'index.html' }))
 
 
 export default app;
