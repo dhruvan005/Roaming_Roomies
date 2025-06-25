@@ -11,7 +11,6 @@ app.use(logger())
 // Configure CORS
 app.use('/api/*', cors({
   origin: [
-    'http://localhost:3000',
     'http://localhost:3001',
     process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
     process.env.FRONTEND_URL || ''

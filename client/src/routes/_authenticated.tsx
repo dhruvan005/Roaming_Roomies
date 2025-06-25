@@ -6,22 +6,21 @@ import { queryClient } from "../lib/api";
 
 export const isAuthenticated = async () => {
   try {
-    // First check if we already have the data in cache using getQueryData
+    // First check if we already have the data in cache
     const cachedData = queryClient.getQueryData(useQueryOptions.queryKey) as { user?: any } | undefined;
     
-    // If we have valid cached data, use it
     if (cachedData?.user) {
       console.log("Using cached user data");
       return true;
     }
     
-    // Only fetch if not in cache
+    
     const data = await queryClient.fetchQuery({
       ...useQueryOptions,
       staleTime: 5 * 60 * 1000, // Cache valid for 5 minutes
     }) as { user?: any };
     
-    console.log("Fetched user data");
+    console.log("Fetched user data:", data);
     return data?.user ? true : false;
   } catch (error) {
     console.error("Authentication error:", error);
@@ -31,8 +30,12 @@ export const isAuthenticated = async () => {
 
 export const Route = createFileRoute("/_authenticated")({
   loader: async ({ location }) => {
+    console.log("Checking authentication for:", location.pathname);
     const authenticated = await isAuthenticated();
+    console.log("Authentication result:", authenticated);
+    
     if (!authenticated) {
+      console.log("Not authenticated, redirecting to login");
       throw redirect({
         to: "/login",
       });
