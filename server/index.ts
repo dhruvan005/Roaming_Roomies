@@ -23,7 +23,9 @@ app.use('/api/*', cors({
 }))
 
 const apiRoutes = app.basePath("/api").route("/user", userRoutes).route("/", authRoute);
-
+const healthCheck = app.get('/health', (c) => {
+  return c.json({ status: 'ok' });
+});
 // Don't forgot to change the callback URL in the Kinde dashboard
 
 // Serve static files
@@ -38,5 +40,7 @@ app.use('*', serveStatic({
   path: 'index.html'
 }))
 
+
 export default app;
+export { apiRoutes, healthCheck };
 export type ApiRoutes = typeof apiRoutes;

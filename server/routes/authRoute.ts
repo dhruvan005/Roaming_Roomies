@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { kindeClient, sessionManager } from "../kinde";
 import { getUser } from "../kinde"
 import { cache } from "hono/cache";
-import { aw } from "../../client/dist/assets/index-DWPlo_ut";
 
 export const authRoute = new Hono()
     .get("/login", async (c) => {
