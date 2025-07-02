@@ -2,7 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "env": {
+    "NODE_ENV": "production"
+  },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://roaming-roomies.onrender.com/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

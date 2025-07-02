@@ -21,7 +21,12 @@ export const authRoute = new Hono()
             await kindeClient.handleRedirectToApp(sessionManager(c), url);
             console.log("Authentication successful, redirecting to frontend");
 
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+            // Environment-aware frontend URL
+            const isDevelopment = process.env.NODE_ENV === 'development';
+            const frontendUrl = isDevelopment 
+                ? 'http://localhost:3001' 
+                : process.env.FRONTEND_URL || 'https://roaming-roomies.vercel.app';
+            
             return c.redirect(frontendUrl);
         } catch (error) {
             console.error("Callback processing failed:", error);
@@ -34,7 +39,7 @@ export const authRoute = new Hono()
             await kindeClient.logout(sessionManager(c));
             console.log("User logged out successfully");
         } catch (error) {
-            
+            console.error("Logout error:", error);
         }
         const logoutUrl = await kindeClient.logout(sessionManager(c));
         return c.redirect(logoutUrl.toString());

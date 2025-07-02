@@ -9,16 +9,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfileFormValues } from '../types';
 
 const getBaseUrl = () => {
-    // In production, always use the full backend URL
+    // Check if we're in production
     if (import.meta.env.PROD) {
         return import.meta.env.VITE_API_BASE_URL || 'https://roaming-roomies.onrender.com';
     }
     
-    // In development, use proxy or environment variable
+    // Development environment
     if (typeof window !== 'undefined') {
+        // Browser environment - use proxy in development
         return import.meta.env.VITE_API_BASE_URL || '/api';
     }
     
+    // Server-side or other environments
     return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 };
 
@@ -31,23 +33,20 @@ export const api = client.api;
 export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            // Disable automatic refetching on window focus
+            staleTime: 5 * 60 * 1000, // 5 minutes
+            gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
             refetchOnWindowFocus: false,
-
-            // Keep data fresh for 5 minutes before marking it as stale
-            staleTime: 5 * 60 * 1000,
-
-            // Keep cached data for 30 minutes before garbage collection
-            gcTime: 30 * 60 * 1000,
-
-            // Disable polling/refetching at intervals
-            refetchInterval: false,
-
-            // Still refetch on reconnect (when internet connection returns)
             refetchOnReconnect: true,
-
-            // Retry failed requests 1 time
-            retry: 2,
+            retry: (failureCount, error: any) => {
+                // Don't retry on 4xx errors
+                if (error?.status >= 400 && error?.status < 500) {
+                    return false;
+                }
+                return failureCount < 3;
+            },
+        },
+        mutations: {
+            retry: 1,
         },
     },
 });

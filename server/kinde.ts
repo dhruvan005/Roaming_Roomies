@@ -8,13 +8,20 @@ import { type Context } from "hono";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 
+// Environment-aware configuration
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 // Client for authorization code flow
 export const kindeClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
     authDomain: process.env.KINDE_DOMAIN!,
     clientId: process.env.KINDE_CLIENT_ID!,
     clientSecret: process.env.KINDE_CLIENT_SECRET!,
-    redirectURL: process.env.KINDE_REDIRECT_URI!,
-    logoutRedirectURL: process.env.KINDE_LOGOUT_REDIRECT_URI!,
+    redirectURL: isDevelopment 
+        ? 'http://localhost:3000/api/callback'
+        : process.env.KINDE_REDIRECT_URI!,
+    logoutRedirectURL: isDevelopment 
+        ? 'http://localhost:3000'
+        : process.env.KINDE_LOGOUT_REDIRECT_URI!,
 });
 
 let store: Record<string, unknown> = {};
