@@ -8,9 +8,16 @@ import { ApiResponse } from "../types";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfileFormValues } from '../types';
 
-// Create a typed Hono client
-// Make sure the base URL is correct for your API
-const client = hc<ApiRoutes>("/");
+const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+        // Client-side: use environment variable or default to current origin + /api
+        return import.meta.env.VITE_API_BASE_URL || '/api';
+    }
+    // Server-side (if applicable)
+    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+};
+
+const client = hc<ApiRoutes>(getBaseUrl());
 
 // Export the API client for direct use
 export const api = client.api;
