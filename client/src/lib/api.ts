@@ -9,11 +9,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfileFormValues } from '../types';
 
 const getBaseUrl = () => {
+    // In production, always use the full backend URL
+    if (import.meta.env.PROD) {
+        return import.meta.env.VITE_API_BASE_URL || 'https://roaming-roomies.onrender.com';
+    }
+    
+    // In development, use proxy or environment variable
     if (typeof window !== 'undefined') {
-        // Client-side: use environment variable or default to current origin + /api
         return import.meta.env.VITE_API_BASE_URL || '/api';
     }
-    // Server-side (if applicable)
+    
     return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 };
 
