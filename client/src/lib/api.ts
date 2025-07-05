@@ -11,17 +11,11 @@ import { UserProfileFormValues } from '../types';
 const getBaseUrl = () => {
     // Check if we're in production
     if (import.meta.env.PROD) {
-        return import.meta.env.VITE_API_BASE_URL || 'https://roaming-roomies.onrender.com';
+        return ''; // Use relative URLs in production (handled by Vercel proxy)
     }
     
     // Development environment
-    if (typeof window !== 'undefined') {
-        // Browser environment - use proxy in development
-        return import.meta.env.VITE_API_BASE_URL || '/api';
-    }
-    
-    // Server-side or other environments
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+    return 'http://localhost:3000';
 };
 
 const client = hc<ApiRoutes>(getBaseUrl());
@@ -34,7 +28,7 @@ export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             staleTime: 5 * 60 * 1000, // 5 minutes
-            gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+            gcTime: 10 * 60 * 1000, // 10 minutes
             refetchOnWindowFocus: false,
             refetchOnReconnect: true,
             retry: (failureCount, error: any) => {
@@ -152,7 +146,15 @@ export const dataControls = {
 export const useQueryOptions = {
     queryKey: ['currentUser'],
     queryFn: async () => {
-        const response = await api.me.$get();
+        const baseUrl = getBaseUrl();
+        const response = await fetch(`${baseUrl}/api/me`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch user');
         }

@@ -15,17 +15,36 @@ export const authRoute = new Hono()
         return c.redirect(registerUrl.toString());
     })
     .get("/callback", async (c) => {
-        console.log("Callback route hit with URL:", c.req.url);
+        console.log("=== CALLBACK DEBUG ===");
+        console.log("Full URL:", c.req.url);
+        console.log("NODE_ENV:", process.env.NODE_ENV);
+        
+        
         try {
             const url = new URL(c.req.url);
-            await kindeClient.handleRedirectToApp(sessionManager(c), url);
-            console.log("Authentication successful, redirecting to frontend");
+            console.log("URL params:", url.searchParams.toString());
+            
+            const manager = sessionManager(c);
+            await kindeClient.handleRedirectToApp(manager, url);
+            console.log("Authentication successful");
+
+            // Check if user is authenticated after callback
+            const isAuthenticated = await kindeClient.isAuthenticated(manager);
+            console.log("Is authenticated after callback:", isAuthenticated);
+
+            if (!isAuthenticated) {
+                console.log("Authentication failed - redirecting to login");
+                return c.redirect('/api/login');
+            }
 
             // Environment-aware frontend URL
-            const isDevelopment = process.env.NODE_ENV === 'development';
+            const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
             const frontendUrl = isDevelopment 
                 ? 'http://localhost:3001' 
                 : process.env.FRONTEND_URL || 'https://roaming-roomies.vercel.app';
+            
+            console.log("Redirecting to:", frontendUrl);
+            console.log("=== END CALLBACK DEBUG ===");
             
             return c.redirect(frontendUrl);
         } catch (error) {
@@ -36,20 +55,39 @@ export const authRoute = new Hono()
     .get("/logout", async (c) => {
         try {
             console.log("logout route hit");
-            await kindeClient.logout(sessionManager(c));
+            const logoutUrl = await kindeClient.logout(sessionManager(c));
             console.log("User logged out successfully");
+            return c.redirect(logoutUrl.toString());
         } catch (error) {
             console.error("Logout error:", error);
+            return c.text("Logout failed", 500);
         }
-        const logoutUrl = await kindeClient.logout(sessionManager(c));
-        return c.redirect(logoutUrl.toString());
     })
-    .get("/me", getUser, async (c) => {
-        const user = c.var.user;
+    .get("/me", async (c) => {
+        console.log("=== /me DEBUG ===");
+        console.log("Cookies from header:", c.req.header('cookie'));
+        
+        try {
+            const manager = sessionManager(c);
+            const isAuthenticated = await kindeClient.isAuthenticated(manager);
+            console.log("Is authenticated:", isAuthenticated);
+            
+            if (!isAuthenticated) {
+                console.log("User not authenticated");
+                return c.json({ error: "Unauthorized" }, 401);
+            }
 
-        // Add cache headers to prevent unnecessary requests
-        c.header('Cache-Control', 'private, max-age=300'); // Cache for 5 minutes
-        c.header('ETag', JSON.stringify(user).length.toString()); // Simple ETag implementation
+            const user = await kindeClient.getUserProfile(manager);
+            console.log("User profile:", user);
+            console.log("=== END /me DEBUG ===");
 
-        return c.json({ user });
+            // Add cache headers to prevent unnecessary requests
+            c.header('Cache-Control', 'private, max-age=300');
+            c.header('ETag', JSON.stringify(user).length.toString());
+
+            return c.json({ user });
+        } catch (error) {
+            console.error("Authentication error:", error);
+            return c.json({ error: "Authentication failed" }, 401);
+        }
     });

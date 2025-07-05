@@ -3,14 +3,20 @@ import { logger } from 'hono/logger'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/bun'
 import { authRoute } from './routes/authRoute.ts'
-import {userRoutes} from './routes/userRoutes'
+import { userRoutes } from './routes/userRoutes'
 
 const app = new Hono()
 app.use(logger())
 
 // Environment detection
-const isDevelopment = process.env.NODE_ENV === 'development'
-const isProduction = process.env.NODE_ENV === 'production'
+const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+const isProduction = process.env.NODE_ENV === 'production';
+
+console.log("=== SERVER START DEBUG ===");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("Is Development:", isDevelopment);
+console.log("Is Production:", isProduction);
+console.log("=== END SERVER START DEBUG ===");
 
 // Configure CORS for both environments
 app.use('/api/*', cors({
@@ -20,22 +26,22 @@ app.use('/api/*', cors({
     'http://127.0.0.1:3001',
     'http://127.0.0.1:3000'
   ] : [
-    process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app',
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
-    'https://roaming-roomies.onrender.com'
-  ].filter(Boolean),
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
-  maxAge: 600,
+    process.env.FRONTEND_URL || 'https://roaming-roomies.vercel.app',
+    'https://roaming-roomies.onrender.com',
+    'https://roaming-roomies.vercel.app'
+  ],
   credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposeHeaders: ['Set-Cookie'],
+  maxAge: 600,
 }))
 
 // API Routes
 const apiRoutes = app.basePath("/api").route("/user", userRoutes).route("/", authRoute);
 
 // Health check endpoint
-const healthCheck = app.get('/health', (c) => {
+app.get('/health', (c) => {
   return c.json({ 
     status: 'ok',
     environment: process.env.NODE_ENV || 'development',
@@ -62,6 +68,14 @@ if (isProduction) {
   }))
 }
 
-export default app;
-export { apiRoutes, healthCheck };
+// Start server
+const port = process.env.PORT || 3000;
+console.log(`Server running on port ${port}`);
+
+export default {
+  port,
+  fetch: app.fetch,
+};
+
+export { apiRoutes };
 export type ApiRoutes = typeof apiRoutes;

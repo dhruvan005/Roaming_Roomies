@@ -1,53 +1,5 @@
 // import { Button } from "antd";
 import { createFileRoute } from "@tanstack/react-router";
-
-// export function Login() {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center p-4">
-//       <div
-//         className="relative flex flex-col w-full sm:w-[60vw] md:w-[40vw] lg:w-[30vw] p-6 sm:p-8 md:p-10 
-//           justify-center rounded-xl m-auto border border-gray-700 shadow-2xl 
-//           bg-gradient-to-br from-gray-900 to-gray-800"
-//       >
-//         <div className="text-center text-2xl sm:text-3xl font-bold mb-8 text-white">
-//           Welcome Back
-//           <p className="text-sm font-normal text-gray-300 mt-2">
-//             Please login or create a new account
-//           </p>
-//         </div>
-
-//         <Button
-//           className="mt-4 bg-red-700 hover:bg-red-600 text-white py-3 px-6 rounded-lg 
-//             cursor-pointer transition-all duration-300 ease-in-out text-lg font-medium
-//             border-none shadow-lg hover:shadow-red-700/30 hover:scale-105"
-//           onClick={() => (window.location.href = "/api/login")}
-//         >
-//           Login
-//         </Button>
-
-//         <Button
-//           className="mt-4 bg-green-700 hover:bg-green-600 text-white py-3 px-6 rounded-lg 
-//             cursor-pointer transition-all duration-300 ease-in-out text-lg font-medium
-//             border-none shadow-lg hover:shadow-green-700/30 hover:scale-105"
-//           onClick={() => (window.location.href = "/api/register")}
-//         >
-//           Register
-//         </Button>
-
-//         <div
-//           className="absolute -z-10 w-[200px] h-[200px] blur-[120px] rounded-full 
-//             bg-red-900/50 -top-10 -left-10"
-//         ></div>
-//         <div
-//           className="absolute -z-10 w-[200px] h-[200px] blur-[120px] rounded-full 
-//             bg-green-900/50 -bottom-10 -right-10"
-//         ></div>
-//       </div>
-//     </div>
-//   );
-// }
-"use client"
-
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -77,6 +29,25 @@ export default function LandingPage() {
       window.removeEventListener("mousemove", handleMouseMove)
     }
   }, [])
+
+  // Environment-aware login function
+  const getApiUrl = () => {
+    if (typeof window !== 'undefined') {
+      // In browser
+      const hostname = window.location.hostname;
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:3000';
+      }
+      // In production, use the proxy
+      return '';
+    }
+    return '';
+  };
+
+  const handleLogin = () => {
+    const apiUrl = getApiUrl();
+    window.location.href = `${apiUrl}/api/login`;
+  };
 
   const cursorVariants = {
     default: {
@@ -213,7 +184,7 @@ export default function LandingPage() {
               className="bg-blue-500 hover:bg-blue-600 shadow-lg hover:shadow-blue-200/50 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
               onMouseEnter={enterButton}
               onMouseLeave={leaveButton}
-              onClick={() => (window.location.href = "/api/login")}
+              onClick={handleLogin}
             >
               Sign Up / Login
             </Button>
@@ -298,7 +269,7 @@ export default function LandingPage() {
                 className="bg-blue-500 hover:bg-blue-600 h-12 px-8 text-lg shadow-lg hover:shadow-blue-200/50 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
                 onMouseEnter={enterButton}
                 onMouseLeave={leaveButton}
-                onClick={() => (window.location.href = "/api/login")}
+                onClick={handleLogin}
               >
                 Find a Room
               </Button>
@@ -307,7 +278,7 @@ export default function LandingPage() {
                 className="h-12 px-8 text-lg border-blue-300 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
                 onMouseEnter={enterButton}
                 onMouseLeave={leaveButton}
-                onClick={() => (window.location.href = "/api/login")}
+                onClick={handleLogin}
               >
                 List Your Space
               </Button>
@@ -423,7 +394,7 @@ export default function LandingPage() {
         <div className=" relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: scrollY > 100 ? 1 : 0, y: scrollY > 100 ? 0 : 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
@@ -796,7 +767,7 @@ export default function LandingPage() {
               className="bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-white/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
               onMouseEnter={enterButton}
               onMouseLeave={leaveButton}
-              onClick={() => (window.location.href = "/api/login")}
+              onClick={handleLogin}
             >
               Get Started Now
               <ArrowRight className="ml-2 h-5 w-5" />
