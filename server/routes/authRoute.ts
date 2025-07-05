@@ -19,13 +19,13 @@ export const authRoute = new Hono()
         console.log("Full URL:", c.req.url);
         console.log("NODE_ENV:", process.env.NODE_ENV);
         
-        
         try {
             const url = new URL(c.req.url);
             console.log("URL params:", url.searchParams.toString());
             
             const manager = sessionManager(c);
             await kindeClient.handleRedirectToApp(manager, url);
+            
             console.log("Authentication successful");
 
             // Check if user is authenticated after callback
@@ -37,7 +37,7 @@ export const authRoute = new Hono()
                 return c.redirect('/api/login');
             }
 
-            // Environment-aware frontend URL
+            // Environment-aware frontend URL - UPDATE THIS PART
             const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
             const frontendUrl = isDevelopment 
                 ? 'http://localhost:3001' 
@@ -46,7 +46,8 @@ export const authRoute = new Hono()
             console.log("Redirecting to:", frontendUrl);
             console.log("=== END CALLBACK DEBUG ===");
             
-            return c.redirect(frontendUrl);
+            // Change this line to redirect to your desired route
+            return c.redirect(`${frontendUrl}/`); // This goes to the authenticated home page
         } catch (error) {
             console.error("Callback processing failed:", error);
             return c.text("Authentication failed", 500);

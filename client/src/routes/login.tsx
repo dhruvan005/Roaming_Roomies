@@ -1,47 +1,55 @@
 // import { Button } from "antd";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Home, Users, Search, CheckCircle, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Home,
+  Users,
+  Search,
+  CheckCircle,
+  MessageSquare,
+  ArrowRight,
+  ChevronDown,
+} from "lucide-react";
 
 export default function LandingPage() {
-  const [scrollY, setScrollY] = useState(0)
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
-  const [cursorVariant, setCursorVariant] = useState("default")
+  const [scrollY, setScrollY] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState("default");
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
+      setScrollY(window.scrollY);
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY })
-    }
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   // Environment-aware login function
   const getApiUrl = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // In browser
       const hostname = window.location.hostname;
-      if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:3000';
+      if (hostname === "localhost" || hostname === "127.0.0.1") {
+        return "http://localhost:3000";
       }
-      // In production, use the proxy
-      return '';
+      // In production, return the backend URL
+      return "https://roaming-roomies.onrender.com";
     }
-    return '';
+    return "";
   };
 
   const handleLogin = () => {
@@ -125,32 +133,21 @@ export default function LandingPage() {
         damping: 15,
       },
     },
-  }
+  };
 
-  const enterButton = () => setCursorVariant("button")
-  const enterCard = () => setCursorVariant("card")
-  const enterText = () => setCursorVariant("text")
-  const enterLink = () => setCursorVariant("link")
-  const leaveButton = () => setCursorVariant("default")
-  const leaveCard = () => setCursorVariant("default")
-  const leaveText = () => setCursorVariant("default")
-  const leaveLink = () => setCursorVariant("default")
+  const enterButton = () => setCursorVariant("button");
+  const enterCard = () => setCursorVariant("card");
+  const enterText = () => setCursorVariant("text");
+  const enterLink = () => setCursorVariant("link");
+  const leaveButton = () => setCursorVariant("default");
+  const leaveCard = () => setCursorVariant("default");
+  const leaveText = () => setCursorVariant("default");
+  const leaveLink = () => setCursorVariant("default");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
       {/* Background Elements */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100 via-white to-white opacity-70" />
-        <svg className="absolute top-0 right-0 opacity-10" width="800" height="800" viewBox="0 0 800 800">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(59, 130, 246, 0.3)" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-blue-100 via-white to-white opacity-70" />
-      </div>
+  
 
       {/* Navigation */}
       <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
@@ -194,53 +191,6 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
-        {/* Animated Lines Background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 opacity-10">
-            {[...Array(10)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute bg-blue-500"
-                style={{
-                  height: '2px',
-                  width: '100%',
-                  left: 0,
-                  top: `${i * 10}%`,
-                }}
-                animate={{
-                  x: ['-100%', '100%'],
-                }}
-                transition={{
-                  duration: 15 + i * 2,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: i * 0.5,
-                }}
-              />
-            ))}
-            {[...Array(15)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute bg-indigo-500"
-                style={{
-                  width: '2px',
-                  height: '100%',
-                  top: 0,
-                  left: `${i * 7}%`,
-                }}
-                animate={{
-                  y: ['-100%', '100%'],
-                }}
-                transition={{
-                  duration: 20 + i * 1.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: i * 0.3,
-                }}
-              />
-            ))}
-          </div>
-        </div>
 
         <div className=" relative z-10">
           <motion.div
@@ -250,18 +200,38 @@ export default function LandingPage() {
             className="max-w-3xl mx-auto text-center"
           >
             <h1 className="text-4xl md:text-6xl boldonse-regular leading-tight  mb-6">
-
-              Life's too short for bad <span className="inline-block bg-blue-200 text-blue-700 px-2 py-1 rounded-md transform rotate-3 relative">Roommates</span> find your <span className="inline-block bg-indigo-200 text-indigo-600 px-2 py-1 rounded-md transform -rotate-3 relative">Perfect</span> match
+              Life's too short for bad{" "}
+              <span className="inline-block bg-blue-200 text-blue-700 px-2 py-1 rounded-md transform rotate-3 relative">
+                Roommates
+              </span>{" "}
+              find your{" "}
+              <span className="inline-block bg-indigo-200 text-indigo-600 px-2 py-1 rounded-md transform -rotate-3 relative">
+                Perfect
+              </span>{" "}
+              match
             </h1>
-            <p className="text-lg text-gray-600 mb-4" onMouseEnter={enterText} onMouseLeave={leaveText}>
-              Connect with compatible roommates based on lifestyle, habits, and preferences. Your perfect living
-              situation is just a few clicks away.
+            <p
+              className="text-lg text-gray-600 mb-4"
+              onMouseEnter={enterText}
+              onMouseLeave={leaveText}
+            >
+              Connect with compatible roommates based on lifestyle, habits, and
+              preferences. Your perfect living situation is just a few clicks
+              away.
             </p>
-            <p className="text-lg text-blue-600 italic mb-8 font-medium" onMouseEnter={enterText} onMouseLeave={leaveText}>
+            <p
+              className="text-lg text-blue-600 italic mb-8 font-medium"
+              onMouseEnter={enterText}
+              onMouseLeave={leaveText}
+            >
               <span className="relative inline-block">
-                <span className="absolute -left-2 -top-2 text-3xl text-blue-300 opacity-50">"</span>
+                <span className="absolute -left-2 -top-2 text-3xl text-blue-300 opacity-50">
+                  "
+                </span>
                 Where strangers become roommates, and roommates become friends.
-                <span className="absolute -bottom-2 -right-2 text-3xl text-blue-300 opacity-50">"</span>
+                <span className="absolute -bottom-2 -right-2 text-3xl text-blue-300 opacity-50">
+                  "
+                </span>
               </span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -329,7 +299,10 @@ export default function LandingPage() {
       </div>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-white relative overflow-hidden">
+      <section
+        id="how-it-works"
+        className="py-20 bg-white relative overflow-hidden"
+      >
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -347,7 +320,8 @@ export default function LandingPage() {
           <motion.div
             className="absolute bottom-0 left-0 w-[200%] h-16 opacity-10"
             style={{
-              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%233b82f6'%3E%3C/path%3E%3C/svg%3E\")",
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%233b82f6'%3E%3C/path%3E%3C/svg%3E\")",
               backgroundSize: "100% 100%",
             }}
             animate={{
@@ -356,13 +330,14 @@ export default function LandingPage() {
             transition={{
               duration: 20,
               repeat: Infinity,
-              ease: "linear"
+              ease: "linear",
             }}
           />
           <motion.div
             className="absolute bottom-0 left-0 w-[200%] h-12 opacity-10"
             style={{
-              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%236366f1'%3E%3C/path%3E%3C/svg%3E\")",
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%236366f1'%3E%3C/path%3E%3C/svg%3E\")",
               backgroundSize: "100% 100%",
             }}
             animate={{
@@ -371,13 +346,14 @@ export default function LandingPage() {
             transition={{
               duration: 18,
               repeat: Infinity,
-              ease: "linear"
+              ease: "linear",
             }}
           />
           <motion.div
             className="absolute top-0 left-0 w-[200%] h-14 opacity-10"
             style={{
-              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z' fill='%233b82f6'%3E%3C/path%3E%3C/svg%3E\")",
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z' fill='%233b82f6'%3E%3C/path%3E%3C/svg%3E\")",
               backgroundSize: "100% 100%",
             }}
             animate={{
@@ -386,7 +362,7 @@ export default function LandingPage() {
             transition={{
               duration: 25,
               repeat: Infinity,
-              ease: "linear"
+              ease: "linear",
             }}
           />
         </div>
@@ -398,10 +374,16 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto" onMouseEnter={enterText} onMouseLeave={leaveText}>
-              Whether you're looking for a room or have one to offer, our platform makes the process simple and
-              effective.
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              How It Works
+            </h2>
+            <p
+              className="text-xl text-gray-600 max-w-2xl mx-auto"
+              onMouseEnter={enterText}
+              onMouseLeave={leaveText}
+            >
+              Whether you're looking for a room or have one to offer, our
+              platform makes the process simple and effective.
             </p>
           </motion.div>
 
@@ -428,7 +410,10 @@ export default function LandingPage() {
               <div className="grid md:grid-cols-3 gap-8">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -441,8 +426,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         Create Your Profile
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Share your lifestyle, habits, and preferences to find compatible roommates.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Share your lifestyle, habits, and preferences to find
+                        compatible roommates.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -450,7 +440,10 @@ export default function LandingPage() {
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -463,8 +456,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         Browse Listings
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Explore available rooms that match your criteria and preferences.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Explore available rooms that match your criteria and
+                        preferences.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -472,7 +470,10 @@ export default function LandingPage() {
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -485,8 +486,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         Connect & Move In
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Message potential roommates, schedule viewings, and find your new home.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Message potential roommates, schedule viewings, and find
+                        your new home.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -498,7 +504,10 @@ export default function LandingPage() {
               <div className="grid md:grid-cols-3 gap-8">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -511,8 +520,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         List Your Space
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Create a detailed listing with photos, amenities, and house rules.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Create a detailed listing with photos, amenities, and
+                        house rules.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -520,7 +534,10 @@ export default function LandingPage() {
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -533,8 +550,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         Set Preferences
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Specify the type of roommate you're looking for based on lifestyle and habits.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Specify the type of roommate you're looking for based on
+                        lifestyle and habits.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -542,7 +564,10 @@ export default function LandingPage() {
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: scrollY > 200 ? 1 : 0, y: scrollY > 200 ? 0 : 20 }}
+                  animate={{
+                    opacity: scrollY > 200 ? 1 : 0,
+                    y: scrollY > 200 ? 0 : 20,
+                  }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                   onMouseEnter={enterCard}
                   onMouseLeave={leaveCard}
@@ -555,8 +580,13 @@ export default function LandingPage() {
                       <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                         Review & Connect
                       </h3>
-                      <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                        Review applicants, chat with potential roommates, and find your perfect match.
+                      <p
+                        className="text-gray-600"
+                        onMouseEnter={enterText}
+                        onMouseLeave={leaveText}
+                      >
+                        Review applicants, chat with potential roommates, and
+                        find your perfect match.
                       </p>
                       <div className="h-1 w-0 bg-blue-400 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
                     </CardContent>
@@ -569,12 +599,20 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-blue-50 relative overflow-hidden">
+      <section
+        id="features"
+        className="py-20 bg-blue-50 relative overflow-hidden"
+      >
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+              <pattern
+                id="dots"
+                width="20"
+                height="20"
+                patternUnits="userSpaceOnUse"
+              >
                 <circle cx="10" cy="10" r="1.5" fill="#3b82f6" />
               </pattern>
             </defs>
@@ -585,24 +623,41 @@ export default function LandingPage() {
         <div className=" relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: scrollY > 600 ? 1 : 0, y: scrollY > 600 ? 0 : 20 }}
+            animate={{
+              opacity: scrollY > 600 ? 1 : 0,
+              y: scrollY > 600 ? 0 : 20,
+            }}
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Smart Matching Features</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto" onMouseEnter={enterText} onMouseLeave={leaveText}>
-              Our platform uses advanced matching algorithms to connect compatible roommates.
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Smart Matching Features
+            </h2>
+            <p
+              className="text-xl text-gray-600 max-w-2xl mx-auto"
+              onMouseEnter={enterText}
+              onMouseLeave={leaveText}
+            >
+              Our platform uses advanced matching algorithms to connect
+              compatible roommates.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: scrollY > 700 ? 1 : 0, x: scrollY > 700 ? 0 : -50 }}
+              animate={{
+                opacity: scrollY > 700 ? 1 : 0,
+                x: scrollY > 700 ? 0 : -50,
+              }}
               transition={{ duration: 0.6 }}
               className="space-y-8"
             >
-              <div className="flex gap-4 group" onMouseEnter={enterCard} onMouseLeave={leaveCard}>
+              <div
+                className="flex gap-4 group"
+                onMouseEnter={enterCard}
+                onMouseLeave={leaveCard}
+              >
                 <div className="rounded-full bg-blue-100 w-12 h-12 flex-shrink-0 flex items-center justify-center group-hover:bg-blue-200 transition-all duration-300 transform group-hover:scale-110">
                   <Users className="h-6 w-6 text-blue-500 group-hover:text-blue-600 transition-colors duration-300" />
                 </div>
@@ -610,17 +665,25 @@ export default function LandingPage() {
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                     Social Compatibility
                   </h3>
-                  <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                    Match with roommates who share your social preferences, whether you're an introvert, extrovert, or
-                    somewhere in between.
+                  <p
+                    className="text-gray-600"
+                    onMouseEnter={enterText}
+                    onMouseLeave={leaveText}
+                  >
+                    Match with roommates who share your social preferences,
+                    whether you're an introvert, extrovert, or somewhere in
+                    between.
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-
                   80% Match
                 </div>
               </div>
-              <div className="flex gap-4 group" onMouseEnter={enterCard} onMouseLeave={leaveCard}>
+              <div
+                className="flex gap-4 group"
+                onMouseEnter={enterCard}
+                onMouseLeave={leaveCard}
+              >
                 <div className="rounded-full bg-blue-100 w-12 h-12 flex-shrink-0 flex items-center justify-center group-hover:bg-blue-200 transition-all duration-300 transform group-hover:scale-110">
                   <Home className="h-6 w-6 text-blue-500 group-hover:text-blue-600 transition-colors duration-300" />
                 </div>
@@ -628,16 +691,24 @@ export default function LandingPage() {
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                     Lifestyle Matching
                   </h3>
-                  <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                    Find roommates with compatible sleeping schedules, cleanliness standards, and daily routines.
+                  <p
+                    className="text-gray-600"
+                    onMouseEnter={enterText}
+                    onMouseLeave={leaveText}
+                  >
+                    Find roommates with compatible sleeping schedules,
+                    cleanliness standards, and daily routines.
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-
                   91% Match
                 </div>
               </div>
-              <div className="flex gap-4 group" onMouseEnter={enterCard} onMouseLeave={leaveCard}>
+              <div
+                className="flex gap-4 group"
+                onMouseEnter={enterCard}
+                onMouseLeave={leaveCard}
+              >
                 <div className="rounded-full bg-blue-100 w-12 h-12 flex-shrink-0 flex items-center justify-center group-hover:bg-blue-200 transition-all duration-300 transform group-hover:scale-110">
                   <CheckCircle className="h-6 w-6 text-blue-500 group-hover:text-blue-600 transition-colors duration-300" />
                 </div>
@@ -645,12 +716,16 @@ export default function LandingPage() {
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">
                     Verified Profiles
                   </h3>
-                  <p className="text-gray-600" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                    All users go through a verification process to ensure safety and authenticity.
+                  <p
+                    className="text-gray-600"
+                    onMouseEnter={enterText}
+                    onMouseLeave={leaveText}
+                  >
+                    All users go through a verification process to ensure safety
+                    and authenticity.
                   </p>
                 </div>
                 <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-
                   85% Match
                 </div>
               </div>
@@ -658,7 +733,10 @@ export default function LandingPage() {
 
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: scrollY > 700 ? 1 : 0, scale: scrollY > 700 ? 1 : 0.9 }}
+              animate={{
+                opacity: scrollY > 700 ? 1 : 0,
+                scale: scrollY > 700 ? 1 : 0.9,
+              }}
               transition={{ duration: 0.6 }}
               className="relative"
               onMouseEnter={enterCard}
@@ -677,10 +755,11 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h4 className="font-bold">Sarah, 28</h4>
-                      <p className="text-sm text-gray-500">Professional, Non-smoker</p>
+                      <p className="text-sm text-gray-500">
+                        Professional, Non-smoker
+                      </p>
                     </div>
                     <div className="ml-auto text-blue-500 font-bold flex items-center gap-1">
-
                       87% Match
                     </div>
                   </div>
@@ -705,9 +784,14 @@ export default function LandingPage() {
                   </div>
 
                   <div className="pt-4 border-t">
-                    <p className="text-gray-600 mb-4" onMouseEnter={enterText} onMouseLeave={leaveText}>
-                      "I'm a software developer who works from home. I enjoy quiet evenings and the occasional weekend
-                      outing with friends."
+                    <p
+                      className="text-gray-600 mb-4"
+                      onMouseEnter={enterText}
+                      onMouseLeave={leaveText}
+                    >
+                      "I'm a software developer who works from home. I enjoy
+                      quiet evenings and the occasional weekend outing with
+                      friends."
                     </p>
                     <Button
                       className="w-full bg-blue-500 hover:bg-blue-600 shadow-lg hover:shadow-blue-200/50 transition-all duration-300 transform hover:-translate-y-1"
@@ -755,13 +839,23 @@ export default function LandingPage() {
         <div className=" relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: scrollY > 1800 ? 1 : 0, y: scrollY > 1800 ? 0 : 20 }}
+            animate={{
+              opacity: scrollY > 1800 ? 1 : 0,
+              y: scrollY > 1800 ? 0 : 20,
+            }}
             transition={{ duration: 0.5 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Find Your Perfect Roommate?</h2>
-            <p className="text-xl mb-8 opacity-90" onMouseEnter={enterText} onMouseLeave={leaveText}>
-              Join thousands of users who have found their ideal living situation through Roaming Roomies.
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Ready to Find Your Perfect Roommate?
+            </h2>
+            <p
+              className="text-xl mb-8 opacity-90"
+              onMouseEnter={enterText}
+              onMouseLeave={leaveText}
+            >
+              Join thousands of users who have found their ideal living
+              situation through Roaming Roomies.
             </p>
             <Button
               className="bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-white/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
@@ -779,14 +873,16 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 bg-gray-900 text-gray-300">
         <div className="">
-
           <div className=" border-gray-800  text-center text-sm">
-            <p> {new Date().getFullYear()} Roaming Roomies. All rights reserved.</p>
+            <p>
+              {" "}
+              {new Date().getFullYear()} Roaming Roomies. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 export const Route = createFileRoute("/login")({
